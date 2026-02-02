@@ -80,6 +80,7 @@ export const ProductScalarFieldEnum = {
   format: 'format',
   ruling: 'ruling',
   pages: 'pages',
+  color: 'color',
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

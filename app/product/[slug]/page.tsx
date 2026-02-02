@@ -8,6 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { getLang, getDictionary } from "@/lib/i18n";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 export default async function ProductPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const { slug } = await params;
   const sp = await searchParams;
@@ -46,10 +53,31 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     rulingMap.set(rLabel, pagesList);
   }
 
+  // Get unique colors
+  const colors = Array.from(new Set(siblings.map(p => p.color).filter(Boolean))) as string[];
+
   const productName = lang === "en" ? product.nameEn : product.nameFr;
   const familyName = familyLabel(product, lang);
   const familyLink = `/products?family=${familyKey(product)}&lang=${lang}`;
   const formatName = formatLabel(product.format, lang);
+
+  // Map color names to CSS colors
+  const getColorStyle = (colorName: string) => {
+    const map: Record<string, string> = {
+      'Orange': 'bg-orange-500',
+      'Gris': 'bg-gray-500',
+      'Jaune': 'bg-yellow-400',
+      'Rose': 'bg-pink-400',
+      'Violet': 'bg-purple-500',
+      'Bleu': 'bg-blue-500',
+      'Rouge': 'bg-red-500',
+      'Vert': 'bg-green-500',
+      'Noir': 'bg-black',
+      'Incolore': 'bg-transparent border border-gray-300',
+      'Assortit': 'bg-gradient-to-r from-blue-400 via-red-400 to-yellow-400',
+    };
+    return map[colorName] || 'bg-gray-200';
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
@@ -83,10 +111,25 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
         <div className="space-y-8">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">{productName}</h1>
-            <div className="flex flex-wrap gap-3">
-               <Badge variant="blue" className="text-sm px-3 py-1">{product.grammageGsm}g</Badge>
-               <Badge variant="green" className="capitalize text-sm px-3 py-1">{coverLabel(product.coverType, lang)}</Badge>
-               <Badge variant="orange" className="text-sm px-3 py-1">{formatName}</Badge>
+            <div className="flex flex-wrap gap-3 items-center">
+               {colors.length > 0 && (
+                 <TooltipProvider>
+                   <div className="flex gap-1">
+                     {colors.map(c => (
+                       <Tooltip key={c}>
+                         <TooltipTrigger asChild>
+                           <div 
+                             className={`w-4 h-4 rounded-sm ${getColorStyle(c)} cursor-help`} 
+                           />
+                         </TooltipTrigger>
+                         <TooltipContent side="bottom" className="bg-white text-black dark:bg-zinc-950 dark:text-white">
+                          <p className="capitalize">{c}</p>
+                        </TooltipContent>
+                       </Tooltip>
+                     ))}
+                   </div>
+                 </TooltipProvider>
+               )}
             </div>
           </div>
 

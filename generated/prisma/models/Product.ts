@@ -48,6 +48,7 @@ export type ProductMinAggregateOutputType = {
   format: $Enums.Format | null
   ruling: $Enums.Ruling | null
   pages: number | null
+  color: string | null
   imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -63,6 +64,7 @@ export type ProductMaxAggregateOutputType = {
   format: $Enums.Format | null
   ruling: $Enums.Ruling | null
   pages: number | null
+  color: string | null
   imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -78,6 +80,7 @@ export type ProductCountAggregateOutputType = {
   format: number
   ruling: number
   pages: number
+  color: number
   imageUrl: number
   createdAt: number
   updatedAt: number
@@ -107,6 +110,7 @@ export type ProductMinAggregateInputType = {
   format?: true
   ruling?: true
   pages?: true
+  color?: true
   imageUrl?: true
   createdAt?: true
   updatedAt?: true
@@ -122,6 +126,7 @@ export type ProductMaxAggregateInputType = {
   format?: true
   ruling?: true
   pages?: true
+  color?: true
   imageUrl?: true
   createdAt?: true
   updatedAt?: true
@@ -137,6 +142,7 @@ export type ProductCountAggregateInputType = {
   format?: true
   ruling?: true
   pages?: true
+  color?: true
   imageUrl?: true
   createdAt?: true
   updatedAt?: true
@@ -239,6 +245,7 @@ export type ProductGroupByOutputType = {
   format: $Enums.Format
   ruling: $Enums.Ruling | null
   pages: number
+  color: string | null
   imageUrl: string
   createdAt: Date
   updatedAt: Date
@@ -277,6 +284,7 @@ export type ProductWhereInput = {
   format?: Prisma.EnumFormatFilter<"Product"> | $Enums.Format
   ruling?: Prisma.EnumRulingNullableFilter<"Product"> | $Enums.Ruling | null
   pages?: Prisma.IntFilter<"Product"> | number
+  color?: Prisma.StringNullableFilter<"Product"> | string | null
   imageUrl?: Prisma.StringFilter<"Product"> | string
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
@@ -292,6 +300,7 @@ export type ProductOrderByWithRelationInput = {
   format?: Prisma.SortOrder
   ruling?: Prisma.SortOrderInput | Prisma.SortOrder
   pages?: Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -310,6 +319,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   format?: Prisma.EnumFormatFilter<"Product"> | $Enums.Format
   ruling?: Prisma.EnumRulingNullableFilter<"Product"> | $Enums.Ruling | null
   pages?: Prisma.IntFilter<"Product"> | number
+  color?: Prisma.StringNullableFilter<"Product"> | string | null
   imageUrl?: Prisma.StringFilter<"Product"> | string
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string
@@ -325,6 +335,7 @@ export type ProductOrderByWithAggregationInput = {
   format?: Prisma.SortOrder
   ruling?: Prisma.SortOrderInput | Prisma.SortOrder
   pages?: Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -348,6 +359,7 @@ export type ProductScalarWhereWithAggregatesInput = {
   format?: Prisma.EnumFormatWithAggregatesFilter<"Product"> | $Enums.Format
   ruling?: Prisma.EnumRulingNullableWithAggregatesFilter<"Product"> | $Enums.Ruling | null
   pages?: Prisma.IntWithAggregatesFilter<"Product"> | number
+  color?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   imageUrl?: Prisma.StringWithAggregatesFilter<"Product"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -362,6 +374,7 @@ export type ProductCreateInput = {
   format: $Enums.Format
   ruling?: $Enums.Ruling | null
   pages: number
+  color?: string | null
   imageUrl: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -377,6 +390,7 @@ export type ProductUncheckedCreateInput = {
   format: $Enums.Format
   ruling?: $Enums.Ruling | null
   pages: number
+  color?: string | null
   imageUrl: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -391,6 +405,7 @@ export type ProductUpdateInput = {
   format?: Prisma.EnumFormatFieldUpdateOperationsInput | $Enums.Format
   ruling?: Prisma.NullableEnumRulingFieldUpdateOperationsInput | $Enums.Ruling | null
   pages?: Prisma.IntFieldUpdateOperationsInput | number
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -406,6 +421,7 @@ export type ProductUncheckedUpdateInput = {
   format?: Prisma.EnumFormatFieldUpdateOperationsInput | $Enums.Format
   ruling?: Prisma.NullableEnumRulingFieldUpdateOperationsInput | $Enums.Ruling | null
   pages?: Prisma.IntFieldUpdateOperationsInput | number
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -421,6 +437,7 @@ export type ProductCreateManyInput = {
   format: $Enums.Format
   ruling?: $Enums.Ruling | null
   pages: number
+  color?: string | null
   imageUrl: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -435,6 +452,7 @@ export type ProductUpdateManyMutationInput = {
   format?: Prisma.EnumFormatFieldUpdateOperationsInput | $Enums.Format
   ruling?: Prisma.NullableEnumRulingFieldUpdateOperationsInput | $Enums.Ruling | null
   pages?: Prisma.IntFieldUpdateOperationsInput | number
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -450,6 +468,7 @@ export type ProductUncheckedUpdateManyInput = {
   format?: Prisma.EnumFormatFieldUpdateOperationsInput | $Enums.Format
   ruling?: Prisma.NullableEnumRulingFieldUpdateOperationsInput | $Enums.Ruling | null
   pages?: Prisma.IntFieldUpdateOperationsInput | number
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -465,6 +484,7 @@ export type ProductCountOrderByAggregateInput = {
   format?: Prisma.SortOrder
   ruling?: Prisma.SortOrder
   pages?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -486,6 +506,7 @@ export type ProductMaxOrderByAggregateInput = {
   format?: Prisma.SortOrder
   ruling?: Prisma.SortOrder
   pages?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -501,6 +522,7 @@ export type ProductMinOrderByAggregateInput = {
   format?: Prisma.SortOrder
   ruling?: Prisma.SortOrder
   pages?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -536,6 +558,10 @@ export type NullableEnumRulingFieldUpdateOperationsInput = {
   set?: $Enums.Ruling | null
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
@@ -552,6 +578,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   format?: boolean
   ruling?: boolean
   pages?: boolean
+  color?: boolean
   imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -567,6 +594,7 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   format?: boolean
   ruling?: boolean
   pages?: boolean
+  color?: boolean
   imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -582,6 +610,7 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   format?: boolean
   ruling?: boolean
   pages?: boolean
+  color?: boolean
   imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -597,12 +626,13 @@ export type ProductSelectScalar = {
   format?: boolean
   ruling?: boolean
   pages?: boolean
+  color?: boolean
   imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nameFr" | "nameEn" | "slug" | "grammageGsm" | "coverType" | "format" | "ruling" | "pages" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nameFr" | "nameEn" | "slug" | "grammageGsm" | "coverType" | "format" | "ruling" | "pages" | "color" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 
 export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Product"
@@ -617,6 +647,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     format: $Enums.Format
     ruling: $Enums.Ruling | null
     pages: number
+    color: string | null
     imageUrl: string
     createdAt: Date
     updatedAt: Date
@@ -1052,6 +1083,7 @@ export interface ProductFieldRefs {
   readonly format: Prisma.FieldRef<"Product", 'Format'>
   readonly ruling: Prisma.FieldRef<"Product", 'Ruling'>
   readonly pages: Prisma.FieldRef<"Product", 'Int'>
+  readonly color: Prisma.FieldRef<"Product", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Product", 'String'>
   readonly createdAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Product", 'DateTime'>
