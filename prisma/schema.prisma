@@ -1,0 +1,44 @@
+// Prisma schema for Postgres
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CoverType {
+  POLYPRO_PIQUE
+  POLYPRO
+  CARTONNE
+}
+
+enum Format {
+  F17x22
+  F21x29_7
+  F24x32
+}
+
+enum Ruling {
+  SEYES
+  LIGNE
+  QUADRI
+  BLANC
+}
+
+model Product {
+  id            Int       @id @default(autoincrement())
+  nameFr        String
+  nameEn        String
+  slug          String    @unique
+  grammageGsm   Int
+  coverType     CoverType
+  format        Format
+  ruling        Ruling?
+  pages         Int
+  imageUrl      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
