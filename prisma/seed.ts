@@ -162,6 +162,33 @@ function normalize(raw: any) {
   
   const slug = `cahier-${raw.g}g-${cover.toLowerCase().replace('_', '-')}-${raw.f.replace(',', '_')}-${raw.p}p-${raw.c.toLowerCase().replace(/\s/g, '-')}`;
   
+  // Image generation logic
+  let imagePrefix = 'polypro';
+  if (cover === CoverType.CARTONNE) imagePrefix = 'cartonne';
+
+  // Normalize color for filename (e.g. "Sans Couv" -> "sans_couv", "Bleu" -> "bleu")
+  const colorSuffix = raw.c.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove accents (e.g. é -> e) if any, though dataset seems clean
+    .replace(/\s/g, '_'); 
+
+  // Check if specific image exists, otherwise fallback to assortit
+  // Note: In a real environment we might check FS, but here we can just default to logic or assume assortit if we want a safe default.
+  // The user requested to use "assortit" everywhere? Or just as a fallback?
+  // "peut on mettre l'image asorti partout" -> Sounds like they want the assortit image for ALL products, or maybe just as a safe fallback?
+  // Let's assume they want it as a fallback if the specific color image isn't found, OR if they really meant "partout" literally.
+  // Re-reading: "peut on mettre l'image asorti partout (c'est une image ou il y a des cahiers de plusieurs couleurs en éventail)"
+  // It sounds like they might want this image to represent the product line if specific photos aren't available.
+  // However, we just renamed specific images.
+  // Let's implement a check: we try to assign the specific color, but we can't easily check file existence in the seed script without 'fs'.
+  // actually we can use 'fs'.
+  
+  const fs = require('fs');
+  const path = require('path');
+  
+  // Force "assortit" image for EVERY product as requested by user
+  // "met limage assoortit partout comme si les autres images n'existaient pas"
+  let imageUrl = `/products/${imagePrefix}_assortit.png`;
+
   return {
     nameFr: `Cahier ${raw.g}g ${cover === 'POLYPRO_PIQUE' ? 'Polypro piqué' : 'Cartonné'} ${raw.f} ${raw.p}p ${raw.c}`,
     nameEn: `Notebook ${raw.g}gsm ${cover === 'POLYPRO_PIQUE' ? 'Polypro stitched' : 'Hard cover'} ${raw.f} ${raw.p}p ${raw.c}`,
@@ -172,7 +199,7 @@ function normalize(raw: any) {
     ruling: Ruling.SEYES, // Default
     pages: raw.p,
     color: raw.c,
-    imageUrl: '/file.svg',
+    imageUrl: imageUrl,
   };
 }
 

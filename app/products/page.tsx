@@ -49,10 +49,6 @@ export default async function Products({ searchParams }: { searchParams: Promise
             { label: family },
           ]}
         />
-        <div className="flex gap-2 self-end sm:self-auto">
-          <Link href={`/products?family=${rawFamily}&lang=fr`} className={`text-sm ${lang === 'fr' ? 'font-bold underline' : 'text-zinc-500'}`}>FR</Link>
-          <Link href={`/products?family=${rawFamily}&lang=en`} className={`text-sm ${lang === 'en' ? 'font-bold underline' : 'text-zinc-500'}`}>EN</Link>
-        </div>
       </div>
       
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

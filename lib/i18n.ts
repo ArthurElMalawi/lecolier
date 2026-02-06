@@ -25,6 +25,12 @@ export const dictionaries = {
       pagesSuffix: "pages",
       backToProducts: "Retour aux formats",
     },
+    resellers: {
+      title: "Nos Revendeurs",
+      searchPlaceholder: "Rechercher un revendeur...",
+      noResults: "Aucun revendeur trouvé",
+      loading: "Chargement de la carte...",
+    },
     enums: {
       cover: {
         POLYPRO_PIQUE: "polypro piqué",
@@ -62,6 +68,12 @@ export const dictionaries = {
       pages: "Pages",
       pagesSuffix: "pages",
       backToProducts: "Back to formats",
+    },
+    resellers: {
+      title: "Our Resellers",
+      searchPlaceholder: "Search for a reseller...",
+      noResults: "No resellers found",
+      loading: "Loading map...",
     },
     enums: {
       cover: {

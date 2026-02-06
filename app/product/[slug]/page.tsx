@@ -89,10 +89,6 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
             { label: formatName },
           ]}
         />
-        <div className="flex gap-2 self-end sm:self-auto">
-          <Link href={`/product/${slug}?lang=fr`} className={`text-sm ${lang === 'fr' ? 'font-bold underline' : 'text-zinc-500'}`}>FR</Link>
-          <Link href={`/product/${slug}?lang=en`} className={`text-sm ${lang === 'en' ? 'font-bold underline' : 'text-zinc-500'}`}>EN</Link>
-        </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -153,17 +149,13 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
                      {Array.from(rulingMap.values()).map((pages, idx) => (
                        <div key={idx} className="flex flex-wrap gap-2 h-8 items-center">
                          {pages.map((page) => (
-                           <span 
-                             key={page} 
-                             className={
-                               page === product.pages && Array.from(rulingMap.keys())[idx] === rulingLabel(product.ruling, lang)
-                                 ? "inline-flex items-center justify-center min-w-[2rem] h-8 rounded bg-zinc-900 text-zinc-50 text-sm font-bold shadow-sm dark:bg-zinc-100 dark:text-zinc-900"
-                                 : "inline-flex items-center justify-center min-w-[2rem] h-8 rounded bg-white text-zinc-600 text-sm border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700"
-                             }
-                           >
-                             {page}
-                           </span>
-                         ))}
+                          <span 
+                            key={page} 
+                            className="inline-flex items-center justify-center min-w-[2rem] h-8 rounded bg-white text-zinc-600 text-sm border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700"
+                          >
+                            {page}
+                          </span>
+                        ))}
                        </div>
                      ))}
                    </div>
