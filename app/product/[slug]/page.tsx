@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/tooltip";
 
 export const dynamic = 'force-dynamic';
+// Test temporaire
+console.log("ROUTE PRODUCT CHARGÉE");
 
 export default async function ProductPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const { slug } = await params;
