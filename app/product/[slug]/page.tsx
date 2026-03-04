@@ -97,8 +97,8 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
         {/* Left Column: Image */}
         <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-black/[.04] dark:border-white/[.04]">
            <Image 
-             src={product.imageUrl} 
-             alt={productName} 
+             src={product.coverType === 'CARTONNE' ? '/products/cartonne_assortit.png' : '/products/polypro_assortit.png'} 
+              alt={productName} 
              fill 
              className="object-contain p-12 transition-transform duration-500 hover:scale-105 dark:invert" 
              priority
