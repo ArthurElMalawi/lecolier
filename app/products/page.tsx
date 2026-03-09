@@ -6,6 +6,7 @@ import { formatLabel, familyLabel, parseFamilyKey } from "@/lib/catalog";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { getLang, getDictionary } from "@/lib/i18n";
+import { ProductCardLink } from "@/components/product-card-link";
 
 export default async function Products({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;
@@ -60,7 +61,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
            if (!target) return null;
            
            return (
-             <Link key={fmt} href={`/product/${target.slug}?lang=${lang}`} className="group block h-full">
+             <ProductCardLink key={fmt} href={`/product/${target.slug}?lang=${lang}`} className="group block h-full">
                <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                  <CardHeader className="pb-2">
                    <CardTitle className="text-center text-lg">{formatLabel(fmt as any, lang)}</CardTitle>
@@ -76,7 +77,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
                    </div>
                  </CardContent>
                </Card>
-             </Link>
+             </ProductCardLink>
            );
         })}
       </div>

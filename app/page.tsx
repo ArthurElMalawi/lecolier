@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { familyLabel, familyKey } from "@/lib/catalog";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { getLang, getDictionary } from "@/lib/i18n";
+import { ProductCardLink } from "@/components/product-card-link";
 
 import { Hero } from "@/components/hero";
 import { ResellerSection } from "@/components/reseller-section";
@@ -46,7 +47,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((f) => (
-            <Link key={f.key} href={`/products?family=${encodeURIComponent(f.key)}&lang=${lang}`} className="group block h-full">
+            <ProductCardLink key={f.key} href={`/products?family=${encodeURIComponent(f.key)}&lang=${lang}`} className="group block h-full">
               <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-center text-lg capitalize">{f.label}</CardTitle>
@@ -62,7 +63,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
                   </div>
                 </CardContent>
               </Card>
-            </Link>
+            </ProductCardLink>
           ))}
         </div>
       </div>
