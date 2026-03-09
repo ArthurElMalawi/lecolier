@@ -40,12 +40,12 @@ export function Hero({ dict, lang }: HeroProps) {
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Link href={`/?lang=${lang}#products`} onClick={handleScroll}>
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   {dict.cta}
                 </Button>
               </Link>
               <Link href={`/qui-sommes-nous?lang=${lang}`}>
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" className="hover:bg-blue-50 border-blue-200 text-blue-700 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
                   {dict.more}
                 </Button>
               </Link>

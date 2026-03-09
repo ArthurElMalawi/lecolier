@@ -20,46 +20,49 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-black/5 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link href={`/?lang=${lang}`} className="flex items-center gap-2">
-          <Image
-            src="/logo.png"
-            alt="L'écolier"
-            width={180}
-            height={60}
-            className="h-12 w-auto"
-            priority
-          />
-          <span className="hidden sm:block text-sm font-medium text-zinc-500 italic ml-2">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+        <Link href={`/?lang=${lang}`} className="flex items-center gap-3 group">
+          <div className="relative overflow-hidden rounded-lg transition-transform duration-300 group-hover:scale-105">
+            <Image
+              src="/logo.png"
+              alt="L'écolier"
+              width={180}
+              height={60}
+              className="h-14 w-auto object-contain"
+              priority
+            />
+          </div>
+          <span className="hidden md:block text-sm font-medium text-zinc-500 italic ml-2 border-l border-zinc-300 pl-3 py-1">
             {slogan}
           </span>
         </Link>
-        <div className="flex items-center gap-6">
-          <Link 
-            href={`/qui-sommes-nous?lang=${lang}`}
-            className="text-sm font-medium text-zinc-500 hover:text-black transition-colors"
-          >
-            {lang === 'en' ? 'Who we are' : 'Qui sommes-nous'}
-          </Link>
-          <div className="h-4 w-px bg-zinc-200 hidden sm:block"></div>
+        
+        <div className="flex items-center gap-6 sm:gap-8">
+          <nav className="hidden sm:flex items-center gap-6">
+            <Link 
+              href={`/qui-sommes-nous?lang=${lang}`}
+              className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full"
+            >
+              {lang === 'en' ? 'Who we are' : 'Qui sommes-nous'}
+            </Link>
+          </nav>
+
+          <div className="h-6 w-px bg-zinc-200 hidden sm:block"></div>
           
-          <div className="flex items-center gap-4">
-             <div className="flex gap-2 items-center">
-                <Link 
-                  href={createLangLink('fr')} 
-                  className={`text-sm transition-colors ${lang === 'fr' ? 'font-bold text-black' : 'font-medium text-zinc-500 hover:text-black'}`}
-                >
-                  FR
-                </Link>
-                <span className="text-zinc-300">|</span>
-                <Link 
-                  href={createLangLink('en')} 
-                  className={`text-sm transition-colors ${lang === 'en' ? 'font-bold text-black' : 'font-medium text-zinc-500 hover:text-black'}`}
-                >
-                  EN
-                </Link>
-             </div>
+          <div className="flex items-center bg-zinc-100 rounded-full p-1 border border-zinc-200">
+             <Link 
+               href={createLangLink('fr')} 
+               className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-300 ${lang === 'fr' ? 'bg-white text-blue-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}
+             >
+               FR
+             </Link>
+             <Link 
+               href={createLangLink('en')} 
+               className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-300 ${lang === 'en' ? 'bg-white text-blue-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}
+             >
+               EN
+             </Link>
           </div>
         </div>
       </div>
