@@ -6,6 +6,7 @@ import { familyLabel, familyKey } from "@/lib/catalog";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { getLang, getDictionary } from "@/lib/i18n";
 
+import { Hero } from "@/components/hero";
 import { ResellerSection } from "@/components/reseller-section";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
@@ -33,7 +34,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="mx-auto max-w-6xl px-6 py-10 space-y-8 w-full">
+      <Hero dict={dict.hero} lang={lang} />
+      
+      <div className="mx-auto max-w-6xl px-6 py-10 space-y-8 w-full scroll-mt-24" id="products">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 capitalize">
+            {dict.home.availableProducts}
+          </h2>
+          <div className="mt-2 h-1 w-20 bg-blue-600 mx-auto rounded-full"></div>
+        </div>
+
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((f) => (
             <Link key={f.key} href={`/products?family=${encodeURIComponent(f.key)}&lang=${lang}`} className="group block h-full">
@@ -47,7 +57,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
                       src={f.imageUrl} 
                       alt={f.label} 
                       fill 
-                      className="object-contain p-2 dark:invert transition-transform duration-300 group-hover:scale-105" 
+                      className="object-contain p-2 transition-transform duration-300 group-hover:scale-105" 
                     />
                   </div>
                 </CardContent>

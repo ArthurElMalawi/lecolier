@@ -3,6 +3,12 @@ export type Lang = "fr" | "en";
 
 export const dictionaries = {
   fr: {
+    hero: {
+      title: "L'excellence pour vos études",
+      subtitle: "Découvrez notre gamme complète de cahiers scolaires de haute qualité. Conçus pour accompagner la réussite de chaque élève, du primaire au lycée.",
+      cta: "Découvrir nos produits",
+      more: "En savoir plus",
+    },
     home: {
       availableProducts: "produits disponibles",
       discoverFormats: "Découvrez les formats disponibles pour cette famille.",
@@ -74,6 +80,12 @@ export const dictionaries = {
     },
   },
   en: {
+    hero: {
+      title: "Excellence for your studies",
+      subtitle: "Discover our complete range of high-quality school notebooks. Designed to support every student's success, from primary to high school.",
+      cta: "Discover our products",
+      more: "Learn more",
+    },
     home: {
       availableProducts: "products available",
       discoverFormats: "Discover available formats for this family.",

@@ -17,7 +17,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
   if (!parsed) {
     return (
       <div className="mx-auto max-w-4xl px-6 py-10">
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.products.invalidFamily}</p>
+        <p className="text-sm text-zinc-600">{dict.products.invalidFamily}</p>
         <Link href={`/?lang=${lang}`} className="text-blue-500 hover:underline mt-4 inline-block">{dict.products.backToHome}</Link>
       </div>
     );
@@ -68,11 +68,11 @@ export default async function Products({ searchParams }: { searchParams: Promise
                  <CardContent className="p-6 pt-2 flex justify-center items-center">
                    <div className="relative aspect-[3/4] w-2/3">
                      <Image 
-                       src={target.imageUrl} 
-                       alt={target.nameFr}
-                       fill
-                       className="object-contain p-2 dark:invert transition-transform duration-300 group-hover:scale-105"
-                     />
+                      src={target.imageUrl} 
+                      alt={target.nameFr}
+                      fill
+                      className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                    />
                    </div>
                  </CardContent>
                </Card>
