@@ -15,6 +15,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { Check } from "lucide-react";
+
 export const dynamic = 'force-dynamic';
 // Test temporaire
 console.log("ROUTE PRODUCT CHARGÉE");
@@ -46,21 +48,13 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     orderBy: { pages: "asc" },
   });
 
-  // Group siblings by ruling
-  const rulingMap = new Map<string, number[]>();
-  for (const p of siblings) {
-    const rLabel = rulingLabel(p.ruling, lang);
-    const pagesList = rulingMap.get(rLabel) || [];
-    if (!pagesList.includes(p.pages)) {
-      pagesList.push(p.pages);
-    }
-    rulingMap.set(rLabel, pagesList);
-  }
-
   // Get unique colors
   const colors = Array.from(new Set(siblings.map(p => p.color).filter(Boolean))) as string[];
+  
+  // Define standard page counts for columns as requested
+  const pageColumns = [32, 48, 96, 192, 288];
 
-  const productName = lang === "en" ? product.nameEn : product.nameFr;
+  const productName = `${familyLabel(product, lang)} ${formatLabel(product.format, lang)}`;
   const familyName = familyLabel(product, lang);
   const familyLink = `/products?family=${familyKey(product)}&lang=${lang}`;
   const formatName = formatLabel(product.format, lang);
@@ -81,6 +75,21 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
       'Assortit': 'bg-gradient-to-r from-blue-400 via-red-400 to-yellow-400',
     };
     return map[colorName] || 'bg-gray-200';
+  };
+
+  const getAvailableRulings = (color: string, pages: number) => {
+    const matches = siblings.filter(s => s.color === color && s.pages === pages);
+    if (matches.length === 0) return [];
+    
+    // Return all rulings for this color/page combination
+    // We filter based on the previous logic (32 -> LIGNE, others -> SEYES/QUADRI)
+    // but now we return the actual ruling labels instead of boolean
+    return matches
+      .filter(m => {
+        if (pages === 32) return m.ruling === 'LIGNE';
+        return m.ruling === 'SEYES' || m.ruling === 'QUADRI';
+      })
+      .map(m => rulingLabel(m.ruling, lang));
   };
 
   return (
@@ -111,59 +120,57 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
         <div className="space-y-8">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">{productName}</h1>
-            <div className="flex flex-wrap gap-3 items-center">
-               {colors.length > 0 && (
-                 <TooltipProvider>
-                   <div className="flex gap-1">
-                     {colors.map(c => (
-                       <Tooltip key={c}>
-                         <TooltipTrigger asChild>
-                           <div 
-                             className={`w-4 h-4 rounded-sm ${getColorStyle(c)} cursor-help`} 
-                           />
-                         </TooltipTrigger>
-                         <TooltipContent side="bottom" className="bg-white text-black dark:bg-zinc-950 dark:text-white">
-                          <p className="capitalize">{c}</p>
-                        </TooltipContent>
-                       </Tooltip>
-                     ))}
-                   </div>
-                 </TooltipProvider>
-               )}
-            </div>
           </div>
 
           <Card className="border-none shadow-none bg-zinc-50/50 dark:bg-zinc-900/50">
             <CardContent className="p-6">
-              <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-                <div>
-                   <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">{dict.product.ruling}</div>
-                   <div className="space-y-3">
-                     {Array.from(rulingMap.keys()).map((ruling) => (
-                       <div key={ruling} className="font-medium text-zinc-900 dark:text-zinc-100 h-8 flex items-center">
-                         {ruling}
-                       </div>
-                     ))}
-                   </div>
-                </div>
-
-                <div>
-                   <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">{dict.product.pages}</div>
-                   <div className="space-y-3">
-                     {Array.from(rulingMap.values()).map((pages, idx) => (
-                       <div key={idx} className="flex flex-wrap gap-2 h-8 items-center">
-                         {pages.map((page) => (
-                          <span 
-                            key={page} 
-                            className="inline-flex items-center justify-center min-w-[2rem] h-8 rounded bg-white text-zinc-600 text-sm border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700"
-                          >
-                            {page}
-                          </span>
-                        ))}
-                       </div>
-                     ))}
-                   </div>
-                </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr>
+                      <th className="p-2"></th>
+                      {pageColumns.map(page => (
+                        <th key={page} className="p-2 font-medium text-zinc-500">
+                          {page}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {colors.map(color => (
+                      <tr key={color}>
+                        <td className="p-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className={`w-6 h-6 rounded mx-auto ${getColorStyle(color)}`} />
+                              </TooltipTrigger>
+                              <TooltipContent side="right" className="bg-white text-black dark:bg-zinc-950 dark:text-white">
+                                <p className="capitalize">{color}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </td>
+                        {pageColumns.map(page => {
+                          const rulings = getAvailableRulings(color, page);
+                          const isAvailable = rulings.length > 0;
+                          return (
+                            <td key={page} className="p-1">
+                              <div className={`
+                                min-h-[2rem] px-1 rounded flex items-center justify-center border transition-colors text-[10px] font-medium leading-none text-center py-1
+                                ${isAvailable 
+                                  ? 'bg-green-100 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
+                                  : 'bg-zinc-50 border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-700'}
+                              `}>
+                                {rulings.join(", ")}
+                              </div>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>

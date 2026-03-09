@@ -1,5 +1,3 @@
-// Prisma schema for Postgres
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -7,6 +5,38 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  nameFr      String
+  nameEn      String
+  slug        String    @unique
+  grammageGsm Int
+  coverType   CoverType
+  format      Format
+  ruling      Ruling?
+  pages       Int
+  color       String?
+  imageUrl    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Reseller {
+  id        String   @id @default(uuid())
+  name      String
+  address   String
+  city      String
+  country   String
+  phone     String?
+  fax       String?
+  email     String?
+  website   String?
+  lat       Float
+  lng       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum CoverType {
@@ -26,20 +56,4 @@ enum Ruling {
   LIGNE
   QUADRI
   BLANC
-}
-
-model Product {
-  id            Int       @id @default(autoincrement())
-  nameFr        String
-  nameEn        String
-  slug          String    @unique
-  grammageGsm   Int
-  coverType     CoverType
-  format        Format
-  ruling        Ruling?
-  pages         Int
-  color         String?   // Added color field
-  imageUrl      String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
 }

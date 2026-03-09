@@ -231,8 +231,70 @@ async function main() {
   console.log('Seed completed.');
 }
 
+async function seedResellers() {
+  console.log('Seeding resellers...');
+  await prisma.reseller.deleteMany({});
+
+  const resellers = [
+    {
+      name: "PAPEX - PAPETERIE EXPRESS",
+      address: "56, Rue Abdou Karim BOURGI",
+      city: "Dakar",
+      country: "Sénégal",
+      phone: "+221 33 849 63 63",
+      fax: "+221 33 821 21 02",
+      email: "contact@papex.sn",
+      lat: 14.6715,
+      lng: -17.4370,
+    },
+    {
+      name: "PAPICI - TOP BURO",
+      address: "1 Bd Valéry Giscard d'Estaing",
+      city: "Abidjan",
+      country: "Côte d'Ivoire",
+      phone: "+225 27 21 28 20 78",
+      lat: 5.3000,
+      lng: -3.9960,
+    },
+    {
+      name: "GIPA",
+      address: "Rue Ange M'ba",
+      city: "Libreville",
+      country: "Gabon",
+      phone: "+241 11 76 22 91",
+      lat: 0.3920,
+      lng: 9.4520,
+    },
+    {
+      name: "Bureau Vallée Sainte Marie",
+      address: "Gillot Est - Retail Park",
+      city: "Sainte-Marie (La Réunion)",
+      country: "France",
+      lat: -20.8930,
+      lng: 55.5250,
+    },
+    {
+      name: "Hachette Pacifique",
+      address: "FC2C+7XJ, Vallée de Tipaerui",
+      city: "Papeete",
+      country: "Polynésie française",
+      phone: "+689 40 46 17 00",
+      lat: -17.5410,
+      lng: -149.5760,
+    },
+  ];
+
+  for (const r of resellers) {
+    await prisma.reseller.create({
+      data: r,
+    });
+  }
+  console.log(`Seeded ${resellers.length} resellers.`);
+}
+
 main()
   .then(async () => {
+    await seedResellers();
     await prisma.$disconnect()
   })
   .catch(async (e) => {

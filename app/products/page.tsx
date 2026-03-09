@@ -28,7 +28,10 @@ export default async function Products({ searchParams }: { searchParams: Promise
     orderBy: { pages: "asc" },
   });
 
-  const formats = Array.from(new Set(products.map((p) => p.format)));
+  const formats = Array.from(new Set(products.map((p) => p.format))).sort((a, b) => {
+    const order = ["F17x22", "F21x29_7", "F24x32"];
+    return order.indexOf(a) - order.indexOf(b);
+  });
 
   // Pour chaque format, on choisit le produit avec le moins de pages comme cible par défaut
   const formatTargets = Object.fromEntries(

@@ -10,6 +10,8 @@ export function Header() {
   const pathname = usePathname();
   const lang = searchParams.get("lang") || "fr";
 
+  const slogan = lang === 'en' ? 'Draw your path' : 'Trace ton chemin';
+
   // Helper to create links that preserve other params
   const createLangLink = (targetLang: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -29,10 +31,21 @@ export function Header() {
             className="h-12 w-auto"
             priority
           />
+          <span className="hidden sm:block text-sm font-medium text-zinc-500 dark:text-zinc-400 italic ml-2">
+            {slogan}
+          </span>
         </Link>
-        <div className="flex gap-4">
+        <div className="flex items-center gap-6">
           <Link 
-            href={createLangLink('fr')} 
+            href={`/qui-sommes-nous?lang=${lang}`}
+            className="text-sm font-medium text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors"
+          >
+            {lang === 'en' ? 'Who we are' : 'Qui sommes-nous'}
+          </Link>
+          <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-700 hidden sm:block"></div>
+          <div className="flex gap-4">
+            <Link 
+              href={createLangLink('fr')} 
             className={`text-sm transition-colors ${lang === 'fr' ? 'font-bold text-black dark:text-white' : 'font-medium text-zinc-500 hover:text-black dark:hover:text-white'}`}
           >
             FR
@@ -46,6 +59,7 @@ export function Header() {
           </Link>
         </div>
       </div>
+    </div>
     </header>
   );
 }

@@ -384,7 +384,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Product: 'Product'
+  Product: 'Product',
+  Reseller: 'Reseller'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,7 +401,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "product"
+    modelProps: "product" | "reseller"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +479,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Reseller: {
+      payload: Prisma.$ResellerPayload<ExtArgs>
+      fields: Prisma.ResellerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ResellerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ResellerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>
+        }
+        findFirst: {
+          args: Prisma.ResellerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ResellerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>
+        }
+        findMany: {
+          args: Prisma.ResellerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>[]
+        }
+        create: {
+          args: Prisma.ResellerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>
+        }
+        createMany: {
+          args: Prisma.ResellerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ResellerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>[]
+        }
+        delete: {
+          args: Prisma.ResellerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>
+        }
+        update: {
+          args: Prisma.ResellerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>
+        }
+        deleteMany: {
+          args: Prisma.ResellerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ResellerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ResellerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>[]
+        }
+        upsert: {
+          args: Prisma.ResellerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResellerPayload>
+        }
+        aggregate: {
+          args: Prisma.ResellerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReseller>
+        }
+        groupBy: {
+          args: Prisma.ResellerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResellerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ResellerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResellerCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -534,6 +609,25 @@ export const ProductScalarFieldEnum = {
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const ResellerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  address: 'address',
+  city: 'city',
+  country: 'country',
+  phone: 'phone',
+  fax: 'fax',
+  email: 'email',
+  website: 'website',
+  lat: 'lat',
+  lng: 'lng',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ResellerScalarFieldEnum = (typeof ResellerScalarFieldEnum)[keyof typeof ResellerScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -759,6 +853,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   product?: Prisma.ProductOmit
+  reseller?: Prisma.ResellerOmit
 }
 
 /* Types for Logging */
