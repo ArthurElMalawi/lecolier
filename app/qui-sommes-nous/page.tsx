@@ -58,7 +58,7 @@ export default async function QuiSommesNousPage({ searchParams }: { searchParams
       </section>
 
       {/* 4. Nos Valeurs */}
-      <section className="py-16 px-6 max-w-6xl mx-auto">
+      <section className="py-16 px-6 max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center text-blue-900">{t.valuesTitle}</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="bg-white hover:shadow-lg transition-shadow border-blue-100">

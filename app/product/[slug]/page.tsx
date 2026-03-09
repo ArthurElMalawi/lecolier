@@ -93,7 +93,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
+    <div className="mx-auto max-w-7xl px-6 py-10 space-y-8">
       {/* Top Bar: Breadcrumb + Lang Switcher */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <Breadcrumb

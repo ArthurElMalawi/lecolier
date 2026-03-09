@@ -45,7 +45,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
   const family = familyLabel(products[0] ?? { grammageGsm: parsed.grammage, coverType: parsed.cover } as any, lang);
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
+    <div className="mx-auto max-w-7xl px-6 py-10 space-y-8">
       {/* Top Bar: Breadcrumb + Lang Switcher */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <Breadcrumb

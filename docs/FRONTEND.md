@@ -52,6 +52,7 @@ Le projet utilise le **Next.js App Router**. L'interface est construite avec Rea
 - **Tailwind CSS 4 :** Configuration via CSS direct ou `postcss.config.mjs`.
 - **Thème :** Utilisation de variables CSS pour les couleurs (background, foreground, etc.) définies dans `app/globals.css`.
 - **Responsive :** Design mobile-first avec breakpoints standard Tailwind (`sm`, `lg`, etc.).
+- **Container :** Standardisation de la largeur maximale (`max-w-7xl`) pour l'ensemble des sections (Header, Hero, Contenu principal, Footer).
 - **Scroll Smooth :** Activé globalement dans `globals.css` pour une navigation fluide.
 
 ## Assets

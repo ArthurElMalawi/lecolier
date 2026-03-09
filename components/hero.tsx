@@ -27,7 +27,7 @@ export function Hero({ dict, lang }: HeroProps) {
 
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-b from-blue-50 to-white pt-16 pb-12 sm:pb-24 lg:pb-32">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2 items-center">
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
