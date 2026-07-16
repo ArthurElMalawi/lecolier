@@ -117,7 +117,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
         </div>
 
         {/* Right Column: Product Info */}
-        <div className="space-y-8">
+        <div className="min-w-0 space-y-8">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">{productName}</h1>
             <p className="text-sm text-zinc-500">

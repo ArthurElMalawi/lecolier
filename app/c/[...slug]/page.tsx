@@ -114,7 +114,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
           />
 
           {/* Colonne droite : titre + sections */}
-          <div className="space-y-8">
+          <div className="min-w-0 space-y-8">
             <div>
               <h1 className="mb-2 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">{nodeLabel(node, lang)}</h1>
               {desc && <p className="text-sm text-zinc-500">{desc}</p>}
