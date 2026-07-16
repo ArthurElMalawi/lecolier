@@ -3,7 +3,7 @@ import Link from "next/link";
 import { formatLabel, rulingLabel, familyKey, familyLabel } from "@/lib/catalog";
 import { findFamilyTrail, nodeLabel, nodeHref } from "@/lib/navigation";
 import { refFor, availableFor } from "@/lib/product-refs";
-import type { CoverType, Format, Ruling } from "@/generated/prisma/client";
+import type { CoverType, Format, Ruling } from "@/lib/catalog-types";
 import { RefTable } from "@/components/ref-table";
 import type { RefTableData } from "@/lib/classement-refs";
 import { Breadcrumb } from "@/components/ui/breadcrumb";

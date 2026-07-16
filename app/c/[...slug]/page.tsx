@@ -6,7 +6,7 @@ import { Clock, ArrowLeft } from "lucide-react";
 
 import { getLang, type Lang } from "@/lib/i18n";
 import { formatLabel, parseFamilyKey } from "@/lib/catalog";
-import type { Format } from "@/generated/prisma/client";
+import type { Format } from "@/lib/catalog-types";
 import { availableFor } from "@/lib/product-refs";
 import { findByPath, nodeLabel, nodeDesc, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon, getAccent } from "@/lib/nav-icons";

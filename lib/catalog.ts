@@ -1,5 +1,5 @@
 
-import { CoverType, Format, Ruling, Product } from "@/generated/prisma/client";
+import type { CoverType, Format, Ruling, Product } from "./catalog-types";
 import { Lang, getDictionary } from "./i18n";
 
 export function coverLabel(cover: CoverType, lang: Lang = "fr"): string {
