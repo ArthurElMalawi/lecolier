@@ -40,7 +40,7 @@ export default async function QuiSommesNousPage({ searchParams }: { searchParams
           <h2 className="text-3xl font-bold text-blue-900">{t.whoTitle}</h2>
           <div className="space-y-6 text-slate-700 text-lg leading-relaxed">
             <p>
-              <span className="font-bold text-blue-700">L'écolier</span> {t.whoIntro.replace("L'écolier ", "")}
+              <span className="font-bold text-blue-700">L&apos;écolier</span> {t.whoIntro.replace("L'écolier ", "")}
             </p>
             <ul className="space-y-4 pl-4 border-l-4 border-blue-200 ml-2">
               <li className="pl-4">
@@ -102,7 +102,7 @@ export default async function QuiSommesNousPage({ searchParams }: { searchParams
       {/* 5. Le Mot du Fondateur */}
       <section className="py-20 px-6 bg-blue-50 text-center">
         <div className="max-w-3xl mx-auto relative">
-          <div className="absolute top-0 left-0 text-6xl text-blue-200 font-serif opacity-50 transform -translate-x-8 -translate-y-8">"</div>
+          <div className="absolute top-0 left-0 text-6xl text-blue-200 font-serif opacity-50 transform -translate-x-8 -translate-y-8">&ldquo;</div>
           <h2 className="text-sm font-bold mb-6 text-blue-900 uppercase tracking-wide">{t.founderTitle}</h2>
           <blockquote className="text-xl italic text-slate-700 font-medium leading-relaxed relative z-10">
             {t.founderText}

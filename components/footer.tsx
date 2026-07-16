@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 
 export function Footer() {
   return (
@@ -8,9 +7,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {/* Colonne 1: Logo & Description */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-zinc-900">L'écolier</h3>
+            <h3 className="text-lg font-bold text-zinc-900">L&apos;écolier</h3>
             <p className="text-sm text-zinc-500 max-w-xs leading-relaxed">
-              La qualité au service de l'éducation. Des cahiers conçus pour durer et accompagner la réussite de chaque élève.
+              La qualité au service de l&apos;éducation. Des cahiers conçus pour durer et accompagner la réussite de chaque élève.
             </p>
           </div>
 
@@ -63,7 +62,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-zinc-100 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-zinc-400">
-            &copy; {new Date().getFullYear()} L'écolier. Tous droits réservés.
+            &copy; {new Date().getFullYear()} L&apos;écolier. Tous droits réservés.
           </p>
           <div className="flex gap-4">
             {/* LIENS LÉGAUX MASQUÉS TEMPORAIREMENT

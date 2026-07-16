@@ -1,14 +1,16 @@
 
 import 'dotenv/config'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient, CoverType, Format, Ruling, Prisma } from '../generated/prisma/client'
+import { PrismaClient, CoverType, Format, Ruling } from '../generated/prisma/client'
+
+type RawEntry = { g: number; f: string; p: number; c: string; t?: string }
 
 const adapter = new PrismaPg({ connectionString: `${process.env.DATABASE_URL}` })
 const prisma = new PrismaClient({ adapter })
 
 // Raw data parsing helper
-function parseRawData() {
-  const raw = [
+function parseRawData(): RawEntry[] {
+  const raw: RawEntry[] = [
     // 90g PP
     { g: 90, f: '17x22', p: 48, c: 'Orange' }, { g: 90, f: '17x22', p: 48, c: 'Gris' }, { g: 90, f: '17x22', p: 48, c: 'Jaune' },
     { g: 90, f: '17x22', p: 48, c: 'Rose' }, { g: 90, f: '17x22', p: 48, c: 'Violet' }, { g: 90, f: '17x22', p: 48, c: 'Bleu' },
@@ -144,7 +146,7 @@ function parseRawData() {
 }
 
 // Helper to clean and format
-function normalize(raw: any) {
+function normalize(raw: RawEntry) {
   let format: Format;
   const f = raw.f.replace(/\s/g, '').replace(',', '_').toLowerCase();
   if (f.includes('17x22')) format = Format.F17x22;
@@ -166,28 +168,8 @@ function normalize(raw: any) {
   let imagePrefix = 'polypro';
   if (cover === CoverType.CARTONNE) imagePrefix = 'cartonne';
 
-  // Normalize color for filename (e.g. "Sans Couv" -> "sans_couv", "Bleu" -> "bleu")
-  const colorSuffix = raw.c.toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove accents (e.g. é -> e) if any, though dataset seems clean
-    .replace(/\s/g, '_'); 
-
-  // Check if specific image exists, otherwise fallback to assortit
-  // Note: In a real environment we might check FS, but here we can just default to logic or assume assortit if we want a safe default.
-  // The user requested to use "assortit" everywhere? Or just as a fallback?
-  // "peut on mettre l'image asorti partout" -> Sounds like they want the assortit image for ALL products, or maybe just as a safe fallback?
-  // Let's assume they want it as a fallback if the specific color image isn't found, OR if they really meant "partout" literally.
-  // Re-reading: "peut on mettre l'image asorti partout (c'est une image ou il y a des cahiers de plusieurs couleurs en éventail)"
-  // It sounds like they might want this image to represent the product line if specific photos aren't available.
-  // However, we just renamed specific images.
-  // Let's implement a check: we try to assign the specific color, but we can't easily check file existence in the seed script without 'fs'.
-  // actually we can use 'fs'.
-  
-  const fs = require('fs');
-  const path = require('path');
-  
-  // Force "assortit" image for EVERY product as requested by user
-  // "met limage assoortit partout comme si les autres images n'existaient pas"
-  let imageUrl = `/products/${imagePrefix}_assortit.png`;
+  // Image « assortit » (éventail de couleurs) pour chaque produit, en attendant les visuels par couleur.
+  const imageUrl = `/products/${imagePrefix}_assortit.png`;
 
   return {
     nameFr: `Cahier ${raw.g}g ${cover === 'POLYPRO_PIQUE' ? 'Polypro piqué' : 'Cartonné'} ${raw.f} ${raw.p}p ${raw.c}`,
@@ -223,7 +205,7 @@ async function main() {
         update: {},
         create: p,
       });
-    } catch (e) {
+    } catch {
       console.warn(`Skipping duplicate or error for ${p.slug}`);
     }
   }

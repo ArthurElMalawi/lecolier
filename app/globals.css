@@ -24,12 +24,18 @@
 }
 */
 
-html {
-  scroll-behavior: smooth;
-}
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/*
+ * Header sticky (h-20 = 5rem) : lors d'une navigation, Next.js aligne le haut du
+ * nouveau segment de page à y=0 via scrollIntoView. Sans marge, le contenu (fil
+ * d'ariane…) passe sous le header. On réserve donc sa hauteur sur la cible du scroll.
+ */
+main > * {
+  scroll-margin-top: 5rem;
 }
