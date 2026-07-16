@@ -4,6 +4,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams, usePathname } from "next/navigation";
+import { ProductNav } from "./product-nav";
 
 export function Header() {
   const searchParams = useSearchParams();
@@ -38,19 +39,29 @@ export function Header() {
           </span>
         </Link>
         
-        <div className="flex items-center gap-6 sm:gap-8">
-          <nav className="hidden sm:flex items-center gap-6">
-            <Link 
+        <div className="flex items-center gap-4 lg:gap-6">
+          <nav className="hidden lg:flex items-center gap-6">
+            <Link
+              href={`/?lang=${lang}`}
+              className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors"
+            >
+              {lang === 'en' ? 'Home' : 'Accueil'}
+            </Link>
+            <ProductNav />
+            <Link
               href={`/qui-sommes-nous?lang=${lang}`}
-              className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full"
+              className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors"
             >
               {lang === 'en' ? 'Who we are' : 'Qui sommes-nous'}
             </Link>
           </nav>
 
-          <div className="h-6 w-px bg-zinc-200 hidden sm:block"></div>
-          
-          <div className="flex items-center bg-zinc-100 rounded-full p-1 border border-zinc-200">
+          <div className="h-6 w-px bg-zinc-200 hidden lg:block"></div>
+
+          {/* Menu mobile / tablette (hamburger) */}
+          <ProductNav mobileOnly />
+
+          <div className="hidden lg:flex items-center bg-zinc-100 rounded-full p-1 border border-zinc-200">
              <Link 
                href={createLangLink('fr')} 
                className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-300 ${lang === 'fr' ? 'bg-white text-blue-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}

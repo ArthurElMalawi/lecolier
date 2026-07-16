@@ -18,7 +18,7 @@ export default function Confidentialite() {
               Nous pouvons collecter les informations suivantes lors de votre navigation ou de votre interaction avec notre site :
             </p>
             <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>Données d'identification (Nom, prénom, email, téléphone)</li>
+              <li>Données d&apos;identification (Nom, prénom, email, téléphone)</li>
               <li>Données de connexion (Adresse IP, navigateur utilisé)</li>
               <li>Données de localisation (Pays, ville)</li>
             </ul>
@@ -40,7 +40,7 @@ export default function Confidentialite() {
           <section>
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900 mb-4">3. Cookies</h2>
             <p>
-              Ce site utilise des cookies pour améliorer l'expérience utilisateur. 
+              Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur.
               Vous pouvez configurer votre navigateur pour refuser les cookies, mais cela pourrait limiter certaines fonctionnalités du site.
             </p>
           </section>
@@ -51,14 +51,14 @@ export default function Confidentialite() {
               Conformément à la réglementation applicable, vous disposez des droits suivants concernant vos données personnelles :
             </p>
             <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>Droit d'accès et de rectification.</li>
-              <li>Droit à l'effacement (« droit à l'oubli »).</li>
+              <li>Droit d&apos;accès et de rectification.</li>
+              <li>Droit à l&apos;effacement (« droit à l&apos;oubli »).</li>
               <li>Droit à la limitation du traitement.</li>
-              <li>Droit d'opposition.</li>
+              <li>Droit d&apos;opposition.</li>
               <li>Droit à la portabilité des données.</li>
             </ul>
             <p className="mt-4">
-              Pour exercer ces droits, vous pouvez nous contacter à l'adresse suivante : <strong>[Votre email de contact]</strong>
+              Pour exercer ces droits, vous pouvez nous contacter à l&apos;adresse suivante : <strong>[Votre email de contact]</strong>
             </p>
           </section>
 

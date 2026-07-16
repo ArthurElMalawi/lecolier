@@ -2,9 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { formatLabel, rulingLabel, coverLabel, familyKey, familyLabel } from "@/lib/catalog";
+import { formatLabel, rulingLabel, familyKey, familyLabel } from "@/lib/catalog";
+import { findFamilyTrail, nodeLabel, nodeHref } from "@/lib/navigation";
+import { refFor } from "@/lib/product-refs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { getLang, getDictionary } from "@/lib/i18n";
 
@@ -15,11 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { Check } from "lucide-react";
-
 export const dynamic = 'force-dynamic';
-// Test temporaire
-console.log("ROUTE PRODUCT CHARGÉE");
 
 export default async function ProductPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const { slug } = await params;
@@ -48,16 +45,23 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     orderBy: { pages: "asc" },
   });
 
-  // Get unique colors
-  const colors = Array.from(new Set(siblings.map(p => p.color).filter(Boolean))) as string[];
-  
-  // Define standard page counts for columns as requested
-  const pageColumns = [32, 48, 96, 192, 288];
+  // Couleurs et nombres de pages candidats
+  const allColors = Array.from(new Set(siblings.map(p => p.color).filter(Boolean))) as string[];
+  const allPages = [32, 48, 96, 192, 288];
 
-  const productName = `${familyLabel(product, lang)} ${formatLabel(product.format, lang)}`;
-  const familyName = familyLabel(product, lang);
-  const familyLink = `/products?family=${familyKey(product)}&lang=${lang}`;
+  const rulingName = rulingLabel(product.ruling, lang);
+  const productName = `${familyLabel(product, lang)} ${formatLabel(product.format, lang)}${rulingName && rulingName !== "—" ? ` — ${rulingName}` : ""}`;
   const formatName = formatLabel(product.format, lang);
+
+  // Fil d'ariane reconstruit depuis la nouvelle arborescence (/c/...)
+  const familyTrail = findFamilyTrail(familyKey(product)) ?? [];
+  const crumbs = [
+    ...familyTrail.map((n, i) => ({
+      label: nodeLabel(n, lang),
+      href: nodeHref(familyTrail.slice(0, i + 1).map((t) => t.slug), n, lang),
+    })),
+    { label: formatName },
+  ];
 
   // Map color names to CSS colors
   const getColorStyle = (colorName: string) => {
@@ -77,31 +81,27 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     return map[colorName] || 'bg-gray-200';
   };
 
-  const getAvailableRulings = (color: string, pages: number) => {
-    const matches = siblings.filter(s => s.color === color && s.pages === pages);
-    if (matches.length === 0) return [];
-    
-    // Return all rulings for this color/page combination
-    // We filter based on the previous logic (32 -> LIGNE, others -> SEYES/QUADRI)
-    // but now we return the actual ruling labels instead of boolean
-    return matches
-      .filter(m => {
-        if (pages === 32) return m.ruling === 'LIGNE';
-        return m.ruling === 'SEYES' || m.ruling === 'QUADRI';
-      })
-      .map(m => rulingLabel(m.ruling, lang));
-  };
+  // Référence produit (SKU) pour une couleur + nb de pages donnés
+  const coverKey = product.coverType === "CARTONNE" ? "CARTONNE" : "PP";
+  const refOf = (color: string, pages: number) =>
+    refFor({
+      grammageGsm: product.grammageGsm,
+      cover: coverKey,
+      format: product.format,
+      ruling: product.ruling,
+      color,
+      pages,
+    });
+
+  // On masque les colonnes (pages) et lignes (couleurs) entièrement vides
+  const pageColumns = allPages.filter((page) => allColors.some((c) => refOf(c, page)));
+  const colors = allColors.filter((c) => pageColumns.some((page) => refOf(c, page)));
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-10 space-y-8">
       {/* Top Bar: Breadcrumb + Lang Switcher */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <Breadcrumb
-          items={[
-            { label: familyName, href: familyLink },
-            { label: formatName },
-          ]}
-        />
+        <Breadcrumb items={crumbs} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -119,7 +119,10 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
         {/* Right Column: Product Info */}
         <div className="space-y-8">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">{productName}</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">{productName}</h1>
+            <p className="text-sm text-zinc-500">
+              {lang === "en" ? "Product references (SKU) by colour and page count" : "Références produit (SKU) par couleur et nombre de pages"}
+            </p>
           </div>
 
           <Card className="border-none shadow-none bg-zinc-50/50 dark:bg-zinc-900/50">
@@ -127,6 +130,17 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
+                    <tr>
+                      <th className="p-2 text-center text-xs font-medium uppercase tracking-wide text-zinc-400">
+                        {lang === "en" ? "Colour" : "Couleur"}
+                      </th>
+                      <th
+                        colSpan={pageColumns.length}
+                        className="p-2 text-center text-xs font-medium uppercase tracking-wide text-zinc-400"
+                      >
+                        {lang === "en" ? "Number of pages" : "Nombre de pages"}
+                      </th>
+                    </tr>
                     <tr>
                       <th className="p-2"></th>
                       {pageColumns.map(page => (
@@ -152,17 +166,16 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
                           </TooltipProvider>
                         </td>
                         {pageColumns.map(page => {
-                          const rulings = getAvailableRulings(color, page);
-                          const isAvailable = rulings.length > 0;
+                          const ref = refOf(color, page);
                           return (
                             <td key={page} className="p-1">
                               <div className={`
-                                min-h-[2rem] px-1 rounded flex items-center justify-center border transition-colors text-[10px] font-medium leading-none text-center py-1
-                                ${isAvailable 
-                                  ? 'bg-green-100 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
-                                  : 'bg-zinc-50 border-zinc-200 dark:bg-zinc-800/50 dark:border-zinc-700'}
+                                min-h-[2rem] px-1 rounded flex items-center justify-center border transition-colors text-[11px] font-semibold tabular-nums leading-none text-center py-1
+                                ${ref
+                                  ? 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300'
+                                  : 'bg-zinc-50 border-zinc-200 text-zinc-300 dark:bg-zinc-800/50 dark:border-zinc-700'}
                               `}>
-                                {rulings.join(", ")}
+                                {ref ?? '—'}
                               </div>
                             </td>
                           );

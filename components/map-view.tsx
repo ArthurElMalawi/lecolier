@@ -6,7 +6,7 @@ import L from "leaflet";
 import { useEffect } from "react";
 
 // Fix for default marker icon
-// @ts-ignore
+// @ts-expect-error - _getIconUrl est une propriété interne non typée de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -43,7 +43,7 @@ function ChangeView({ center, zoom }: { center: [number, number]; zoom: number }
   return null;
 }
 
-export default function MapView({ center, zoom, resellers, selectedReseller, onSelectReseller }: MapViewProps) {
+export default function MapView({ center, zoom, resellers, onSelectReseller }: MapViewProps) {
   return (
     <MapContainer center={center} zoom={zoom} style={{ height: "100%", width: "100%" }}>
       <ChangeView center={center} zoom={zoom} />
