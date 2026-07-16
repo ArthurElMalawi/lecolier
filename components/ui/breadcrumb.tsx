@@ -15,19 +15,19 @@ export interface BreadcrumbProps {
 
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className={cn("flex items-center space-x-2 text-sm text-zinc-500", className)}>
-      <Link href="/" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+    <nav aria-label="Breadcrumb" className={cn("flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-500", className)}>
+      <Link href="/" className="shrink-0 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
         <Home className="h-4 w-4" />
       </Link>
       {items.map((item, index) => (
-        <div key={index} className="flex items-center space-x-2">
-          <ChevronRight className="h-4 w-4 text-zinc-400" />
+        <div key={index} className="flex items-center gap-x-2">
+          <ChevronRight className="h-4 w-4 shrink-0 text-zinc-400" />
           {item.href ? (
-            <Link href={item.href} className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+            <Link href={item.href} className="break-words hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
               {item.label}
             </Link>
           ) : (
-            <span className="font-medium text-zinc-900 dark:text-zinc-100">{item.label}</span>
+            <span className="break-words font-medium text-zinc-900 dark:text-zinc-100">{item.label}</span>
           )}
         </div>
       ))}
