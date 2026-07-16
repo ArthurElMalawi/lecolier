@@ -316,7 +316,57 @@ const REFS: Record<string, string> = {
   "90|PP|F24x32|STD|SEYES|Violet|96": "44594",
   "90|PP|F24x32|TP|SEYES|Incolore|192": "47853",
   "90|PP|F24x32|TP|SEYES|Incolore|96": "44612",
+
+  // Ajouts manuels d'après les visuels du catalogue (couleur Assorti 70g absente du xlsx).
+  "70|PP|F17x22|STD|SEYES|Assortit|48": "44620",
+  "70|PP|F17x22|STD|SEYES|Assortit|96": "44626",
+  "70|PP|F17x22|STD|SEYES|Assortit|192": "44632",
+  "70|PP|F17x22|STD|SEYES|Assortit|288": "48169",
+  "70|PP|F21x29_7|STD|SEYES|Assortit|48": "44638",
+  "70|PP|F21x29_7|STD|SEYES|Assortit|96": "44644",
+  "70|PP|F21x29_7|STD|SEYES|Assortit|192": "44650",
+  "70|PP|F21x29_7|STD|SEYES|Assortit|288": "48187",
+  "70|PP|F24x32|STD|SEYES|Assortit|48": "48223",
+  "70|PP|F24x32|STD|SEYES|Assortit|96": "48241",
+  "70|PP|F24x32|STD|SEYES|Assortit|192": "48259",
+  "70|PP|F24x32|STD|SEYES|Assortit|288": "48205",
+  "70|PP|F24x32|STD|QUADRI|Assortit|96": "48277",
+  "70|PP|F24x32|STD|QUADRI|Assortit|192": "48295",
 };
+
+/** Ordre canonique d'affichage des couleurs (aligne l'ordre des lignes sur les visuels). */
+export const COLOR_ORDER = [
+  "Orange", "Gris", "Jaune", "Rose", "Violet", "Bleu", "Rouge", "Vert", "Noir", "Incolore", "Assortit",
+];
+
+/**
+ * Couleurs et nombres de pages disponibles pour une famille (grammage/cover/format),
+ * dérivés directement des références (images) — indépendant de toute base.
+ */
+export function availableFor(opts: {
+  grammageGsm: number;
+  cover: "PP" | "CARTONNE";
+  format: string;
+  variant?: "STD" | "TP" | "MAT" | "DESSIN";
+  ruling?: string;
+}): { colors: string[]; pages: number[] } {
+  const grammage = opts.grammageGsm === 58 ? 56 : opts.grammageGsm;
+  const variant = opts.variant ?? "STD";
+  const ruling = opts.ruling ?? "SEYES";
+  const prefix = [grammage, opts.cover, opts.format, variant, ruling, ""].join("|");
+  const colors = new Set<string>();
+  const pages = new Set<number>();
+  for (const key of Object.keys(REFS)) {
+    if (!key.startsWith(prefix)) continue;
+    const parts = key.split("|");
+    colors.add(parts[5]);
+    pages.add(Number(parts[6]));
+  }
+  const orderedColors = COLOR_ORDER.filter((c) => colors.has(c));
+  // Couleurs éventuelles hors liste canonique, ajoutées à la fin.
+  for (const c of colors) if (!orderedColors.includes(c)) orderedColors.push(c);
+  return { colors: orderedColors, pages: [...pages].sort((a, b) => a - b) };
+}
 
 /** Réf. SKU pour un produit, ou null si inconnue. */
 export function refFor(opts: {

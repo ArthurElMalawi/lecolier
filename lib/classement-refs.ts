@@ -21,6 +21,91 @@ const PAGES: Bi[] = [
 const P = (n: number): Bi => ({ fr: `${n} pages`, en: `${n} pages` });
 
 export const classementSheets: Record<string, ProductSheet> = {
+  // Clé par chemin complet (le slug « travaux-pratiques » se répète selon la gamme).
+  "nos-cahiers/gamme-polypro-premium/travaux-pratiques": [
+    {
+      section: { fr: "Garantie Véritable Papier Dessin — 90 g/m²", en: "Genuine Drawing Paper — 90 gsm" },
+      table: {
+        columns: [P(60), P(96), P(192)],
+        rows: [
+          { label: { fr: "17×22", en: "17×22" }, cells: ["44610", "47847", "48134"] },
+          { label: { fr: "17×22 · Rose", en: "17×22 · Pink" }, cells: [null, "47877", null] },
+          { label: { fr: "21×29,7", en: "21×29.7" }, cells: [null, "44611", "47850"] },
+          { label: { fr: "24×32", en: "24×32" }, cells: [null, "44612", "47853"] },
+        ],
+      },
+    },
+  ],
+  "nos-cahiers/gamme-polypro-premium/dessin-musique-chant": [
+    {
+      section: { fr: "Garantie Véritable Papier Dessin — 90 g/m²", en: "Genuine Drawing Paper — 90 gsm" },
+      table: {
+        columns: [P(32), P(96)],
+        rows: [
+          { label: { fr: "17×22", en: "17×22" }, cells: ["44614", null] },
+          { label: { fr: "24×32", en: "24×32" }, cells: [null, "47871"] },
+        ],
+      },
+    },
+  ],
+  "nos-cahiers/gamme-polypro-premium/maternelle-petite-ecole": [
+    {
+      section: { fr: "Double Lignes 3 mm — 90 g/m²", en: "Double Lines 3 mm — 90 gsm" },
+      table: {
+        columns: [P(32)],
+        rows: [{ label: { fr: "17×22", en: "17×22" }, cells: ["44613"] }],
+      },
+    },
+  ],
+  "nos-cahiers/gamme-polypro-classique/travaux-pratiques": [
+    {
+      section: { fr: "Garantie Véritable Papier à Dessin — 70 g/m²", en: "Genuine Drawing Paper — 70 gsm" },
+      table: {
+        columns: [P(96)],
+        rows: [
+          { label: { fr: "17×22", en: "17×22" }, cells: ["48308"] },
+          { label: { fr: "24×32", en: "24×32" }, cells: ["48309"] },
+        ],
+      },
+    },
+  ],
+  "nos-cahiers/gamme-polypro-classique/dessin-musique-chant": [
+    {
+      section: { fr: "Dessin — Papier à Dessin 70 g/m²", en: "Drawing — 70 gsm drawing paper" },
+      table: {
+        columns: [
+          { fr: "17×22 · 32 p.", en: "17×22 · 32 p." },
+          { fr: "24×32 · 96 p.", en: "24×32 · 96 p." },
+        ],
+        rows: [
+          { label: { fr: "Jaune", en: "Yellow" }, cells: ["48315", "48320"] },
+          { label: { fr: "Bleu", en: "Blue" }, cells: ["48316", "48321"] },
+          { label: { fr: "Rouge", en: "Red" }, cells: ["48317", "48322"] },
+          { label: { fr: "Vert", en: "Green" }, cells: ["48318", "48323"] },
+          { label: { fr: "Incolore", en: "Clear" }, cells: ["48319", "48324"] },
+        ],
+      },
+    },
+    {
+      section: { fr: "Musique et Chant — 70 g/m²", en: "Music — 70 gsm" },
+      table: {
+        columns: [P(32)],
+        rows: [
+          { label: { fr: "17×22", en: "17×22" }, cells: ["48325"] },
+          { label: { fr: "24×32", en: "24×32" }, cells: ["48326"] },
+        ],
+      },
+    },
+  ],
+  "nos-cahiers/gamme-polypro-classique/maternelle-petite-ecole": [
+    {
+      section: { fr: "Double Lignes 3 mm — 70 g/m²", en: "Double Lines 3 mm — 70 gsm" },
+      table: {
+        columns: [P(32)],
+        rows: [{ label: { fr: "17×22", en: "17×22" }, cells: ["48314"] }],
+      },
+    },
+  ],
   "gamme-plume": [
     {
       section: { fr: "", en: "" },

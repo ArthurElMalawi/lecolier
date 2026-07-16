@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Clock, ArrowLeft } from "lucide-react";
 
-import { prisma } from "@/lib/prisma";
 import { getLang, type Lang } from "@/lib/i18n";
 import { formatLabel, parseFamilyKey } from "@/lib/catalog";
+import type { Format } from "@/generated/prisma/client";
+import { availableFor } from "@/lib/product-refs";
 import { findByPath, nodeLabel, nodeDesc, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon, getAccent } from "@/lib/nav-icons";
 import { classementSheets } from "@/lib/classement-refs";
@@ -30,42 +31,47 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 /* --------------------------- Listing des produits -------------------------- */
 
-async function FamilyProducts({ family, lang }: { family: string; lang: Lang }) {
+const FORMAT_SLUG: Record<string, string> = { F17x22: "17x22", F21x29_7: "21x29_7", F24x32: "24x32" };
+
+function FamilyProducts({ family, lang }: { family: string; lang: Lang }) {
   const parsed = parseFamilyKey(family);
   if (!parsed) return null;
 
-  const products = await prisma.product.findMany({
-    where: { grammageGsm: parsed.grammage, coverType: parsed.cover },
-    orderBy: { pages: "asc" },
-  });
+  const coverKey = parsed.cover === "CARTONNE" ? "CARTONNE" : "PP";
+  const has = (format: string, ruling?: string) =>
+    availableFor({ grammageGsm: parsed.grammage, cover: coverKey, format, ruling }).pages.length > 0;
 
-  const order = ["F17x22", "F21x29_7", "F24x32"];
-  const formats = Array.from(new Set(products.map((p) => p.format))).sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  // Une carte par format Seyès disponible, + une carte 5×5 (réglure QUADRI, 24×32) si dispo.
+  const cards: { key: string; href: string; title: string }[] = [];
+  for (const fmt of ["F17x22", "F21x29_7", "F24x32"] as Format[]) {
+    if (has(fmt)) cards.push({ key: fmt, href: `/product/cahier-${family}-${FORMAT_SLUG[fmt]}?lang=${lang}`, title: formatLabel(fmt, lang) });
+  }
+  if (has("F24x32", "QUADRI")) {
+    cards.push({ key: "24x32-5x5", href: `/product/cahier-${family}-24x32-5x5?lang=${lang}`, title: `${formatLabel("F24x32" as Format, lang)} 5×5` });
+  }
 
-  if (formats.length === 0) {
+  if (cards.length === 0) {
     return <p className="text-sm text-zinc-500">{lang === "en" ? "No product available yet." : "Aucun produit disponible pour le moment."}</p>;
   }
 
+  const img = parsed.cover === "CARTONNE" ? "/products/cartonne_assortit.png" : "/products/polypro_assortit.png";
+
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {formats.map((fmt) => {
-        const target = products.find((p) => p.format === fmt);
-        if (!target) return null;
-        return (
-          <ProductCardLink key={fmt} href={`/product/${target.slug}?lang=${lang}`} className="group block h-full">
-            <Card className="h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-center text-lg">{formatLabel(fmt, lang)}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex items-center justify-center p-6 pt-2">
-                <div className="relative aspect-[3/4] w-2/3">
-                  <Image src={target.imageUrl} alt={target.nameFr} fill className="object-contain p-2 transition-transform duration-300 group-hover:scale-105" />
-                </div>
-              </CardContent>
-            </Card>
-          </ProductCardLink>
-        );
-      })}
+      {cards.map((c) => (
+        <ProductCardLink key={c.key} href={c.href} className="group block h-full">
+          <Card className="h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-center text-lg">{c.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-center p-6 pt-2">
+              <div className="relative aspect-[3/4] w-2/3">
+                <Image src={img} alt={c.title} fill className="object-contain p-2 transition-transform duration-300 group-hover:scale-105 dark:invert" />
+              </div>
+            </CardContent>
+          </Card>
+        </ProductCardLink>
+      ))}
     </div>
   );
 }
@@ -94,7 +100,9 @@ export default async function CategoryPage({ params, searchParams }: { params: P
 
   const children = node.children ?? [];
   const parentSlugs = trail.map((t) => t.slug);
-  const sheet = classementSheets[node.slug];
+  // Fiche produit : on cherche d'abord par chemin complet (slugs répétés comme
+  // « travaux-pratiques » selon la gamme), puis par slug simple.
+  const sheet = classementSheets[slug.join("/")] ?? classementSheets[node.slug];
   const note = node.note ? (lang === "en" ? node.note.en : node.note.fr) : null;
   const desc = nodeDesc(node, lang);
 

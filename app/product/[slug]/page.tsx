@@ -1,32 +1,44 @@
-
 import Image from "next/image";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { formatLabel, rulingLabel, familyKey, familyLabel } from "@/lib/catalog";
 import { findFamilyTrail, nodeLabel, nodeHref } from "@/lib/navigation";
-import { refFor } from "@/lib/product-refs";
-import { Card, CardContent } from "@/components/ui/card";
+import { refFor, availableFor } from "@/lib/product-refs";
+import type { CoverType, Format, Ruling } from "@/generated/prisma/client";
+import { RefTable } from "@/components/ref-table";
+import type { RefTableData } from "@/lib/classement-refs";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { getLang, getDictionary } from "@/lib/i18n";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-export const dynamic = 'force-dynamic';
+// Slug d'une fiche cahier : cahier-{grammage}g-{cover}-{format}[-5x5] (réglure 5×5 optionnelle).
+const COVER_BY_SLUG: Record<string, CoverType> = {
+  "polypro-pique": "POLYPRO_PIQUE",
+  polypro: "POLYPRO",
+  cartonne: "CARTONNE",
+};
+const FORMAT_BY_SLUG: Record<string, Format> = {
+  "17x22": "F17x22",
+  "21x29_7": "F21x29_7",
+  "24x32": "F24x32",
+};
 
 export default async function ProductPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const { slug } = await params;
   const sp = await searchParams;
   const lang = getLang(sp);
   const dict = getDictionary(lang);
-  
-  const product = await prisma.product.findUnique({ where: { slug } });
 
-  if (!product) {
+  const m = slug.match(/^cahier-(\d+)g-(polypro-pique|polypro|cartonne)-(17x22|21x29_7|24x32)(-5x5)?$/);
+  const coverType = m ? COVER_BY_SLUG[m[2]] : undefined;
+  const format = m ? FORMAT_BY_SLUG[m[3]] : undefined;
+  const grammageGsm = m ? Number(m[1]) : 0;
+  const ruling: Ruling = m && m[4] ? "QUADRI" : "SEYES";
+  const coverKey = coverType === "CARTONNE" ? "CARTONNE" : "PP";
+
+  // Couleurs et nombres de pages disponibles, dérivés des références (images).
+  const { colors, pages } =
+    coverType && format ? availableFor({ grammageGsm, cover: coverKey, format, ruling }) : { colors: [], pages: [] };
+
+  if (!coverType || !format || colors.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-10">
         <p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.product.notFound}</p>
@@ -35,26 +47,12 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     );
   }
 
-  // Fetch all products with the same grammage, cover, and format (siblings)
-  const siblings = await prisma.product.findMany({
-    where: {
-      grammageGsm: product.grammageGsm,
-      coverType: product.coverType,
-      format: product.format,
-    },
-    orderBy: { pages: "asc" },
-  });
+  const rulingName = rulingLabel(ruling, lang);
+  const productName = `${familyLabel({ grammageGsm, coverType }, lang)} ${formatLabel(format, lang)}${rulingName && rulingName !== "—" ? ` — ${rulingName}` : ""}`;
+  const formatName = `${formatLabel(format, lang)}${ruling === "QUADRI" ? " 5×5" : ""}`;
 
-  // Couleurs et nombres de pages candidats
-  const allColors = Array.from(new Set(siblings.map(p => p.color).filter(Boolean))) as string[];
-  const allPages = [32, 48, 96, 192, 288];
-
-  const rulingName = rulingLabel(product.ruling, lang);
-  const productName = `${familyLabel(product, lang)} ${formatLabel(product.format, lang)}${rulingName && rulingName !== "—" ? ` — ${rulingName}` : ""}`;
-  const formatName = formatLabel(product.format, lang);
-
-  // Fil d'ariane reconstruit depuis la nouvelle arborescence (/c/...)
-  const familyTrail = findFamilyTrail(familyKey(product)) ?? [];
+  // Fil d'ariane reconstruit depuis l'arborescence (/c/...)
+  const familyTrail = findFamilyTrail(familyKey({ grammageGsm, coverType })) ?? [];
   const crumbs = [
     ...familyTrail.map((n, i) => ({
       label: nodeLabel(n, lang),
@@ -63,60 +61,33 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     { label: formatName },
   ];
 
-  // Map color names to CSS colors
-  const getColorStyle = (colorName: string) => {
-    const map: Record<string, string> = {
-      'Orange': 'bg-orange-500',
-      'Gris': 'bg-gray-500',
-      'Jaune': 'bg-yellow-400',
-      'Rose': 'bg-pink-400',
-      'Violet': 'bg-purple-500',
-      'Bleu': 'bg-blue-500',
-      'Rouge': 'bg-red-500',
-      'Vert': 'bg-green-500',
-      'Noir': 'bg-black',
-      'Incolore': 'bg-transparent border border-gray-300',
-      'Assortit': 'bg-gradient-to-r from-blue-400 via-red-400 to-yellow-400',
-    };
-    return map[colorName] || 'bg-gray-200';
+  const tableData: RefTableData = {
+    columns: pages.map((p) => ({ fr: String(p), en: String(p) })),
+    rows: colors.map((color) => ({
+      label: { fr: color, en: color },
+      cells: pages.map((p) => refFor({ grammageGsm, cover: coverKey, format, ruling, color, pages: p })),
+    })),
   };
-
-  // Référence produit (SKU) pour une couleur + nb de pages donnés
-  const coverKey = product.coverType === "CARTONNE" ? "CARTONNE" : "PP";
-  const refOf = (color: string, pages: number) =>
-    refFor({
-      grammageGsm: product.grammageGsm,
-      cover: coverKey,
-      format: product.format,
-      ruling: product.ruling,
-      color,
-      pages,
-    });
-
-  // On masque les colonnes (pages) et lignes (couleurs) entièrement vides
-  const pageColumns = allPages.filter((page) => allColors.some((c) => refOf(c, page)));
-  const colors = allColors.filter((c) => pageColumns.some((page) => refOf(c, page)));
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-10 space-y-8">
-      {/* Top Bar: Breadcrumb + Lang Switcher */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <Breadcrumb items={crumbs} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-12 items-start">
-        {/* Left Column: Image */}
+        {/* Colonne gauche : image */}
         <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-black/[.04] dark:border-white/[.04]">
-           <Image 
-             src={product.coverType === 'CARTONNE' ? '/products/cartonne_assortit.png' : '/products/polypro_assortit.png'} 
-              alt={productName} 
-             fill 
-             className="object-contain p-12 transition-transform duration-500 hover:scale-105 dark:invert" 
-             priority
-           />
+          <Image
+            src={coverType === "CARTONNE" ? "/products/cartonne_assortit.png" : "/products/polypro_assortit.png"}
+            alt={productName}
+            fill
+            className="object-contain p-12 transition-transform duration-500 hover:scale-105 dark:invert"
+            priority
+          />
         </div>
 
-        {/* Right Column: Product Info */}
+        {/* Colonne droite : titre + tableau */}
         <div className="min-w-0 space-y-8">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">{productName}</h1>
@@ -125,68 +96,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
             </p>
           </div>
 
-          <Card className="border-none shadow-none bg-zinc-50/50 dark:bg-zinc-900/50">
-            <CardContent className="p-6">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr>
-                      <th className="p-2 text-center text-xs font-medium uppercase tracking-wide text-zinc-400">
-                        {lang === "en" ? "Colour" : "Couleur"}
-                      </th>
-                      <th
-                        colSpan={pageColumns.length}
-                        className="p-2 text-center text-xs font-medium uppercase tracking-wide text-zinc-400"
-                      >
-                        {lang === "en" ? "Number of pages" : "Nombre de pages"}
-                      </th>
-                    </tr>
-                    <tr>
-                      <th className="p-2"></th>
-                      {pageColumns.map(page => (
-                        <th key={page} className="p-2 font-medium text-zinc-500">
-                          {page}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {colors.map(color => (
-                      <tr key={color}>
-                        <td className="p-2">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className={`w-6 h-6 rounded mx-auto ${getColorStyle(color)}`} />
-                              </TooltipTrigger>
-                              <TooltipContent side="right" className="bg-white text-black dark:bg-zinc-950 dark:text-white">
-                                <p className="capitalize">{color}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </td>
-                        {pageColumns.map(page => {
-                          const ref = refOf(color, page);
-                          return (
-                            <td key={page} className="p-1">
-                              <div className={`
-                                min-h-[2rem] px-1 rounded flex items-center justify-center border transition-colors text-[11px] font-semibold tabular-nums leading-none text-center py-1
-                                ${ref
-                                  ? 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300'
-                                  : 'bg-zinc-50 border-zinc-200 text-zinc-300 dark:bg-zinc-800/50 dark:border-zinc-700'}
-                              `}>
-                                {ref ?? '—'}
-                              </div>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+          <RefTable data={tableData} lang={lang} />
         </div>
       </div>
     </div>

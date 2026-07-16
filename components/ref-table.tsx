@@ -1,7 +1,31 @@
 import type { Lang } from "@/lib/i18n";
 import type { RefTableData } from "@/lib/classement-refs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-/** Tableau de références normalisé (carte zinc-50/50, sans bordure/ombre). */
+/** Pastille (carré) par nom de couleur — une ligne dont le libellé est une couleur est rendue en pastille. */
+export const COLOR_STYLE: Record<string, string> = {
+  Orange: "bg-orange-500",
+  Gris: "bg-gray-500",
+  Jaune: "bg-yellow-400",
+  Rose: "bg-pink-400",
+  Violet: "bg-purple-500",
+  Bleu: "bg-blue-500",
+  Rouge: "bg-red-500",
+  Vert: "bg-green-500",
+  Noir: "bg-black",
+  Incolore: "bg-transparent border border-gray-300",
+  Assortit: "bg-gradient-to-r from-blue-400 via-red-400 to-yellow-400",
+};
+
+/**
+ * Tableau de références normalisé (carte zinc-50/50, sans bordure/ombre).
+ * Si le libellé d'une ligne est une couleur connue, il est rendu en pastille.
+ */
 export function RefTable({ data, lang }: { data: RefTableData; lang: Lang }) {
   const L = (b: { fr: string; en: string }) => (lang === "en" ? b.en : b.fr);
 
@@ -26,22 +50,40 @@ export function RefTable({ data, lang }: { data: RefTableData; lang: Lang }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
-            <tr key={r.label.fr} className="border-b border-black/[.04] last:border-0 dark:border-white/[.05]">
-              <td className="whitespace-nowrap p-3 font-medium text-zinc-700 dark:text-zinc-300">{L(r.label)}</td>
-              {r.cells.map((cell, i) => (
-                <td key={i} className="p-2 text-center">
-                  {cell ? (
-                    <span className="inline-block rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300">
-                      {cell}
-                    </span>
+          {rows.map((r) => {
+            const swatch = COLOR_STYLE[r.label.fr];
+            return (
+              <tr key={r.label.fr} className="border-b border-black/[.04] last:border-0 dark:border-white/[.05]">
+                <td className="whitespace-nowrap p-3 font-medium text-zinc-700 dark:text-zinc-300">
+                  {swatch ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className={`h-6 w-6 rounded ${swatch}`} />
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="bg-white text-black dark:bg-zinc-950 dark:text-white">
+                          <p className="capitalize">{L(r.label)}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   ) : (
-                    <span className="text-zinc-300 dark:text-zinc-600">—</span>
+                    L(r.label)
                   )}
                 </td>
-              ))}
-            </tr>
-          ))}
+                {r.cells.map((cell, i) => (
+                  <td key={i} className="p-2 text-center">
+                    {cell ? (
+                      <span className="inline-block rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300">
+                        {cell}
+                      </span>
+                    ) : (
+                      <span className="text-zinc-300 dark:text-zinc-600">—</span>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
