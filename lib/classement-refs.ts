@@ -78,7 +78,7 @@ export const classementSheets: Record<string, ProductSheet> = {
           { fr: "24×32 · 96 p.", en: "24×32 · 96 p." },
         ],
         rows: [
-          { label: { fr: "Jaune", en: "Yellow" }, cells: ["48315", "48320"] },
+          { label: { fr: "Orange", en: "Orange" }, cells: ["48315", "48320"] },
           { label: { fr: "Bleu", en: "Blue" }, cells: ["48316", "48321"] },
           { label: { fr: "Rouge", en: "Red" }, cells: ["48317", "48322"] },
           { label: { fr: "Vert", en: "Green" }, cells: ["48318", "48323"] },
