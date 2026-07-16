@@ -22,7 +22,7 @@ function Leaf({ trail, node, lang, onNavigate }: { trail: string[]; node: NavNod
       <Link
         href={nodeHref(trail, node, lang)}
         onClick={onNavigate}
-        className="group/leaf flex items-center gap-2 rounded-md px-2 py-1 text-sm text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-600"
+        className="group/leaf flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-600 lg:px-2 lg:py-1"
       >
         <span className="h-1 w-1 shrink-0 rounded-full bg-zinc-200" />
         {label}
@@ -37,7 +37,7 @@ function Leaf({ trail, node, lang, onNavigate }: { trail: string[]; node: NavNod
     <Link
       href={nodeHref(trail, node, lang)}
       onClick={onNavigate}
-      className="group/leaf flex items-center gap-2 rounded-md px-2 py-1 text-sm text-zinc-600 transition-colors hover:bg-blue-50 hover:text-blue-600"
+      className="group/leaf flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-zinc-600 transition-colors hover:bg-blue-50 hover:text-blue-600 lg:px-2 lg:py-1"
     >
       <span className="h-1 w-1 shrink-0 rounded-full bg-zinc-300 transition-colors group-hover/leaf:bg-blue-500" />
       {label}

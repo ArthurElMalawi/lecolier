@@ -15,21 +15,24 @@ export interface BreadcrumbProps {
 
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className={cn("flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-500", className)}>
-      <Link href="/" className="shrink-0 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-        <Home className="h-4 w-4" />
+    <nav
+      aria-label="Breadcrumb"
+      className={cn("text-sm leading-6 text-zinc-500 [overflow-wrap:anywhere]", className)}
+    >
+      <Link href="/" className="inline align-middle hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+        <Home className="inline h-4 w-4 align-middle" />
       </Link>
       {items.map((item, index) => (
-        <div key={index} className="flex items-center gap-x-2">
-          <ChevronRight className="h-4 w-4 shrink-0 text-zinc-400" />
+        <span key={index}>
+          <ChevronRight className="mx-1 inline h-4 w-4 align-middle text-zinc-400" />
           {item.href ? (
-            <Link href={item.href} className="break-words hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+            <Link href={item.href} className="align-middle hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
               {item.label}
             </Link>
           ) : (
-            <span className="break-words font-medium text-zinc-900 dark:text-zinc-100">{item.label}</span>
+            <span className="align-middle font-medium text-zinc-900 dark:text-zinc-100">{item.label}</span>
           )}
-        </div>
+        </span>
       ))}
     </nav>
   );

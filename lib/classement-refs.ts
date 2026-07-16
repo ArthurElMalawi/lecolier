@@ -45,7 +45,7 @@ export const classementSheets: Record<string, ProductSheet> = {
       table: {
         columns: PAGES,
         rows: [
-          { label: { fr: "Seyès · perforés", en: "Seyès · punched" }, cells: ["44758", "44759", "47840"] },
+          { label: { fr: "Seyès · perforés", en: "Seyès · punched" }, cells: ["44758", "44759", "44840"] },
           { label: { fr: "5×5 · perforés", en: "5×5 · punched" }, cells: ["44760", "44761", null] },
         ],
       },
@@ -57,9 +57,9 @@ export const classementSheets: Record<string, ProductSheet> = {
       table: {
         columns: PAGES,
         rows: [
-          { label: { fr: "17×22 · non perforés", en: "17×22 · unpunched" }, cells: [null, "44753", null] },
+          { label: { fr: "17×22 · non perforés", en: "17×22 · unpunched" }, cells: [null, "44754", null] },
           { label: { fr: "21×29,7 · perforés", en: "21×29.7 · punched" }, cells: ["44755", "44756", "47842"] },
-          { label: { fr: "21×29,7 · non perforés", en: "21×29.7 · unpunched" }, cells: [null, "44754", null] },
+          { label: { fr: "21×29,7 · non perforés", en: "21×29.7 · unpunched" }, cells: [null, "44753", null] },
         ],
       },
     },
