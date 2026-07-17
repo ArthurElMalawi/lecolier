@@ -4,9 +4,8 @@ import { formatLabel, rulingLabel, familyKey, familyLabel } from "@/lib/catalog"
 import { findFamilyTrail, nodeLabel, nodeHref } from "@/lib/navigation";
 import { refFor, availableFor } from "@/lib/product-refs";
 import type { CoverType, Format, Ruling } from "@/lib/catalog-types";
-import { RefTable } from "@/components/ref-table";
 import type { RefTableData } from "@/lib/classement-refs";
-import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { ProductSheet } from "@/components/product-sheet";
 import { getLang, getDictionary } from "@/lib/i18n";
 
 // Slug d'une fiche cahier : cahier-{grammage}g-{cover}-{format}[-5x5] (réglure 5×5 optionnelle).
@@ -64,20 +63,22 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
   const tableData: RefTableData = {
     columns: pages.map((p) => ({ fr: String(p), en: String(p) })),
     rows: colors.map((color) => ({
-      label: { fr: color, en: color },
+      color,
       cells: pages.map((p) => refFor({ grammageGsm, cover: coverKey, format, ruling, color, pages: p })),
     })),
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-10 space-y-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <Breadcrumb items={crumbs} />
-      </div>
-
-      <div className="grid lg:grid-cols-2 gap-12 items-start">
-        {/* Colonne gauche : image */}
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-black/[.04] dark:border-white/[.04]">
+    <ProductSheet
+      crumbs={crumbs}
+      title={productName}
+      description={
+        lang === "en"
+          ? "Product references (SKU) by colour and page count"
+          : "Références produit (SKU) par couleur et nombre de pages"
+      }
+      image={
+        <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-black/[.04] bg-zinc-50 dark:border-white/[.04] dark:bg-zinc-900">
           <Image
             src={coverType === "CARTONNE" ? "/products/cartonne_assortit.png" : "/products/polypro_assortit.png"}
             alt={productName}
@@ -86,19 +87,9 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
             priority
           />
         </div>
-
-        {/* Colonne droite : titre + tableau */}
-        <div className="min-w-0 space-y-8">
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">{productName}</h1>
-            <p className="text-sm text-zinc-500">
-              {lang === "en" ? "Product references (SKU) by colour and page count" : "Références produit (SKU) par couleur et nombre de pages"}
-            </p>
-          </div>
-
-          <RefTable data={tableData} lang={lang} />
-        </div>
-      </div>
-    </div>
+      }
+      sections={[{ table: tableData }]}
+      lang={lang}
+    />
   );
 }

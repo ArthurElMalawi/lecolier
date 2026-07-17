@@ -11,8 +11,8 @@ import { availableFor } from "@/lib/product-refs";
 import { findByPath, nodeLabel, nodeDesc, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon, getAccent } from "@/lib/nav-icons";
 import { classementSheets } from "@/lib/classement-refs";
-import { RefTable } from "@/components/ref-table";
 import { ProductImage } from "@/components/product-image";
+import { ProductSheet } from "@/components/product-sheet";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { CategoryCard } from "@/components/category-card";
@@ -109,37 +109,24 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   /* --- Fiche produit (classement : Feuillets Mobiles, Copies Doubles…) --- */
   if (children.length === 0 && sheet) {
     return (
-      <div className="mx-auto max-w-7xl space-y-8 px-6 py-10 lg:px-8">
-        <Breadcrumb items={crumbs} />
-
-        <div className="grid items-start gap-12 lg:grid-cols-2">
-          {/* Colonne gauche : image (placeholder si absente) */}
+      <ProductSheet
+        crumbs={crumbs}
+        title={nodeLabel(node, lang)}
+        description={desc}
+        image={
           <ProductImage
             src={node.image}
             alt={nodeLabel(node, lang)}
             iconKey={node.icon}
             caption={lang === "en" ? "Visual coming soon" : "Visuel à venir"}
           />
-
-          {/* Colonne droite : titre + sections */}
-          <div className="min-w-0 space-y-8">
-            <div>
-              <h1 className="mb-2 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">{nodeLabel(node, lang)}</h1>
-              {desc && <p className="text-sm text-zinc-500">{desc}</p>}
-            </div>
-
-            {sheet.map((s, i) => {
-              const title = lang === "en" ? s.section.en : s.section.fr;
-              return (
-                <section key={s.section.fr || i} className="space-y-3">
-                  {title && <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">{title}</h2>}
-                  <RefTable data={s.table} lang={lang} />
-                </section>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+        }
+        sections={sheet.map((s) => ({
+          title: lang === "en" ? s.section.en : s.section.fr,
+          table: s.table,
+        }))}
+        lang={lang}
+      />
     );
   }
 

@@ -6,9 +6,19 @@
  * sous-titre et son tableau (réglure/perforation × nombre de pages).
  */
 export type Bi = { fr: string; en: string };
+
+/**
+ * Une ligne de tableau porte une couleur (rendue en PASTILLE, jamais en toutes
+ * lettres) et/ou un libellé texte (dimension, réglure, perforation…).
+ */
+export type RefRow = {
+  color?: string;
+  label?: Bi;
+  cells: (string | null)[];
+};
 export type RefTableData = {
   columns: Bi[];
-  rows: { label: Bi; cells: (string | null)[] }[];
+  rows: RefRow[];
 };
 export type ProductSheet = { section: Bi; table: RefTableData }[];
 
@@ -20,6 +30,13 @@ const PAGES: Bi[] = [
 
 const P = (n: number): Bi => ({ fr: `${n} pages`, en: `${n} pages` });
 
+/** Libellés de dimension réutilisés par les fiches. */
+const D = {
+  f17x22: { fr: "17 × 22 cm", en: "17 × 22 cm" },
+  f21x29_7: { fr: "21 × 29,7 cm", en: "21 × 29.7 cm" },
+  f24x32: { fr: "24 × 32 cm", en: "24 × 32 cm" },
+} satisfies Record<string, Bi>;
+
 export const classementSheets: Record<string, ProductSheet> = {
   // Clé par chemin complet (le slug « travaux-pratiques » se répète selon la gamme).
   "nos-cahiers/gamme-polypro-premium/travaux-pratiques": [
@@ -28,10 +45,10 @@ export const classementSheets: Record<string, ProductSheet> = {
       table: {
         columns: [P(60), P(96), P(192)],
         rows: [
-          { label: { fr: "17×22", en: "17×22" }, cells: ["44610", "47847", "48134"] },
-          { label: { fr: "17×22 · Rose", en: "17×22 · Pink" }, cells: [null, "47877", null] },
-          { label: { fr: "21×29,7", en: "21×29.7" }, cells: [null, "44611", "47850"] },
-          { label: { fr: "24×32", en: "24×32" }, cells: [null, "44612", "47853"] },
+          { color: "Incolore", label: D.f17x22, cells: ["44610", "47847", "48134"] },
+          { color: "Rose", label: D.f17x22, cells: [null, "47877", null] },
+          { color: "Incolore", label: D.f21x29_7, cells: [null, "44611", "47850"] },
+          { color: "Incolore", label: D.f24x32, cells: [null, "44612", "47853"] },
         ],
       },
     },
@@ -42,8 +59,8 @@ export const classementSheets: Record<string, ProductSheet> = {
       table: {
         columns: [P(32), P(96)],
         rows: [
-          { label: { fr: "17×22", en: "17×22" }, cells: ["44614", null] },
-          { label: { fr: "24×32", en: "24×32" }, cells: [null, "47871"] },
+          { color: "Assortit", label: D.f17x22, cells: ["44614", null] },
+          { color: "Incolore", label: D.f24x32, cells: [null, "47871"] },
         ],
       },
     },
@@ -53,7 +70,7 @@ export const classementSheets: Record<string, ProductSheet> = {
       section: { fr: "Double Lignes 3 mm — 90 g/m²", en: "Double Lines 3 mm — 90 gsm" },
       table: {
         columns: [P(32)],
-        rows: [{ label: { fr: "17×22", en: "17×22" }, cells: ["44613"] }],
+        rows: [{ color: "Assortit", label: D.f17x22, cells: ["44613"] }],
       },
     },
   ],
@@ -63,8 +80,8 @@ export const classementSheets: Record<string, ProductSheet> = {
       table: {
         columns: [P(96)],
         rows: [
-          { label: { fr: "17×22", en: "17×22" }, cells: ["48308"] },
-          { label: { fr: "24×32", en: "24×32" }, cells: ["48309"] },
+          { color: "Incolore", label: D.f17x22, cells: ["48308"] },
+          { color: "Incolore", label: D.f24x32, cells: ["48309"] },
         ],
       },
     },
@@ -78,11 +95,11 @@ export const classementSheets: Record<string, ProductSheet> = {
           { fr: "24×32 · 96 p.", en: "24×32 · 96 p." },
         ],
         rows: [
-          { label: { fr: "Orange", en: "Orange" }, cells: ["48315", "48320"] },
-          { label: { fr: "Bleu", en: "Blue" }, cells: ["48316", "48321"] },
-          { label: { fr: "Rouge", en: "Red" }, cells: ["48317", "48322"] },
-          { label: { fr: "Vert", en: "Green" }, cells: ["48318", "48323"] },
-          { label: { fr: "Incolore", en: "Clear" }, cells: ["48319", "48324"] },
+          { color: "Orange", cells: ["48315", "48320"] },
+          { color: "Bleu", cells: ["48316", "48321"] },
+          { color: "Rouge", cells: ["48317", "48322"] },
+          { color: "Vert", cells: ["48318", "48323"] },
+          { color: "Incolore", cells: ["48319", "48324"] },
         ],
       },
     },
@@ -91,8 +108,8 @@ export const classementSheets: Record<string, ProductSheet> = {
       table: {
         columns: [P(32)],
         rows: [
-          { label: { fr: "17×22", en: "17×22" }, cells: ["48325"] },
-          { label: { fr: "24×32", en: "24×32" }, cells: ["48326"] },
+          { color: "Incolore", label: D.f17x22, cells: ["48325"] },
+          { color: "Incolore", label: D.f24x32, cells: ["48326"] },
         ],
       },
     },
@@ -102,7 +119,7 @@ export const classementSheets: Record<string, ProductSheet> = {
       section: { fr: "Double Lignes 3 mm — 70 g/m²", en: "Double Lines 3 mm — 70 gsm" },
       table: {
         columns: [P(32)],
-        rows: [{ label: { fr: "17×22", en: "17×22" }, cells: ["48314"] }],
+        rows: [{ color: "Assortit", label: D.f17x22, cells: ["48314"] }],
       },
     },
   ],
@@ -112,14 +129,8 @@ export const classementSheets: Record<string, ProductSheet> = {
       table: {
         columns: [P(32), P(48), P(96), P(192), P(288)],
         rows: [
-          {
-            label: { fr: "17 × 22 cm", en: "17 × 22 cm" },
-            cells: ["47942", "47825", "47828", "47831", "48369"],
-          },
-          {
-            label: { fr: "21 × 29,7 cm", en: "21 × 29.7 cm" },
-            cells: [null, null, "47834", "47837", null],
-          },
+          { label: D.f17x22, cells: ["47942", "47825", "47828", "47831", "48369"] },
+          { label: D.f21x29_7, cells: [null, null, "47834", "47837", null] },
         ],
       },
     },
