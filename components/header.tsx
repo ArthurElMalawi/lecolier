@@ -54,6 +54,12 @@ export function Header() {
             >
               {lang === 'en' ? 'Who we are' : 'Qui sommes-nous'}
             </Link>
+            <Link
+              href={`/nous-contacter?lang=${lang}`}
+              className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors"
+            >
+              {lang === 'en' ? 'Contact us' : 'Nous contacter'}
+            </Link>
           </nav>
 
           <div className="h-6 w-px bg-zinc-200 hidden lg:block"></div>

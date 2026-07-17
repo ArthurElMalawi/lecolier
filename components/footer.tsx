@@ -9,13 +9,12 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-zinc-900">L&apos;écolier</h3>
             <p className="text-sm text-zinc-500 max-w-xs leading-relaxed">
-              La qualité au service de l&apos;éducation. Des cahiers conçus pour durer et accompagner la réussite de chaque élève.
+              La qualité au service de l&apos;éducation. Des fournitures scolaires conçues pour durer et accompagner la réussite de chaque élève.
             </p>
           </div>
 
           {/* Colonne 2: Liens utiles */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-zinc-900 uppercase tracking-wider">Navigation</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-sm text-zinc-600 hover:text-blue-600 transition-colors">
@@ -30,6 +29,11 @@ export function Footer() {
               <li>
                 <Link href="/#products" className="text-sm text-zinc-600 hover:text-blue-600 transition-colors">
                   Nos Produits
+                </Link>
+              </li>
+              <li>
+                <Link href="/nous-contacter" className="text-sm text-zinc-600 hover:text-blue-600 transition-colors">
+                  Nous contacter
                 </Link>
               </li>
             </ul>

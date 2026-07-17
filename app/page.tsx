@@ -1,7 +1,7 @@
 import { getLang, getDictionary } from "@/lib/i18n";
 import { Hero } from "@/components/hero";
 import { CategoryShowcase } from "@/components/category-showcase";
-// import { ResellerSection } from "@/components/reseller-section"; // en standby
+import { ResellerSection } from "@/components/reseller-section";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;
@@ -22,9 +22,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         <CategoryShowcase lang={lang} />
       </div>
 
-      {/* Section Revendeurs en standby — à réactiver plus tard
       <ResellerSection translations={dict.resellers} />
-      */}
     </div>
   );
 }

@@ -308,6 +308,16 @@ function MobileNav({ lang }: { lang: Lang }) {
                   {lang === "en" ? "Who we are" : "Qui sommes-nous"}
                 </Link>
               )}
+
+              {!current && (
+                <Link
+                  href={`/nous-contacter?lang=${lang}`}
+                  onClick={close}
+                  className="block rounded-md px-2 py-2.5 text-sm font-semibold text-zinc-800 transition-colors hover:bg-zinc-50"
+                >
+                  {lang === "en" ? "Contact us" : "Nous contacter"}
+                </Link>
+              )}
             </div>
 
             {/* Sélecteur de langue (bas de menu) */}

@@ -49,16 +49,6 @@ const INITIAL_RESELLERS: Reseller[] = [
     lng: -3.9960,
   },
   {
-    id: "3",
-    name: "GIPA",
-    address: "Rue Ange M'ba",
-    city: "Libreville",
-    country: "Gabon",
-    phone: "+241 11 76 22 91",
-    lat: 0.3920,
-    lng: 9.4520,
-  },
-  {
     id: "4",
     name: "Bureau Vallée Sainte Marie",
     address: "Gillot Est - Retail Park",

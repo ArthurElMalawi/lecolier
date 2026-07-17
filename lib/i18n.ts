@@ -5,7 +5,7 @@ export const dictionaries = {
   fr: {
     hero: {
       title: "L'excellence pour vos études",
-      subtitle: "Découvrez notre gamme complète de cahiers scolaires de haute qualité. Conçus pour accompagner la réussite de chaque élève, du primaire au lycée.",
+      subtitle: "Découvrez notre gamme complète de fournitures scolaires de haute qualité. Conçus pour accompagner la réussite de chaque élève, du primaire à l'université.",
       cta: "Découvrir nos produits",
       more: "En savoir plus",
     },
@@ -36,6 +36,20 @@ export const dictionaries = {
       searchPlaceholder: "Rechercher un revendeur...",
       noResults: "Aucun revendeur trouvé",
       loading: "Chargement de la carte...",
+    },
+    contact: {
+      title: "Nous contacter",
+      intro: "Une question, un projet, une demande de revendeur ? Écrivez-nous, nous vous répondrons rapidement.",
+      emailLabel: "Votre adresse e-mail",
+      emailPlaceholder: "vous@exemple.com",
+      subjectLabel: "Objet",
+      subjectPlaceholder: "L'objet de votre message",
+      messageLabel: "Votre message",
+      messagePlaceholder: "Écrivez votre message ici...",
+      submit: "Envoyer",
+      sending: "Envoi en cours...",
+      success: "Merci ! Votre message a bien été envoyé.",
+      error: "Une erreur est survenue. Merci de réessayer ou de nous écrire directement.",
     },
     about: {
       title: "L’Élan de la Réussite",
@@ -82,7 +96,7 @@ export const dictionaries = {
   en: {
     hero: {
       title: "Excellence for your studies",
-      subtitle: "Discover our complete range of high-quality school notebooks. Designed to support every student's success, from primary to high school.",
+      subtitle: "Discover our complete range of high-quality school supplies. Designed to support every student's success, from primary to university.",
       cta: "Discover our products",
       more: "Learn more",
     },
@@ -113,6 +127,20 @@ export const dictionaries = {
       searchPlaceholder: "Search for a reseller...",
       noResults: "No resellers found",
       loading: "Loading map...",
+    },
+    contact: {
+      title: "Contact us",
+      intro: "A question, a project, a reseller request? Write to us and we'll get back to you quickly.",
+      emailLabel: "Your email address",
+      emailPlaceholder: "you@example.com",
+      subjectLabel: "Subject",
+      subjectPlaceholder: "The subject of your message",
+      messageLabel: "Your message",
+      messagePlaceholder: "Write your message here...",
+      submit: "Send",
+      sending: "Sending...",
+      success: "Thank you! Your message has been sent.",
+      error: "Something went wrong. Please try again or email us directly.",
     },
     about: {
       title: "The Momentum of Success",
