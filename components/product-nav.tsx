@@ -135,27 +135,38 @@ function DesktopMega({ lang }: { lang: Lang }) {
       >
         <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
           <div className="grid grid-cols-2 items-start gap-x-8 gap-y-8 md:grid-cols-3 lg:grid-cols-5">
-            {navTree.map((cat) => (
-              <div key={cat.slug} className="space-y-3">
-                <Link
-                  href={nodeHref([cat.slug], cat, lang)}
-                  onClick={close}
-                  className="block text-xs font-bold uppercase tracking-wider text-blue-600 hover:underline"
-                >
-                  {nodeLabel(cat, lang)}
-                </Link>
-                {cat.note && (
-                  <p className="text-[11px] font-medium italic text-blue-400">
-                    {lang === "en" ? cat.note.en : cat.note.fr}
-                  </p>
-                )}
-                <div className="flex flex-col gap-3">
-                  {cat.children?.map((child) => (
-                    <MegaSub key={child.slug} trail={[cat.slug]} node={child} lang={lang} onNavigate={close} />
-                  ))}
+            {navTree.map((cat) => {
+              const wide = cat.slug === "nos-cahiers";
+              const kids = cat.children ?? [];
+              const half = Math.ceil(kids.length / 2);
+              const columns = wide ? [kids.slice(0, half), kids.slice(half)] : [kids];
+              return (
+                <div key={cat.slug} className={cn("space-y-3", wide && "lg:col-span-2")}>
+                  <Link
+                    href={nodeHref([cat.slug], cat, lang)}
+                    onClick={close}
+                    className="block text-xs font-bold uppercase tracking-wider text-blue-600 hover:underline"
+                  >
+                    {nodeLabel(cat, lang)}
+                  </Link>
+                  {cat.note && (
+                    <p className="text-[11px] font-medium italic text-blue-400">
+                      {lang === "en" ? cat.note.en : cat.note.fr}
+                    </p>
+                  )}
+                  {/* Colonnes indépendantes : déplier un item n'affecte pas la colonne voisine. */}
+                  <div className={cn("flex flex-col gap-3", wide && "lg:flex-row lg:items-start lg:gap-8")}>
+                    {columns.map((col, ci) => (
+                      <div key={ci} className={cn("flex flex-col gap-3", wide && "lg:flex-1")}>
+                        {col.map((child) => (
+                          <MegaSub key={child.slug} trail={[cat.slug]} node={child} lang={lang} onNavigate={close} />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

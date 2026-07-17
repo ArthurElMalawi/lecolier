@@ -15,7 +15,7 @@ export function Footer() {
 
           {/* Colonne 2: Liens utiles */}
           <div className="space-y-4">
-            <ul className="space-y-2">
+            <ul className="grid grid-cols-2 gap-x-8 gap-y-2">
               <li>
                 <Link href="/" className="text-sm text-zinc-600 hover:text-blue-600 transition-colors">
                   Accueil
@@ -29,6 +29,11 @@ export function Footer() {
               <li>
                 <Link href="/#products" className="text-sm text-zinc-600 hover:text-blue-600 transition-colors">
                   Nos Produits
+                </Link>
+              </li>
+              <li>
+                <Link href="/catalogue" className="text-sm text-zinc-600 hover:text-blue-600 transition-colors">
+                  Catalogue
                 </Link>
               </li>
               <li>

@@ -253,21 +253,6 @@ export const navTree: NavNode[] = [
       { slug: "universite", fr: "Université", en: "University", icon: "level", soon: true },
     ],
   },
-  {
-    slug: "la-marque",
-    fr: "La marque / Espace Pro",
-    en: "The Brand / Pro Area",
-    icon: "brand",
-    desc: {
-      fr: "Nos engagements qualité, l'espace écoles & professionnels et le contact.",
-      en: "Our quality commitments, the schools & pro area, and contact.",
-    },
-    children: [
-      { slug: "qui-sommes-nous", fr: "Nos engagements qualité (Qui sommes-nous)", en: "Our Quality Commitments (About Us)", path: "/qui-sommes-nous", icon: "shield" },
-      { slug: "espace-pro", fr: "Espace Écoles & Professionnels (téléchargements)", en: "Schools & Professionals (downloads)", icon: "download", soon: true },
-      { slug: "contact", fr: "Contact", en: "Contact", icon: "mail", soon: true },
-    ],
-  },
 ];
 
 /* -------------------------------------------------------------------------- */

@@ -105,12 +105,6 @@ export const ACCENTS: Record<string, Accent> = {
     text: "text-amber-600",
     ring: "hover:border-amber-300",
   },
-  "la-marque": {
-    gradient: "from-rose-500 to-pink-400",
-    soft: "bg-rose-50 text-rose-600",
-    text: "text-rose-600",
-    ring: "hover:border-rose-300",
-  },
 };
 
 const DEFAULT_ACCENT: Accent = {
