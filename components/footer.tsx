@@ -65,8 +65,8 @@ export function Footer() {
             &copy; {new Date().getFullYear()} L&apos;écolier. Tous droits réservés.
           </p>
           <div className="flex gap-4">
-            {/* LIENS LÉGAUX MASQUÉS TEMPORAIREMENT
             <Link href="/mentions-legales" className="text-xs text-zinc-400 hover:text-zinc-600">Mentions légales</Link>
+            {/* Confidentialité masqué : la page /confidentialite n'existe pas encore
             <Link href="/confidentialite" className="text-xs text-zinc-400 hover:text-zinc-600">Confidentialité</Link>
             */}
           </div>

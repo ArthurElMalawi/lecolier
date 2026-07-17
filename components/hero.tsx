@@ -44,17 +44,12 @@ export function Hero({ dict, lang }: HeroProps) {
                   {dict.cta}
                 </Button>
               </Link>
-              <Link href={`/qui-sommes-nous?lang=${lang}`}>
-                <Button variant="outline" size="lg" className="hover:bg-blue-50 border-blue-200 text-blue-700 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-                  {dict.more}
-                </Button>
-              </Link>
             </div>
           </div>
           <div className="mx-auto w-full lg:order-last">
              <div className="relative w-full h-[300px] lg:h-[400px]">
                 <Image
-                  src="/products/cartonne_assortit.png"
+                  src="/products/polypro_assortit.png"
                   alt="Assortiment de cahiers L'écolier"
                   fill
                   className="object-contain"
