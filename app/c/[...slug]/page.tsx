@@ -124,10 +124,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   const desc = nodeDesc(node, lang);
 
   /* --- Fiche produit (classement : Feuillets Mobiles, Copies Doubles…) --- */
-  // Une page sans références mais avec des visuels vaut mieux qu'un « Bientôt disponible ».
-  // Les pages de gamme (node.family) gardent leur liste de formats : elles ne sont pas des fiches.
+  // Une fiche existante l'emporte, même si le nœud porte une famille (Gamme Plume
+  // présente tous ses formats dans un seul tableau). Sinon une page illustrée vaut
+  // mieux qu'un « Bientôt disponible » — mais une page de gamme garde ses formats.
   const sheetImages = imagesForPages([slug.join("/"), ...groupedPages(slug.join("/"))]);
-  if (children.length === 0 && !node.family && (sheet || sheetImages.length > 0)) {
+  if (children.length === 0 && (sheet || (!node.family && sheetImages.length > 0))) {
     return (
       <ProductSheet
         crumbs={crumbs}

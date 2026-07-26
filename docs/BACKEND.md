@@ -48,7 +48,18 @@ Clés : chemin complet (`nos-cahiers/…/x`) ou slug simple quand il est unique 
 Le même arbre alimente le méga-menu, le tiroir mobile, les sections d'accueil et `/c/[...slug]`.
 Champs notables : `family` (renvoie vers `product-refs`), `soon`, `icon`, `desc`, `phare`.
 
+## Coloris
+
+`lib/colors.ts` — pastille et traduction de chaque coloris. Les couleurs sont saisies en français
+dans les références ; tableaux et recherche passent tous par `colorLabel()`.
+
 ## Visuels
 
 `lib/catalogue-images.generated.ts` — manifeste généré par `npm run images`, jamais édité à la main.
 `lib/catalogue-images.ts` en expose la lecture. Voir [FRONTEND.md](./FRONTEND.md#visuels-produit).
+
+## Recherche
+
+`lib/search-index.ts` ne stocke rien : il agrège l'arborescence, les références et les fiches en un
+index de pages, construit au chargement du module. Un produit devient donc trouvable dès qu'il est
+ajouté à `navTree` ou à l'export Excel. Voir [FRONTEND.md](./FRONTEND.md#recherche).

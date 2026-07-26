@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import type { Lang } from "@/lib/i18n";
 import { navTree, nodeLabel, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon } from "@/lib/nav-icons";
+import { SearchBar } from "@/components/search-bar";
 
 /* -------------------------------------------------------------------------- */
 /*  Feuille (lien réel ou "bientôt")                                           */
@@ -287,6 +288,8 @@ function MobileNav({ lang }: { lang: Lang }) {
 
             {/* Liste : niveau courant */}
             <div className="flex-1 overflow-y-auto p-2">
+              <SearchBar lang={lang} variant="drawer" onNavigate={close} className="mb-2" />
+
               {current ? (
                 <Link
                   href={nodeHref(trailSlugs, current, lang)}

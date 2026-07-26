@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams, usePathname } from "next/navigation";
 import { ProductNav } from "./product-nav";
+import { SearchBar } from "./search-bar";
 
 export function Header() {
   const searchParams = useSearchParams();
@@ -38,7 +39,10 @@ export function Header() {
             {slogan}
           </span>
         </Link>
-        
+
+        {/* Recherche par nom ou par référence — desktop (le menu mobile a la sienne). */}
+        <SearchBar lang={lang === "en" ? "en" : "fr"} className="mx-6 hidden max-w-md flex-1 lg:block" />
+
         <div className="flex items-center gap-4 lg:gap-6">
           <nav className="hidden lg:flex items-center gap-6">
             <Link

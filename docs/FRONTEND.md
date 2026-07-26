@@ -16,6 +16,7 @@ Le projet utilise le **Next.js App Router**. L'interface est construite avec Rea
 - **Détail Produit (`app/product/[slug]/page.tsx`) :**
     - Fiche d'un cahier pour un format donné, slug `cahier-{grammage}g-{cover}-{format}[-5x5]`.
     - Références dérivées de `lib/product-refs.ts` (couleur × pagination).
+- **Recherche (`app/recherche/page.tsx`) :** résultats de `?q=`, rendus côté serveur.
 - **Qui sommes-nous (`app/qui-sommes-nous/page.tsx`) :**
     - Présentation de l'histoire, des valeurs et de la mission de la marque.
 - **Nous contacter (`app/nous-contacter/page.tsx`) :** formulaire posté sur `app/api/contact/route.ts`.
@@ -28,7 +29,10 @@ Le projet utilise le **Next.js App Router**. L'interface est construite avec Rea
 - **`components/ref-table.tsx` :**
     - Tableau de références normalisé. Les colonnes et lignes entièrement vides sont masquées.
     - Les couleurs sont **toujours** rendues en pastille avec infobulle, jamais en toutes lettres
-      (`COLOR_STYLE` / `COLOR_EN`).
+      (`COLOR_STYLE` / `colorLabel` de `lib/colors.ts`).
+- **`components/search-bar.tsx` / `components/search-result.tsx` :**
+    - Champ de recherche (en-tête desktop, haut du tiroir mobile) et ligne de résultat partagée
+      entre les suggestions et la page `/recherche`. Voir « Recherche » plus bas.
 - **`components/product-carousel.tsx` :**
     - Carrousel des visuels d'une fiche : flèches (écran large uniquement), bande de vignettes,
       compteur, légende, clavier ←/→ et balayage tactile.
@@ -37,7 +41,7 @@ Le projet utilise le **Next.js App Router**. L'interface est construite avec Rea
     - Carte vers une sous-catégorie. Une catégorie marquée `soon` qui a des visuels n'est plus
       annoncée comme à venir.
 - **`components/header.tsx` :**
-    - En-tête fixe avec logo, navigation et sélecteur de langue.
+    - En-tête fixe avec logo, barre de recherche, navigation et sélecteur de langue.
     - Design moderne avec effets de survol et transparence.
 - **`components/hero.tsx` :**
     - Section d'introduction visuelle avec image et texte d'accroche.
@@ -99,6 +103,31 @@ nom de fichier (`…170x220_bleu_48P.png` → « 17 × 22 cm · Bleu · 48 pages
 - `imagesForPages([…])` — une page qui en regroupe d'autres réunit leurs visuels (voir `groupedPages`).
 - `heroFor(chemin, variante)` — vignette d'une carte de format : son premier visuel, à défaut un commun.
 - `hasImages(chemin)` — utilisé par `CategoryCard` pour lever l'étiquette « Bientôt disponible ».
+
+## Recherche
+
+### Index (`lib/search-index.ts`)
+Construit **une fois au chargement du module**, à partir des mêmes sources que les pages : rien n'y
+est saisi à la main. Une entrée = une page réellement atteignable, avec les références qu'elle
+affiche — chercher un SKU renvoie donc toujours vers une page qui le montre.
+
+- chaque nœud de `navTree` (avec les références de sa fiche, via `sheetFor`) ;
+- les fiches format d'une gamme (`/product/…`), sauf si la gamme a sa propre fiche — c'est la
+  règle qu'applique `/c/[...slug]` (cf. Gamme Plume, qui présente tous ses formats en un tableau).
+
+`searchCatalogue(q, lang, limite)` accepte :
+- un **numéro de référence** : égalité, puis début, puis fragment. En dessous de `MIN_REF_DIGITS`
+  chiffres (`lib/search-query.ts`), la requête désignerait la moitié du catalogue : l'interface le dit
+  (« saisissez au moins 3 chiffres ») plutôt que d'afficher un « aucun résultat » trompeur ;
+- des **mots** : confrontés au titre de la page puis à son fil d'ariane, tous doivent correspondre.
+  Accents et ponctuation sont ignorés, et « 17x22 » retrouve « 17 x 22 cm ».
+
+### Interface
+`SearchBar` interroge `app/api/search/route.ts` au fil de la frappe (délai de 180 ms) : l'index reste
+côté serveur plutôt que d'alourdir le bundle client de tout le catalogue. Entrée sans sélection ouvre
+`/recherche`, qui appelle `searchCatalogue` directement. Deux présentations, une seule ligne de
+résultat (`SearchResultRow`) : surcouche sous le champ en en-tête, dans le flux dans le tiroir mobile
+(le conteneur y défile).
 
 ## Assets
 - Visuels produit générés : `public/catalogue/` (ne pas éditer, voir ci-dessus).
