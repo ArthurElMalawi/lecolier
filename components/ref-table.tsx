@@ -15,8 +15,11 @@ export const COLOR_STYLE: Record<string, string> = {
   Rose: "bg-pink-400",
   Violet: "bg-purple-500",
   Bleu: "bg-blue-500",
+  "Bleu clair": "bg-sky-300",
   Rouge: "bg-red-500",
   Vert: "bg-green-500",
+  "Vert clair": "bg-lime-400",
+  Brun: "bg-amber-800",
   Noir: "bg-black",
   Incolore: "bg-transparent border border-zinc-300 dark:border-zinc-600",
   Assortit: "bg-gradient-to-r from-blue-400 via-red-400 to-yellow-400",
@@ -29,8 +32,11 @@ const COLOR_EN: Record<string, string> = {
   Rose: "Pink",
   Violet: "Purple",
   Bleu: "Blue",
+  "Bleu clair": "Light blue",
   Rouge: "Red",
   Vert: "Green",
+  "Vert clair": "Light green",
+  Brun: "Brown",
   Noir: "Black",
   Incolore: "Clear",
   Assortit: "Assorted",
@@ -76,8 +82,9 @@ export function RefTable({ data, lang }: { data: RefTableData; lang: Lang }) {
       <table className="w-full min-w-[30rem] text-sm">
         <thead>
           <tr className="border-b border-black/[.06] dark:border-white/[.08]">
-            {hasSwatch && <th className="p-3" />}
-            {hasLabel && <th className="p-3" />}
+            {/* Colonnes pastille/libellé : largeur au contenu, l'espace restant va aux données. */}
+            {hasSwatch && <th className="w-10 p-3" />}
+            {hasLabel && <th className="w-px p-3" />}
             {columns.map((c) => (
               <th key={c.fr} className="p-3 text-center font-medium text-zinc-500">
                 {L(c)}

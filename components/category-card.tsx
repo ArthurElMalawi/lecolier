@@ -3,14 +3,17 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import type { Lang } from "@/lib/i18n";
 import { nodeLabel, nodeDesc, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon, type Accent } from "@/lib/nav-icons";
+import { hasImages } from "@/lib/catalogue-images";
 
 /** Carte cliquable vers une (sous-)catégorie ou une famille produit. */
 export function CategoryCard({ trail, node, lang, accent }: { trail: string[]; node: NavNode; lang: Lang; accent: Accent }) {
   const label = nodeLabel(node, lang);
   const desc = nodeDesc(node, lang);
   const childCount = node.children?.length ?? 0;
+  // Dès qu'une page a des visuels, elle n'est plus annoncée comme à venir.
+  const soon = node.soon && !hasImages(trail.join("/"));
 
-  const footer = node.soon
+  const footer = soon
     ? lang === "en" ? "Coming soon" : "Bientôt disponible"
     : childCount > 0
       ? `${childCount} ${lang === "en" ? "categories" : "catégories"}`
@@ -19,7 +22,7 @@ export function CategoryCard({ trail, node, lang, accent }: { trail: string[]; n
   return (
     <Link
       href={nodeHref(trail, node, lang)}
-      className={`group flex h-full flex-col rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${accent.ring} ${node.soon ? "opacity-70" : ""}`}
+      className={`group flex h-full flex-col rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${accent.ring} ${soon ? "opacity-70" : ""}`}
     >
       <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${accent.soft}`}>
         <NavIcon iconKey={node.icon} className="h-6 w-6" strokeWidth={1.75} />
@@ -32,8 +35,8 @@ export function CategoryCard({ trail, node, lang, accent }: { trail: string[]; n
       {desc && <p className="mt-1.5 line-clamp-2 text-sm text-zinc-500">{desc}</p>}
 
       <div className="mt-auto flex items-center justify-between pt-5">
-        <span className={`text-xs font-medium ${node.soon ? "text-zinc-400" : accent.text}`}>{footer}</span>
-        <ArrowRight className={`h-4 w-4 text-zinc-300 transition-all group-hover:translate-x-1 ${node.soon ? "" : "group-hover:text-blue-600"}`} />
+        <span className={`text-xs font-medium ${soon ? "text-zinc-400" : accent.text}`}>{footer}</span>
+        <ArrowRight className={`h-4 w-4 text-zinc-300 transition-all group-hover:translate-x-1 ${soon ? "" : "group-hover:text-blue-600"}`} />
       </div>
     </Link>
   );

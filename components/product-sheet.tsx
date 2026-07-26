@@ -22,6 +22,7 @@ export function ProductSheet({
   description,
   image,
   sections,
+  note,
   lang,
 }: {
   crumbs: { label: string; href?: string }[];
@@ -29,6 +30,8 @@ export function ProductSheet({
   description?: string | null;
   image: ReactNode;
   sections: SheetSection[];
+  /** Message affiché à la place des tableaux (références pas encore saisies). */
+  note?: string | null;
   lang: Lang;
 }) {
   return (
@@ -45,6 +48,10 @@ export function ProductSheet({
             </h1>
             {description && <p className="text-sm text-zinc-500">{description}</p>}
           </div>
+
+          {sections.length === 0 && note && (
+            <p className="rounded-lg bg-zinc-50 p-4 text-sm text-zinc-500 dark:bg-zinc-900/50">{note}</p>
+          )}
 
           {sections.map((s, i) => (
             <section key={s.title || i} className="space-y-3">

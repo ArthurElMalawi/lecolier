@@ -6,18 +6,36 @@ Le projet utilise le **Next.js App Router**. L'interface est construite avec Rea
 ## Pages
 - **Accueil (`app/page.tsx`) :**
     - Section Hero (`components/hero.tsx`) : Présentation de la marque avec appel à l'action.
-    - Liste des familles de produits sous forme de cartes.
-    - Section des revendeurs (`ResellerSection`) avec carte interactive.
-    - Récupère les données produits via Prisma (Server Component).
-- **Liste des Produits (`app/products/page.tsx`) :**
-    - Affiche les formats disponibles pour une famille donnée.
-    - Utilise les paramètres d'URL pour filtrer (`?family=...`).
+    - Sections de catégories dérivées de `navTree` (aucun appel base : tout est en mémoire).
+    - Section des revendeurs (`ResellerSection`) avec carte interactive — actuellement commentée.
+- **Catalogue (`app/c/[...slug]/page.tsx`) :** route unique de toute l'arborescence. Selon le nœud :
+    - une **fiche produit** (`ProductSheet`) si le chemin a une fiche de références ou des visuels ;
+    - une **grille de catégories** (`CategoryCard`) s'il a des enfants ;
+    - une **liste de formats** si le nœud porte une `family` (page de gamme) ;
+    - un bloc « Bientôt disponible » sinon.
 - **Détail Produit (`app/product/[slug]/page.tsx`) :**
-    - Affiche les détails complets d'un cahier (réglure, pages, etc.).
+    - Fiche d'un cahier pour un format donné, slug `cahier-{grammage}g-{cover}-{format}[-5x5]`.
+    - Références dérivées de `lib/product-refs.ts` (couleur × pagination).
 - **Qui sommes-nous (`app/qui-sommes-nous/page.tsx`) :**
     - Présentation de l'histoire, des valeurs et de la mission de la marque.
+- **Nous contacter (`app/nous-contacter/page.tsx`) :** formulaire posté sur `app/api/contact/route.ts`.
 
 ## Composants Clés
+- **`components/product-sheet.tsx` :**
+    - Mise en page commune à **toutes** les fiches : fil d'ariane, visuel à gauche, titre et sections
+      de tableaux à droite. Le titre de section est omis s'il est vide.
+    - `note` s'affiche à la place des tableaux quand la fiche n'a pas encore de références.
+- **`components/ref-table.tsx` :**
+    - Tableau de références normalisé. Les colonnes et lignes entièrement vides sont masquées.
+    - Les couleurs sont **toujours** rendues en pastille avec infobulle, jamais en toutes lettres
+      (`COLOR_STYLE` / `COLOR_EN`).
+- **`components/product-carousel.tsx` :**
+    - Carrousel des visuels d'une fiche : flèches (écran large uniquement), bande de vignettes,
+      compteur, légende, clavier ←/→ et balayage tactile.
+    - Reprend le placeholder de `ProductImage` (« Visuel à venir ») quand la page n'a pas de visuel.
+- **`components/category-card.tsx` :**
+    - Carte vers une sous-catégorie. Une catégorie marquée `soon` qui a des visuels n'est plus
+      annoncée comme à venir.
 - **`components/header.tsx` :**
     - En-tête fixe avec logo, navigation et sélecteur de langue.
     - Design moderne avec effets de survol et transparence.
@@ -55,6 +73,34 @@ Le projet utilise le **Next.js App Router**. L'interface est construite avec Rea
 - **Container :** Standardisation de la largeur maximale (`max-w-7xl`) pour l'ensemble des sections (Header, Hero, Contenu principal, Footer).
 - **Scroll Smooth :** Activé globalement dans `globals.css` pour une navigation fluide.
 
+## Visuels produit
+
+### Chaîne d'ingestion
+Les photos sont déposées dans `C:\Users\arthu\Pictures\lecolier\catalogue-v1`, dont l'arborescence
+**reproduit celle du menu**, avec un niveau optionnel de « variante » sous la page produit :
+
+```
+nos-cahiers/gamme-polypro-premium/cahiers/17x22/*.png        -> variante « 17x22 »
+nos-cahiers/gamme-polypro-premium/cahiers/toutes-tailles/*   -> commun à toute la gamme
+nos-cahiers/gamme-polypro-classique/cahiers/24x32-5x5/*      -> variante « 24x32-5x5 »
+fournitures/classement/copies-doubles/*.png                  -> commun (pas de variante)
+```
+
+`npm run images` (`scripts/ingest-catalogue-images.mts`) convertit tout en webp ≤ 1400 px dans
+`public/catalogue/`, régénère `lib/catalogue-images.generated.ts` et déduit une légende bilingue du
+nom de fichier (`…170x220_bleu_48P.png` → « 17 × 22 cm · Bleu · 48 pages » ; `Page de garde`,
+`Réglure`, `5 couleurs`, `Perforated`, `5x5` sont reconnus). Le dossier de sortie et le manifeste sont
+**entièrement régénérés** à chaque exécution : ajouter des images puis relancer suffit.
+
+### Lecture (`lib/catalogue-images.ts`)
+- `imagesFor(chemin, variante?)` — visuels **communs d'abord**, puis ceux de la taille affichée.
+- Une variante `toutes-tailles-<réglure>` ne s'applique qu'aux produits de cette réglure :
+  `toutes-tailles-seyes` n'apparaît pas sur une page 5×5. `toutes-tailles` (sans suffixe) vaut pour tout.
+- `imagesForPages([…])` — une page qui en regroupe d'autres réunit leurs visuels (voir `groupedPages`).
+- `heroFor(chemin, variante)` — vignette d'une carte de format : son premier visuel, à défaut un commun.
+- `hasImages(chemin)` — utilisé par `CategoryCard` pour lever l'étiquette « Bientôt disponible ».
+
 ## Assets
-- Les images produits sont stockées dans `public/products/`.
+- Visuels produit générés : `public/catalogue/` (ne pas éditer, voir ci-dessus).
+- Anciens placeholders : `public/products/`.
 - Le logo et autres icônes sont à la racine de `public/`.

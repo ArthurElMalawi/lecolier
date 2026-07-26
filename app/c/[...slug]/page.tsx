@@ -10,8 +10,9 @@ import type { Format } from "@/lib/catalog-types";
 import { availableFor } from "@/lib/product-refs";
 import { findByPath, nodeLabel, nodeDesc, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon, getAccent } from "@/lib/nav-icons";
-import { classementSheets } from "@/lib/classement-refs";
-import { ProductImage } from "@/components/product-image";
+import { sheetFor, groupedPages } from "@/lib/usage-sheets";
+import { imagesForPages, heroFor } from "@/lib/catalogue-images";
+import { ProductCarousel } from "@/components/product-carousel";
 import { ProductSheet } from "@/components/product-sheet";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 const FORMAT_SLUG: Record<string, string> = { F17x22: "17x22", F21x29_7: "21x29_7", F24x32: "24x32" };
 
-function FamilyProducts({ family, lang }: { family: string; lang: Lang }) {
+function FamilyProducts({ family, navPath, lang }: { family: string; navPath: string; lang: Lang }) {
   const parsed = parseFamilyKey(family);
   if (!parsed) return null;
 
@@ -42,12 +43,24 @@ function FamilyProducts({ family, lang }: { family: string; lang: Lang }) {
     availableFor({ grammageGsm: parsed.grammage, cover: coverKey, format, ruling }).pages.length > 0;
 
   // Une carte par format Seyès disponible, + une carte 5×5 (réglure QUADRI, 24×32) si dispo.
-  const cards: { key: string; href: string; title: string }[] = [];
+  // La vignette est le premier visuel du format quand il existe (voir lib/catalogue-images).
+  const cards: { key: string; href: string; title: string; photo?: string }[] = [];
   for (const fmt of ["F17x22", "F21x29_7", "F24x32"] as Format[]) {
-    if (has(fmt)) cards.push({ key: fmt, href: `/product/cahier-${family}-${FORMAT_SLUG[fmt]}?lang=${lang}`, title: formatLabel(fmt, lang) });
+    if (has(fmt))
+      cards.push({
+        key: fmt,
+        href: `/product/cahier-${family}-${FORMAT_SLUG[fmt]}?lang=${lang}`,
+        title: formatLabel(fmt, lang),
+        photo: heroFor(navPath, FORMAT_SLUG[fmt])?.src,
+      });
   }
   if (has("F24x32", "QUADRI")) {
-    cards.push({ key: "24x32-5x5", href: `/product/cahier-${family}-24x32-5x5?lang=${lang}`, title: `${formatLabel("F24x32" as Format, lang)} 5×5` });
+    cards.push({
+      key: "24x32-5x5",
+      href: `/product/cahier-${family}-24x32-5x5?lang=${lang}`,
+      title: `${formatLabel("F24x32" as Format, lang)} 5×5`,
+      photo: heroFor(navPath, `${FORMAT_SLUG.F24x32}-5x5`)?.src,
+    });
   }
 
   if (cards.length === 0) {
@@ -66,7 +79,13 @@ function FamilyProducts({ family, lang }: { family: string; lang: Lang }) {
             </CardHeader>
             <CardContent className="flex items-center justify-center p-6 pt-2">
               <div className="relative aspect-[3/4] w-2/3">
-                <Image src={img} alt={c.title} fill className="object-contain p-2 transition-transform duration-300 group-hover:scale-105 dark:invert" />
+                <Image
+                  src={c.photo ?? img}
+                  alt={c.title}
+                  fill
+                  sizes="(min-width: 1024px) 20vw, 40vw"
+                  className={`object-contain p-2 transition-transform duration-300 group-hover:scale-105 ${c.photo ? "" : "dark:invert"}`}
+                />
               </div>
             </CardContent>
           </Card>
@@ -100,31 +119,28 @@ export default async function CategoryPage({ params, searchParams }: { params: P
 
   const children = node.children ?? [];
   const parentSlugs = trail.map((t) => t.slug);
-  // Fiche produit : on cherche d'abord par chemin complet (slugs répétés comme
-  // « travaux-pratiques » selon la gamme), puis par slug simple.
-  const sheet = classementSheets[slug.join("/")] ?? classementSheets[node.slug];
+  const sheet = sheetFor(slug.join("/"), node.slug);
   const note = node.note ? (lang === "en" ? node.note.en : node.note.fr) : null;
   const desc = nodeDesc(node, lang);
 
   /* --- Fiche produit (classement : Feuillets Mobiles, Copies Doubles…) --- */
-  if (children.length === 0 && sheet) {
+  // Une page sans références mais avec des visuels vaut mieux qu'un « Bientôt disponible ».
+  // Les pages de gamme (node.family) gardent leur liste de formats : elles ne sont pas des fiches.
+  const sheetImages = imagesForPages([slug.join("/"), ...groupedPages(slug.join("/"))]);
+  if (children.length === 0 && !node.family && (sheet || sheetImages.length > 0)) {
     return (
       <ProductSheet
         crumbs={crumbs}
         title={nodeLabel(node, lang)}
         description={desc}
         image={
-          <ProductImage
-            src={node.image}
-            alt={nodeLabel(node, lang)}
-            iconKey={node.icon}
-            caption={lang === "en" ? "Visual coming soon" : "Visuel à venir"}
-          />
+          <ProductCarousel images={sheetImages} alt={nodeLabel(node, lang)} iconKey={node.icon} lang={lang} />
         }
-        sections={sheet.map((s) => ({
+        sections={(sheet ?? []).map((s) => ({
           title: lang === "en" ? s.section.en : s.section.fr,
           table: s.table,
         }))}
+        note={lang === "en" ? "References coming soon." : "Références bientôt disponibles."}
         lang={lang}
       />
     );
@@ -161,9 +177,10 @@ export default async function CategoryPage({ params, searchParams }: { params: P
             ))}
           </div>
         ) : node.family ? (
+          // Page de gamme : pas de carrousel, on liste les formats (les visuels sont sur les fiches).
           <>
             <h2 className="mb-6 text-lg font-semibold text-zinc-800">{lang === "en" ? "Available formats" : "Formats disponibles"}</h2>
-            <FamilyProducts family={node.family} lang={lang} />
+            <FamilyProducts family={node.family} navPath={parentSlugs.join("/")} lang={lang} />
           </>
         ) : (
           <div className="mx-auto max-w-md rounded-2xl border border-zinc-200 bg-zinc-50 p-10 text-center">

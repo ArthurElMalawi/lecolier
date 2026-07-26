@@ -37,92 +37,100 @@ const D = {
   f24x32: { fr: "24 × 32 cm", en: "24 × 32 cm" },
 } satisfies Record<string, Bi>;
 
+/** Dimensions utilisées en colonnes (blocs, spiralés…). */
+const C = {
+  a4: { fr: "A4", en: "A4" },
+  a5: { fr: "A5", en: "A5" },
+  ref: { fr: "Référence", en: "Reference" },
+} satisfies Record<string, Bi>;
+
+/**
+ * Fiches saisies à la main. Les usages TP / Dessin & Musique / Maternelle n'y
+ * figurent plus : leurs tableaux sont dérivés de product-refs.ts par lib/usage-sheets.ts,
+ * pour que la page par gamme et la page « Cahiers Spécialisés » ne divergent pas.
+ */
 export const classementSheets: Record<string, ProductSheet> = {
-  // Clé par chemin complet (le slug « travaux-pratiques » se répète selon la gamme).
-  "nos-cahiers/gamme-polypro-premium/travaux-pratiques": [
+
+  /* --- Prises de notes & spiralés --- */
+  "cahiers-spirales-8-sujets": [
     {
-      section: { fr: "Garantie Véritable Papier Dessin — 90 g/m²", en: "Genuine Drawing Paper — 90 gsm" },
+      section: { fr: "Cahiers Spiralés — 8 intercalaires · Papier 80 g/m²", en: "Spiral Notebooks — 8 dividers · 80 gsm paper" },
       table: {
-        columns: [P(60), P(96), P(192)],
+        columns: [D.f17x22, { fr: "A4 — 21 × 29,7 cm", en: "A4 — 21 × 29.7 cm" }],
         rows: [
-          { color: "Incolore", label: D.f17x22, cells: ["44610", "47847", "48134"] },
-          { color: "Rose", label: D.f17x22, cells: [null, "47877", null] },
-          { color: "Incolore", label: D.f21x29_7, cells: [null, "44611", "47850"] },
-          { color: "Incolore", label: D.f24x32, cells: [null, "44612", "47853"] },
+          { color: "Gris", cells: ["44762", "44764"] },
+          { color: "Noir", cells: ["44763", "44765"] },
         ],
       },
     },
   ],
-  "nos-cahiers/gamme-polypro-premium/dessin-musique-chant": [
+  "blocs-notes": [
     {
-      section: { fr: "Garantie Véritable Papier Dessin — 90 g/m²", en: "Genuine Drawing Paper — 90 gsm" },
+      section: { fr: "", en: "" },
       table: {
-        columns: [P(32), P(96)],
+        columns: [C.a4, C.a5],
         rows: [
-          { color: "Assortit", label: D.f17x22, cells: ["44614", null] },
-          { color: "Incolore", label: D.f24x32, cells: [null, "47871"] },
+          { label: { fr: "70 g/m² — couverture 230 g", en: "70 gsm — 230 g cover" }, cells: ["47806", "47809"] },
+          { label: { fr: "55 g/m² — couverture 180 g", en: "55 gsm — 180 g cover" }, cells: ["48358", "48357"] },
         ],
       },
     },
   ],
-  "nos-cahiers/gamme-polypro-premium/maternelle-petite-ecole": [
+
+  /* --- Classement : protège-cahiers --- */
+  "proteges-cahiers": [
     {
-      section: { fr: "Double Lignes 3 mm — 90 g/m²", en: "Double Lines 3 mm — 90 gsm" },
-      table: {
-        columns: [P(32)],
-        rows: [{ color: "Assortit", label: D.f17x22, cells: ["44613"] }],
+      section: {
+        fr: "17 × 22 cm — Grain cuir avec porte-étiquette · 22/100e",
+        en: "17 × 22 cm — Leather grain with label holder · 22/100",
       },
-    },
-  ],
-  "nos-cahiers/gamme-polypro-classique/travaux-pratiques": [
-    {
-      section: { fr: "Garantie Véritable Papier à Dessin — 70 g/m²", en: "Genuine Drawing Paper — 70 gsm" },
       table: {
-        columns: [P(96)],
+        columns: [C.ref],
         rows: [
-          { color: "Incolore", label: D.f17x22, cells: ["48308"] },
-          { color: "Incolore", label: D.f24x32, cells: ["48309"] },
+          { color: "Bleu", cells: ["40175"] },
+          { color: "Rouge", cells: ["40176"] },
+          { color: "Jaune", cells: ["40177"] },
+          { color: "Vert", cells: ["40178"] },
+          { color: "Violet", cells: ["40179"] },
+          { color: "Noir", cells: ["40180"] },
+          { color: "Orange", cells: ["40181"] },
+          { color: "Rose", cells: ["40182"] },
+          { color: "Bleu clair", cells: ["40183"] },
+          { color: "Vert clair", cells: ["40184"] },
+          { color: "Brun", cells: ["40185"] },
+          { color: "Gris", cells: ["40186"] },
         ],
       },
     },
   ],
-  "nos-cahiers/gamme-polypro-classique/dessin-musique-chant": [
+
+  /* --- Accessoires & quotidien --- */
+  "gourdes-bpa": [
     {
-      section: { fr: "Dessin — Papier à Dessin 70 g/m²", en: "Drawing — 70 gsm drawing paper" },
+      section: {
+        fr: "Gourdes en plastique sans BPA — 4 couleurs assorties",
+        en: "BPA-free plastic bottles — 4 assorted colours",
+      },
       table: {
-        columns: [
-          { fr: "17×22 · 32 p.", en: "17×22 · 32 p." },
-          { fr: "24×32 · 96 p.", en: "24×32 · 96 p." },
-        ],
+        columns: [C.ref],
+        rows: [{ color: "Assortit", label: { fr: "500 ml", en: "500 ml" }, cells: ["48131"] }],
+      },
+    },
+  ],
+  "sacs-kraft": [
+    {
+      section: { fr: "", en: "" },
+      table: {
+        columns: [C.ref],
         rows: [
-          { color: "Orange", cells: ["48315", "48320"] },
-          { color: "Bleu", cells: ["48316", "48321"] },
-          { color: "Rouge", cells: ["48317", "48322"] },
-          { color: "Vert", cells: ["48318", "48323"] },
-          { color: "Incolore", cells: ["48319", "48324"] },
-        ],
-      },
-    },
-    {
-      section: { fr: "Musique et Chant — 70 g/m²", en: "Music — 70 gsm" },
-      table: {
-        columns: [P(32)],
-        rows: [
-          { color: "Incolore", label: D.f17x22, cells: ["48325"] },
-          { color: "Incolore", label: D.f24x32, cells: ["48326"] },
+          { label: { fr: "20 × 26 × 12 cm", en: "20 × 26 × 12 cm" }, cells: ["49818"] },
+          { label: { fr: "30 × 38 × 14 cm", en: "30 × 38 × 14 cm" }, cells: ["49820"] },
+          { label: { fr: "38 × 40 × 16 cm", en: "38 × 40 × 16 cm" }, cells: ["49822"] },
         ],
       },
     },
   ],
-  "nos-cahiers/gamme-polypro-classique/maternelle-petite-ecole": [
-    {
-      section: { fr: "Double Lignes 3 mm — 70 g/m²", en: "Double Lines 3 mm — 70 gsm" },
-      table: {
-        columns: [P(32)],
-        rows: [{ color: "Assortit", label: D.f17x22, cells: ["48314"] }],
-      },
-    },
-  ],
+
   "gamme-plume": [
     {
       section: { fr: "", en: "" },

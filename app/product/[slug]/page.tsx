@@ -1,10 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
 import { formatLabel, rulingLabel, familyKey, familyLabel } from "@/lib/catalog";
 import { findFamilyTrail, nodeLabel, nodeHref } from "@/lib/navigation";
 import { refFor, availableFor } from "@/lib/product-refs";
+import { imagesFor } from "@/lib/catalogue-images";
 import type { CoverType, Format, Ruling } from "@/lib/catalog-types";
 import type { RefTableData } from "@/lib/classement-refs";
+import { ProductCarousel } from "@/components/product-carousel";
 import { ProductSheet } from "@/components/product-sheet";
 import { getLang, getDictionary } from "@/lib/i18n";
 
@@ -18,6 +19,12 @@ const FORMAT_BY_SLUG: Record<string, Format> = {
   "17x22": "F17x22",
   "21x29_7": "F21x29_7",
   "24x32": "F24x32",
+};
+/** Sous-dossier de visuels correspondant au format (voir lib/catalogue-images). */
+const VARIANT_BY_FORMAT: Record<Format, string> = {
+  F17x22: "17x22",
+  F21x29_7: "21x29_7",
+  F24x32: "24x32",
 };
 
 export default async function ProductPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
@@ -78,15 +85,15 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
           : "Références produit (SKU) par couleur et nombre de pages"
       }
       image={
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-black/[.04] bg-zinc-50 dark:border-white/[.04] dark:bg-zinc-900">
-          <Image
-            src={coverType === "CARTONNE" ? "/products/cartonne_assortit.png" : "/products/polypro_assortit.png"}
-            alt={productName}
-            fill
-            className="object-contain p-12 transition-transform duration-500 hover:scale-105 dark:invert"
-            priority
-          />
-        </div>
+        <ProductCarousel
+          images={imagesFor(
+            familyTrail.map((n) => n.slug).join("/"),
+            `${VARIANT_BY_FORMAT[format]}${ruling === "QUADRI" ? "-5x5" : ""}`,
+          )}
+          alt={productName}
+          iconKey="notebook"
+          lang={lang}
+        />
       }
       sections={[{ table: tableData }]}
       lang={lang}

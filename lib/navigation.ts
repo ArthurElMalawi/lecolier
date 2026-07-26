@@ -96,9 +96,36 @@ export const navTree: NavNode[] = [
         icon: "layers",
         desc: { fr: "Des cahiers pensés pour chaque usage scolaire.", en: "Notebooks tailored to each school use." },
         children: [
-          { slug: "travaux-pratiques", fr: "Travaux Pratiques (TP)", en: "Practical Work (Lab)", icon: "flask", soon: true },
-          { slug: "dessin-musique-chant", fr: "Dessin & Musique et Chant", en: "Drawing & Music", icon: "music", soon: true },
-          { slug: "maternelle-petite-ecole", fr: "Maternelle / Petite École (Double lignes)", en: "Preschool / Early Years (Double-lined)", icon: "baby", soon: true },
+          {
+            slug: "travaux-pratiques",
+            fr: "Travaux Pratiques (TP)",
+            en: "Practical Work (Lab)",
+            icon: "flask",
+            desc: {
+              fr: "Couverture polypro 300 microns (3/10ème), piqûres, Seyès. Garantie véritable papier à dessin.",
+              en: "300-micron (3/10) polypro cover, stitched, Seyès. Genuine drawing paper guaranteed.",
+            },
+          },
+          {
+            slug: "dessin-musique-chant",
+            fr: "Dessin & Musique et Chant",
+            en: "Drawing & Music",
+            icon: "music",
+            desc: {
+              fr: "Couverture polypro 300 microns (3/10ème) avec page de garde personnalisable, piqûres, Seyès. Garantie véritable papier dessin.",
+              en: "300-micron (3/10) polypro cover with customizable title page, stitched, Seyès. Genuine drawing paper guaranteed.",
+            },
+          },
+          {
+            slug: "maternelle-petite-ecole",
+            fr: "Maternelle / Petite École (Double lignes)",
+            en: "Preschool / Early Years (Double-lined)",
+            icon: "baby",
+            desc: {
+              fr: "Couverture polypro 300 microns (3/10ème) avec page de garde personnalisable, piqûres, double lignes 3 mm.",
+              en: "300-micron (3/10) polypro cover with customizable title page, stitched, 3 mm double lines.",
+            },
+          },
         ],
       },
       {
@@ -108,8 +135,26 @@ export const navTree: NavNode[] = [
         icon: "spiral",
         desc: { fr: "Cahiers spiralés et blocs pour prendre des notes.", en: "Spiral notebooks and pads for note-taking." },
         children: [
-          { slug: "cahiers-spirales-8-sujets", fr: "Cahiers 80gr Spiralés 8 sujets", en: "80gsm 8-Subject Spiral Notebooks", icon: "spiral", soon: true },
-          { slug: "blocs-notes", fr: "Blocs Notes", en: "Notepads", icon: "notepad", soon: true },
+          {
+            slug: "cahiers-spirales-8-sujets",
+            fr: "Cahiers 80gr Spiralés 8 sujets",
+            en: "80gsm 8-Subject Spiral Notebooks",
+            icon: "spiral",
+            desc: {
+              fr: "Couverture polypro 700 microns, 8 intercalaires 400 microns, papier 80 g/m². Formats 17×22 et A4.",
+              en: "700-micron polypro cover, 8 dividers at 400 microns, 80gsm paper. 17×22 and A4 formats.",
+            },
+          },
+          {
+            slug: "blocs-notes",
+            fr: "Blocs Notes",
+            en: "Notepads",
+            icon: "notepad",
+            desc: {
+              fr: "Blocs notes A4 et A5, papier 70 g/m² (couverture 230 g) ou 55 g/m² (couverture 180 g).",
+              en: "A4 and A5 notepads, 70gsm paper (230 g cover) or 55gsm (180 g cover).",
+            },
+          },
         ],
       },
     ],
@@ -151,7 +196,16 @@ export const navTree: NavNode[] = [
               en: "Punched loose-leaf sheets, 70gsm paper, 21×29.7 (A4) format. Seyès or 5×5 ruling.",
             },
           },
-          { slug: "proteges-cahiers", fr: "Protèges Cahiers (120 & 220 microns)", en: "Notebook Covers (120 & 220 microns)", icon: "shield", soon: true },
+          {
+            slug: "proteges-cahiers",
+            fr: "Protèges Cahiers (120 & 220 microns)",
+            en: "Notebook Covers (120 & 220 microns)",
+            icon: "shield",
+            desc: {
+              fr: "Protège-cahiers 17×22 grain cuir avec porte-étiquette, 22/100e. 12 coloris.",
+              en: "17×22 leather-grain covers with label holder, 22/100. 12 colours.",
+            },
+          },
         ],
       },
       {
@@ -232,7 +286,37 @@ export const navTree: NavNode[] = [
         en: "Water Bottles",
         icon: "bottle",
         desc: { fr: "Gourdes sans BPA, pour rester hydraté.", en: "BPA-free bottles to stay hydrated." },
-        children: [{ slug: "gourdes-bpa", fr: "Gourdes sans BPA", en: "BPA-Free Water Bottles", icon: "bottle", soon: true }],
+        children: [
+          {
+            slug: "gourdes-bpa",
+            fr: "Gourdes sans BPA",
+            en: "BPA-Free Water Bottles",
+            icon: "bottle",
+            desc: {
+              fr: "Gourde en plastique sans BPA, 500 ml, 4 couleurs assorties. Forme unique, usage alimentaire.",
+              en: "BPA-free plastic bottle, 500 ml, 4 assorted colours. Distinctive shape, food-safe.",
+            },
+          },
+        ],
+      },
+      {
+        slug: "sacs-kraft-plv",
+        fr: "Sacs Kraft & PLV",
+        en: "Kraft Bags & POS",
+        icon: "bag",
+        desc: { fr: "Sacs kraft et supports de communication en point de vente.", en: "Kraft bags and point-of-sale material." },
+        children: [
+          {
+            slug: "sacs-kraft",
+            fr: "Sacs Kraft",
+            en: "Kraft Bags",
+            icon: "bag",
+            desc: {
+              fr: "Sacs kraft à poignées torsadées, logo L'écolier. Trois dimensions.",
+              en: "Kraft bags with twisted handles, L'écolier logo. Three sizes.",
+            },
+          },
+        ],
       },
     ],
   },

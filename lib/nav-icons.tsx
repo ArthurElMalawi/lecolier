@@ -24,6 +24,7 @@ import {
   Droplets,
   StickyNote,
   RotateCw,
+  ShoppingBag,
   type LucideIcon,
 } from "lucide-react";
 
@@ -49,6 +50,7 @@ const ICONS: Record<string, LucideIcon> = {
   palette: Palette,
   accessories: Backpack,
   backpack: Backpack,
+  bag: ShoppingBag,
   calendar: Calendar,
   bottle: Droplets,
   level: GraduationCap,
