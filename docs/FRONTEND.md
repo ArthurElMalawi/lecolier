@@ -117,7 +117,10 @@ Trois régimes, du plus précis au plus tolérant :
    garde donc sa place.
 
 ### Lecture (`lib/catalogue-images.ts`)
-- `imagesFor(chemin, variante?)` — visuels **communs d'abord**, puis ceux de la taille affichée.
+- `imagesFor(chemin, variante?)` — ordonne par **type de vue** (`rank`, posé à l'ingestion), pas par
+  portée : toutes les couvertures ouvrent le carrousel, les détails (page de garde, réglure) le
+  ferment, qu'ils soient communs à la gamme ou propres à une taille. À type égal, les visuels
+  restent groupés par taille, dans l'ordre canonique des coloris.
 - Une variante `toutes-tailles-<réglure>` ne s'applique qu'aux produits de cette réglure :
   `toutes-tailles-seyes` n'apparaît pas sur une page 5×5. `toutes-tailles` (sans suffixe) vaut pour tout.
 - `imagesForPages([…])` — une page qui en regroupe d'autres réunit leurs visuels (voir `groupedPages`).

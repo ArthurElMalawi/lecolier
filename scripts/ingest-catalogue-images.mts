@@ -454,7 +454,9 @@ function writeManifest() {
       lines.push(`    ${JSON.stringify(variant)}: [`);
       for (const e of list) {
         const caption = e.caption ? `, caption: ${bi(e.caption)}` : "";
-        lines.push(`      { src: ${JSON.stringify(e.src)}${caption} },`);
+        // Le rang voyage jusqu'au rendu : c'est lui qui ordonne le carrousel une fois
+        // les visuels communs et ceux de la taille réunis (cf. imagesFor).
+        lines.push(`      { src: ${JSON.stringify(e.src)}${caption}, rank: ${e.rank} },`);
       }
       lines.push("    ],");
     }

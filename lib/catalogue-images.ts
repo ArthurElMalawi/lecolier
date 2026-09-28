@@ -1,8 +1,14 @@
 import type { Bi } from "./classement-refs";
 import { catalogueImages } from "./catalogue-images.generated";
 
-/** Visuel d'une page produit. `caption` décrit la vue (format, coloris, pagination…). */
-export type CatalogueImage = { src: string; caption?: Bi };
+/**
+ * Visuel d'une page produit. `caption` décrit la vue (format, coloris, pagination…).
+ *
+ * `rank` classe les **types** de vue — couverture (10-20 selon le coloris), vue de
+ * format sans coloris (60), coloris assortis (70), page de garde (80), réglure (90) —
+ * et fixe l'ordre du carrousel. Il est posé à l'ingestion (scripts/ingest-catalogue-images.mts).
+ */
+export type CatalogueImage = { src: string; caption?: Bi; rank?: number };
 
 type Variants = Record<string, CatalogueImage[]>;
 
@@ -25,6 +31,12 @@ function commonVariants(byVariant: Variants, variant?: string): string[] {
   });
 }
 
+/**
+ * Une vue montre-t-elle le produit (couverture, coloris assortis) ou un détail
+ * (page de garde, réglure) ? Seuil aligné sur les rangs posés à l'ingestion.
+ */
+const detail = (rank = 50) => (rank >= 80 ? 1 : 0);
+
 const dedupe = (images: CatalogueImage[]) => {
   const seen = new Set<string>();
   return images.filter((img) => !seen.has(img.src) && seen.add(img.src));
@@ -36,21 +48,32 @@ const dedupe = (images: CatalogueImage[]) => {
  * @param navPath chemin de la page dans l'arborescence (ex. « nos-cahiers/gamme-polypro-premium/cahiers »)
  * @param variant taille du produit affiché (ex. « 17x22 », « 24x32-5x5 ») ; omis, toutes les tailles.
  *
- * Les visuels communs à la gamme (coloris assortis, page de garde, réglure)
- * ouvrent le carrousel, suivis de ceux propres à la taille affichée.
+ * L'ordre suit le **type de vue** (`rank`), pas la portée : les couvertures ouvrent
+ * le carrousel, les détails (page de garde, réglure) le ferment — qu'ils soient
+ * communs à la gamme ou propres à une taille.
  */
 export function imagesFor(navPath: string, variant?: string): CatalogueImage[] {
   const byVariant = catalogueImages[navPath];
   if (!byVariant) return [];
 
-  const common = commonVariants(byVariant, variant).flatMap((k) => byVariant[k]);
-  const specific = variant
-    ? byVariant[variant] ?? []
-    : Object.keys(byVariant)
-        .filter((k) => !isCommon(k))
-        .flatMap((k) => byVariant[k]);
+  const specificKeys = variant ? [variant] : Object.keys(byVariant).filter((k) => !isCommon(k));
+  // Les tailles d'abord, les visuels de gamme ensuite : à type de vue égal, un 17×22
+  // reste groupé avec les 17×22 plutôt que d'alterner avec les 24×32.
+  const groups = [...specificKeys, ...commonVariants(byVariant, variant)];
 
-  return dedupe([...common, ...specific]);
+  const ordered = groups
+    .flatMap((key, group) => (byVariant[key] ?? []).map((img) => ({ img, group })))
+    .sort(
+      (a, b) =>
+        // Toutes les couvertures avant tous les détails, quelle que soit la taille…
+        detail(a.img.rank) - detail(b.img.rank) ||
+        // …puis taille par taille, et dans l'ordre canonique des coloris.
+        a.group - b.group ||
+        (a.img.rank ?? 50) - (b.img.rank ?? 50),
+    )
+    .map((e) => e.img);
+
+  return dedupe(ordered);
 }
 
 /** Visuels de plusieurs pages à la suite — une page qui en regroupe d'autres réunit leurs visuels. */
