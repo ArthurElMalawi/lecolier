@@ -101,6 +101,16 @@ const COLORS: [string, Bi][] = [
   ["incolore", { fr: "Incolore", en: "Clear" }],
 ];
 
+/** Usage lu dans le nom d'une vue « réglure », pour distinguer des visuels par ailleurs jumeaux. */
+const RULING_USAGE: [RegExp, Bi][] = [
+  [/musique et chant/, { fr: "Musique et Chant", en: "Music & Singing" }],
+  [/\bdessin\b/, { fr: "Dessin", en: "Drawing" }],
+  [/\bdl\b|double ligne/, { fr: "Double lignes", en: "Double lines" }],
+  // « Sans réglure » = papier uni. Ne pas confondre avec « sans couverture ».
+  [/sans reglure|\bsans\b(?! couverture)/, { fr: "Sans réglure", en: "Unruled" }],
+  [/seyes/, { fr: "Réglure Seyès", en: "Seyès ruling" }],
+];
+
 type Parsed = { caption: Bi | null; rank: number; pages: number };
 
 /** Déduit une légende bilingue du nom de fichier (ex. « … - 170x220_bleu_48P »). */
@@ -159,11 +169,18 @@ function parseName(file: string): Parsed {
   }
   if (/reglure/.test(n)) {
     const zoom = /reglure\s*\+/.test(n) || n.includes("reglure+");
+    if (zoom) return { caption: { fr: "Intérieur — réglure Seyès", en: "Inside — Seyès ruling" }, rank: 90, pages };
+
+    // Un lot entier de « …_Reglure » ne peut pas s'intituler pareil : le nom porte
+    // l'usage (et souvent le coloris, déjà accumulé plus haut).
+    const usage = RULING_USAGE.find(([re]) => re.test(n))?.[1];
+    if (usage) {
+      fr.push(usage.fr);
+      en.push(usage.en);
+    }
     return {
-      caption: zoom
-        ? { fr: "Intérieur — réglure Seyès", en: "Inside — Seyès ruling" }
-        : { fr: "Détail de la réglure", en: "Ruling close-up" },
-      rank: zoom ? 90 : 91,
+      caption: fr.length ? { fr: fr.join(" · "), en: en.join(" · ") } : { fr: "Détail de la réglure", en: "Ruling close-up" },
+      rank: 91,
       pages,
     };
   }
@@ -352,6 +369,9 @@ async function walk(dir: string) {
       continue;
     }
     if (!IMAGE_EXT.has(extname(name).toLowerCase())) continue;
+    // Les pictogrammes sont des icônes de réglure (un cercle, un fragment de lignes) :
+    // lisibles à 24 px, absurdes en pleine largeur dans un carrousel.
+    if (/^picto\b/.test(plain(name))) continue;
     await ingest(full);
   }
 }
@@ -424,9 +444,13 @@ function writeManifest() {
     lines.push(`  ${JSON.stringify(navPath)}: {`);
     const variants = byPath.get(navPath)!;
     for (const variant of [...variants.keys()].sort()) {
+      // Un même visuel peut venir de deux dossiers sources (une référence rangée à la
+      // fois sous sa gamme et sous « Cahiers Spécialisés ») : une seule entrée suffit.
+      const seen = new Set<string>();
       const list = variants
         .get(variant)!
-        .sort((a, b) => a.rank - b.rank || a.pages - b.pages || a.src.localeCompare(b.src));
+        .sort((a, b) => a.rank - b.rank || a.pages - b.pages || a.src.localeCompare(b.src))
+        .filter((e) => !seen.has(e.src) && seen.add(e.src));
       lines.push(`    ${JSON.stringify(variant)}: [`);
       for (const e of list) {
         const caption = e.caption ? `, caption: ${bi(e.caption)}` : "";
