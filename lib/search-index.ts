@@ -58,21 +58,30 @@ const FORMAT_SLUG: Record<Format, string> = { F17x22: "17x22", F21x29_7: "21x29_
 
 const bi = (fn: (lang: Lang) => string): Bi => ({ fr: fn("fr"), en: fn("en") });
 
-/** Références d'une fiche, chaque cellule précisée par sa ligne et sa colonne. */
+/**
+ * Références d'une fiche, chaque cellule précisée par ce qui la distingue des autres.
+ *
+ * Une colonne unique n'est qu'un en-tête (« Référence ») : elle ne distingue rien
+ * et n'entre pas dans le détail. Reste alors la ligne (coloris, dimension…), ou à
+ * défaut le nom de la section — les pages à plusieurs produits n'ont souvent
+ * qu'une référence par produit (cf. lib/product-lines).
+ */
 function sheetRefs(sheet: ProductSheet): IndexedRef[] {
   const out: IndexedRef[] = [];
-  for (const { table } of sheet) {
+  for (const { section, table } of sheet) {
+    const discriminating = table.columns.length > 1;
     for (const row of table.rows) {
       row.cells.forEach((cell, i) => {
         if (!cell) return;
-        const column = table.columns[i];
+        const column = discriminating ? table.columns[i] : undefined;
         out.push({
           ref: cell,
-          ...bi((lang) =>
-            [row.color && colorLabel(row.color, lang), row.label?.[lang], column?.[lang]]
+          ...bi((lang) => {
+            const detail = [row.color && colorLabel(row.color, lang), row.label?.[lang], column?.[lang]]
               .filter(Boolean)
-              .join(" · "),
-          ),
+              .join(" · ");
+            return detail || section[lang];
+          }),
         });
       });
     }

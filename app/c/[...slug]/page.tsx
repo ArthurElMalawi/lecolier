@@ -11,7 +11,8 @@ import { availableFor } from "@/lib/product-refs";
 import { findByPath, nodeLabel, nodeDesc, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon, getAccent } from "@/lib/nav-icons";
 import { sheetFor, groupedPages } from "@/lib/usage-sheets";
-import { imagesForPages, heroFor } from "@/lib/catalogue-images";
+import { linesFor } from "@/lib/product-lines";
+import { imagesFor, imagesForPages, heroFor } from "@/lib/catalogue-images";
 import { ProductCarousel } from "@/components/product-carousel";
 import { ProductSheet } from "@/components/product-sheet";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
@@ -119,15 +120,44 @@ export default async function CategoryPage({ params, searchParams }: { params: P
 
   const children = node.children ?? [];
   const parentSlugs = trail.map((t) => t.slug);
-  const sheet = sheetFor(slug.join("/"), node.slug);
+  const path = slug.join("/");
+  const sheet = sheetFor(path, node.slug);
   const note = node.note ? (lang === "en" ? node.note.en : node.note.fr) : null;
   const desc = nodeDesc(node, lang);
+  const L = (b: { fr: string; en: string }) => (lang === "en" ? b.en : b.fr);
+
+  /* --- Page à plusieurs produits (fournitures, accessoires) : un carrousel chacun --- */
+  const lines = linesFor(path);
+  if (children.length === 0 && lines.length > 0) {
+    return (
+      <ProductSheet
+        crumbs={crumbs}
+        title={nodeLabel(node, lang)}
+        description={desc}
+        products={lines.map((line) => ({
+          key: line.variant,
+          image: (
+            <ProductCarousel
+              images={imagesFor(path, line.variant)}
+              alt={L(line.name)}
+              iconKey={node.icon}
+              lang={lang}
+            />
+          ),
+          title: L(line.name),
+          description: line.desc ? L(line.desc) : null,
+          table: line.table,
+        }))}
+        lang={lang}
+      />
+    );
+  }
 
   /* --- Fiche produit (classement : Feuillets Mobiles, Copies Doubles…) --- */
   // Une fiche existante l'emporte, même si le nœud porte une famille (Gamme Plume
   // présente tous ses formats dans un seul tableau). Sinon une page illustrée vaut
   // mieux qu'un « Bientôt disponible » — mais une page de gamme garde ses formats.
-  const sheetImages = imagesForPages([slug.join("/"), ...groupedPages(slug.join("/"))]);
+  const sheetImages = imagesForPages([path, ...groupedPages(path)]);
   if (children.length === 0 && (sheet || (!node.family && sheetImages.length > 0))) {
     return (
       <ProductSheet

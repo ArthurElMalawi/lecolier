@@ -101,12 +101,6 @@ export const ACCENTS: Record<string, Accent> = {
     text: "text-violet-600",
     ring: "hover:border-violet-300",
   },
-  "par-niveau": {
-    gradient: "from-amber-500 to-orange-400",
-    soft: "bg-amber-50 text-amber-600",
-    text: "text-amber-600",
-    ring: "hover:border-amber-300",
-  },
 };
 
 const DEFAULT_ACCENT: Accent = {

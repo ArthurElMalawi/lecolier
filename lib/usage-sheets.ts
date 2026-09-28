@@ -12,6 +12,7 @@ import type { Bi, ProductSheet, RefRow, RefTableData } from "./classement-refs";
 // Extension explicite : scripts/ingest-catalogue-images.mts charge ce module directement
 // avec Node, qui ne devine pas les extensions comme le fait le bundler.
 import { classementSheets } from "./classement-refs.ts";
+import { lineSheets } from "./product-lines.ts";
 import { availableFor, refFor, COLOR_ORDER } from "./product-refs.ts";
 
 type Variant = "STD" | "TP" | "MAT" | "DESSIN";
@@ -202,9 +203,10 @@ export const usageSheets: Record<string, ProductSheet> = Object.fromEntries(
 );
 
 /**
- * Fiche d'une page : usage dérivé, sinon fiche saisie à la main (par chemin
- * complet puis par slug simple, les slugs d'usage se répétant selon la gamme).
+ * Fiche d'une page : usage dérivé, puis pages à plusieurs produits
+ * (lib/product-lines), sinon fiche saisie à la main (par chemin complet puis par
+ * slug simple, les slugs d'usage se répétant selon la gamme).
  */
 export function sheetFor(path: string, slug: string): ProductSheet | undefined {
-  return usageSheets[path] ?? classementSheets[path] ?? classementSheets[slug];
+  return usageSheets[path] ?? lineSheets[path] ?? classementSheets[path] ?? classementSheets[slug];
 }

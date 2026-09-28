@@ -215,11 +215,47 @@ export const navTree: NavNode[] = [
         icon: "ruler",
         desc: { fr: "Crayons, gommes, règles, équerres et compas.", en: "Pencils, erasers, rulers, squares and compasses." },
         children: [
-          { slug: "kit-tracage", fr: "Kit de Traçage / Set Mathématique", en: "Geometry Set / Math Set", icon: "ruler", soon: true },
-          { slug: "regles-equerres-compas", fr: "Règle, Equerres, Rapporteurs et Compas", en: "Rulers, Squares, Protractors & Compasses", icon: "ruler", soon: true },
-          { slug: "crayons-papier", fr: "Crayons à papier", en: "Graphite Pencils", icon: "pencil", soon: true },
-          { slug: "gommes", fr: "Gomme", en: "Erasers", icon: "eraser", soon: true },
-          { slug: "taille-crayons", fr: "Tailles Crayons", en: "Pencil Sharpeners", icon: "pencil", soon: true },
+          {
+            slug: "kit-tracage",
+            fr: "Kit de Traçage / Set Mathématique",
+            en: "Geometry Set / Math Set",
+            icon: "ruler",
+            desc: {
+              fr: "Kits 3, 4 et 5 pièces : règle 30 cm, équerres, rapporteur et compas.",
+              en: "3, 4 and 5-piece sets: 30 cm ruler, squares, protractor and compass.",
+            },
+          },
+          {
+            slug: "regles-equerres-compas",
+            fr: "Règle, Equerres, Rapporteurs et Compas",
+            en: "Rulers, Squares, Protractors & Compasses",
+            icon: "ruler",
+            desc: {
+              fr: "Compas plastique avec crayon, fixe ou réglable. Règles, équerres et rapporteurs sont proposés en kit de traçage.",
+              en: "Plastic compass with pencil, fixed or adjustable. Rulers, squares and protractors come in the geometry sets.",
+            },
+          },
+          {
+            slug: "crayons-papier",
+            fr: "Crayons à papier",
+            en: "Graphite Pencils",
+            icon: "pencil",
+            desc: { fr: "Crayons HB n°2, corps bois ou plastique, en boîte de 10.", en: "HB #2 pencils, wooden or plastic body, in boxes of 10." },
+          },
+          {
+            slug: "gommes",
+            fr: "Gomme",
+            en: "Erasers",
+            icon: "eraser",
+            desc: { fr: "Gommes blanches T20 et T30.", en: "T20 and T30 white erasers." },
+          },
+          {
+            slug: "taille-crayons",
+            fr: "Tailles Crayons",
+            en: "Pencil Sharpeners",
+            icon: "pencil",
+            desc: { fr: "Taille-crayon 2 trous avec mini réservoir, et modèle Design.", en: "Two-hole sharpener with mini canister, and Design model." },
+          },
         ],
       },
       {
@@ -229,12 +265,27 @@ export const navTree: NavNode[] = [
         icon: "scissors",
         desc: { fr: "Colles et ciseaux adaptés à chaque âge.", en: "Glue and scissors for every age." },
         children: [
-          { slug: "colle-baton", fr: "Colle en Bâton", en: "Glue Sticks", icon: "glue", soon: true },
+          {
+            slug: "colle-baton",
+            fr: "Colle en Bâton",
+            en: "Glue Sticks",
+            icon: "glue",
+            desc: { fr: "Bâtons de colle 10, 20 et 40 g.", en: "10, 20 and 40 g glue sticks." },
+          },
           { slug: "colle-blanche", fr: "Colle Blanche", en: "White Glue", icon: "glue", soon: true },
           { slug: "colle-transparente", fr: "Colle Transparente", en: "Clear Glue", icon: "glue", soon: true },
-          { slug: "ciseaux-petite-enfance", fr: "Ciseaux petite enfance", en: "Toddler Scissors", icon: "scissors", soon: true },
-          { slug: "ciseaux-ecole", fr: "Ciseaux d'école", en: "School Scissors", icon: "scissors", soon: true },
-          { slug: "ciseaux-grande-taille", fr: "Ciseaux Grande Taille", en: "Large Scissors", icon: "scissors", soon: true },
+          // Une seule rubrique pour les trois tailles : elles se choisissent l'une par
+          // rapport à l'autre, les séparer obligeait à ouvrir trois pages pour comparer.
+          {
+            slug: "ciseaux",
+            fr: "Ciseaux",
+            en: "Scissors",
+            icon: "scissors",
+            desc: {
+              fr: "De la petite enfance au grand format : ciseaux plastique, 12 cm et 18 cm.",
+              en: "From toddlers to older pupils: plastic, 12 cm and 18 cm scissors.",
+            },
+          },
         ],
       },
       {
@@ -244,9 +295,33 @@ export const navTree: NavNode[] = [
         icon: "palette",
         desc: { fr: "Papier à grain, crayons et feutres de couleurs.", en: "Textured paper, colored pencils and markers." },
         children: [
-          { slug: "papier-dessin-grain", fr: "Papier à Dessin à Grain", en: "Textured Drawing Paper", icon: "palette", soon: true },
-          { slug: "crayons-couleurs", fr: "Crayons de couleurs", en: "Colored Pencils", icon: "palette", soon: true },
-          { slug: "feutres", fr: "Feutres de Couleurs", en: "Felt-Tip Markers", icon: "palette", soon: true },
+          {
+            slug: "papier-dessin-grain",
+            fr: "Papier à Dessin à Grain",
+            en: "Textured Drawing Paper",
+            icon: "palette",
+            desc: {
+              fr: "Pochettes de 12 feuilles de papier blanc à grain, 180 et 220 g/m², en 21 × 29,7 et 24 × 32 cm.",
+              en: "Packs of 12 white textured sheets, 180 and 220 gsm, in 21 × 29.7 and 24 × 32 cm.",
+            },
+          },
+          {
+            slug: "crayons-couleurs",
+            fr: "Crayons de couleurs",
+            en: "Colored Pencils",
+            icon: "palette",
+            desc: {
+              fr: "Crayons triangulaires 18 cm, bois ou plastique, en boîte de 12.",
+              en: "18 cm triangular pencils, wooden or plastic, in boxes of 12.",
+            },
+          },
+          {
+            slug: "feutres",
+            fr: "Feutres de Couleurs",
+            en: "Felt-Tip Markers",
+            icon: "palette",
+            desc: { fr: "Boîte de 12 feutres pointe moyenne.", en: "Box of 12 medium-tip markers." },
+          },
         ],
       },
     ],
@@ -268,8 +343,20 @@ export const navTree: NavNode[] = [
         icon: "backpack",
         desc: { fr: "Sacs à dos et trousses résistants.", en: "Sturdy backpacks and pencil cases." },
         children: [
-          { slug: "sacs-a-dos", fr: "Sacs à Dos", en: "Backpacks", icon: "backpack", soon: true },
-          { slug: "trousses", fr: "Trousses", en: "Pencil Cases", icon: "backpack", soon: true },
+          {
+            slug: "sacs-a-dos",
+            fr: "Sacs à Dos",
+            en: "Backpacks",
+            icon: "backpack",
+            desc: { fr: "Sac à dos L'écolier, trois coloris.", en: "L'écolier backpack, three colours." },
+          },
+          {
+            slug: "trousses",
+            fr: "Trousses",
+            en: "Pencil Cases",
+            icon: "backpack",
+            desc: { fr: "Trousse 2 zips en trois coloris, et modèle haut de gamme.", en: "Two-zip case in three colours, plus a premium model." },
+          },
         ],
       },
       {
@@ -318,23 +405,6 @@ export const navTree: NavNode[] = [
           },
         ],
       },
-    ],
-  },
-  {
-    slug: "par-niveau",
-    fr: "Achats par Niveau Scolaire",
-    en: "Shop by School Level",
-    icon: "level",
-    note: { fr: "La nouveauté qui facilite la vie", en: "The new time-saver" },
-    desc: {
-      fr: "Retrouvez en un clic tout le matériel adapté au niveau de votre enfant.",
-      en: "Find everything your child needs for their level in one click.",
-    },
-    children: [
-      { slug: "maternelle", fr: "Maternelle", en: "Preschool", icon: "baby", soon: true },
-      { slug: "primaire", fr: "École Primaire", en: "Primary School", icon: "pencil", soon: true },
-      { slug: "college-lycee", fr: "Collège & Lycée", en: "Middle & High School", icon: "level", soon: true },
-      { slug: "universite", fr: "Université", en: "University", icon: "level", soon: true },
     ],
   },
 ];
