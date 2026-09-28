@@ -33,9 +33,12 @@ export default function MentionsLegales() {
               Le site est hébergé par :
             </p>
             <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li><strong>Hébergeur :</strong> [Nom de l&apos;hébergeur, ex: Vercel, OVH...]</li>
-              <li><strong>Adresse :</strong> [Adresse de l&apos;hébergeur]</li>
-              <li><strong>Site web :</strong> [Site web de l&apos;hébergeur]</li>
+              <li><strong>Hébergeur :</strong> Vercel Inc.</li>
+              <li><strong>Adresse :</strong> 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis</li>
+              <li><strong>Site web :</strong>{' '}
+                <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-zinc-900 underline underline-offset-2 hover:no-underline">vercel.com</a>
+              </li>
+              <li><strong>Contact :</strong> privacy@vercel.com</li>
             </ul>
           </section>
 

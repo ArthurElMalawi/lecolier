@@ -1,7 +1,7 @@
 // Généré depuis « lsiting articles complet v3 2026 09 28.xlsx » — NE PAS éditer à la main.
 //   python scripts/generate-product-refs.py "<export>.xlsx" --write
 //
-// Clé: grammage|cover(PP|CARTONNE)|format|variant(STD|TP|MAT|DESSIN)|ruling(SEYES|QUADRI|LIGNE|BLANC)|couleur|pages
+// Clé: grammage|cover(PP|CARTONNE)|format|variant(NotebookVariant)|ruling(SEYES|QUADRI|LIGNE|BLANC)|couleur|pages
 //
 // La DESIGNATION de l'export fait foi : ses colonnes structurées sont fusionnées
 // (valeur sur la première ligne seulement) et parfois décalées d'une rubrique à l'autre.
@@ -9,6 +9,8 @@
 // Les clés « 60|CARTONNE » et « 70|CARTONNE » ne figurent plus dans l'export et ne sont
 // affichées nulle part (l'arborescence n'a pas de gamme cartonnée hors Plume) ; elles sont
 // conservées telles quelles plutôt que supprimées.
+
+import type { NotebookVariant } from "./catalog-types";
 
 const REFS: Record<string, string> = {
   "56|CARTONNE|F17x22|STD|SEYES|Assortit|192": "47831",
@@ -270,6 +272,9 @@ const REFS: Record<string, string> = {
   "90|PP|F17x22|TP|SEYES|Incolore|64": "44610",
   "90|PP|F17x22|TP|SEYES|Incolore|96": "47847",
   "90|PP|F17x22|TP|SEYES|Rose|96": "47877",
+  "90|PP|F21x29_7|RECHERCHE|BLANC|Assortit|96": "40057",
+  "90|PP|F21x29_7|RECHERCHE|SEYES|Assortit|192": "47936",
+  "90|PP|F21x29_7|RECHERCHE|SEYES|Assortit|288": "47939",
   "90|PP|F21x29_7|STD|SEYES|Assortit|192": "44569",
   "90|PP|F21x29_7|STD|SEYES|Assortit|288": "44579",
   "90|PP|F21x29_7|STD|SEYES|Assortit|48": "44549",
@@ -360,7 +365,7 @@ export type RefAttributes = {
   grammageGsm: number;
   cover: "PP" | "CARTONNE";
   format: string;
-  variant: "STD" | "TP" | "MAT" | "DESSIN";
+  variant: NotebookVariant;
   ruling: string;
   color: string;
   pages: number;
@@ -420,7 +425,7 @@ export function availableFor(opts: {
   grammageGsm: number;
   cover: "PP" | "CARTONNE";
   format: string;
-  variant?: "STD" | "TP" | "MAT" | "DESSIN";
+  variant?: NotebookVariant;
   ruling?: string;
 }): { colors: string[]; pages: number[] } {
   const grammage = opts.grammageGsm === 58 ? 56 : opts.grammageGsm;
@@ -446,7 +451,7 @@ export function refFor(opts: {
   grammageGsm: number;
   cover: "PP" | "CARTONNE";
   format: string;
-  variant?: "STD" | "TP" | "MAT" | "DESSIN";
+  variant?: NotebookVariant;
   ruling?: string | null;
   color?: string | null;
   pages: number;

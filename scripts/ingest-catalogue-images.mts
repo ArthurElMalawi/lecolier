@@ -280,6 +280,9 @@ const unplaced: string[] = [];
  */
 function usageSlug(a: RefAttributes): string {
   if (a.variant === "TP") return "travaux-pratiques";
+  // Le cahier de recherche n'est pas sous une gamme mais sous « Cahiers Spécialisés » :
+  // sa fiche le place (PAGE_BY_REF), ce cas ne sert que de garde-fou.
+  if (a.variant === "RECHERCHE") return "cahier-recherche";
   if (a.variant === "MAT" || a.ruling === "LIGNE") return "maternelle-petite-ecole";
   if (a.variant === "DESSIN" || a.ruling === "BLANC") return "dessin-musique-chant";
   return "cahiers";

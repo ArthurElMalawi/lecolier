@@ -5,6 +5,11 @@
 import type { CatalogueImage } from "./catalogue-images";
 
 export const catalogueImages: Record<string, Record<string, CatalogueImage[]>> = {
+  "accessoires": {
+    "": [
+      { src: "/catalogue/accessoires/_/image-introduction-accessoires.webp", rank: 0 },
+    ],
+  },
   "accessoires/agendas/agenda-rentree": {
     "": [
       { src: "/catalogue/accessoires/agendas/agenda-rentree/_/capture-d-ecran-2026-07-26-192215.webp", rank: 0 },
@@ -43,6 +48,11 @@ export const catalogueImages: Record<string, Record<string, CatalogueImage[]>> =
       { src: "/catalogue/accessoires/sacs-kraft-plv/sacs-kraft/_/img-20241015-105617.webp", rank: 0 },
     ],
   },
+  "fournitures": {
+    "": [
+      { src: "/catalogue/fournitures/_/image-introduction-fournitures.webp", rank: 0 },
+    ],
+  },
   "fournitures/art-creatif/papier-dessin-grain": {
     "": [
       { src: "/catalogue/fournitures/art-creatif/papier-dessin-grain/_/capture-d-ecran-2026-07-26-192303.webp", rank: 0 },
@@ -65,6 +75,13 @@ export const catalogueImages: Record<string, Record<string, CatalogueImage[]>> =
   "nos-cahiers": {
     "": [
       { src: "/catalogue/nos-cahiers/_/image-introduction-nos-cahiers.webp", rank: 0 },
+    ],
+  },
+  "nos-cahiers/cahiers-specialises/cahier-recherche": {
+    "21x29_7": [
+      { src: "/catalogue/nos-cahiers/cahiers-specialises/cahier-recherche/21x29_7/40057.webp", caption: { fr: "21 × 29,7 cm · Assortit · 96 pages", en: "21 × 29.7 cm · Assorted · 96 pages" }, rank: 20 },
+      { src: "/catalogue/nos-cahiers/cahiers-specialises/cahier-recherche/21x29_7/47936.webp", caption: { fr: "21 × 29,7 cm · Assortit · 192 pages", en: "21 × 29.7 cm · Assorted · 192 pages" }, rank: 20 },
+      { src: "/catalogue/nos-cahiers/cahiers-specialises/cahier-recherche/21x29_7/47939.webp", caption: { fr: "21 × 29,7 cm · Assortit · 288 pages", en: "21 × 29.7 cm · Assorted · 288 pages" }, rank: 20 },
     ],
   },
   "nos-cahiers/gamme-cartonnee-plume/gamme-plume": {

@@ -126,6 +126,16 @@ export const navTree: NavNode[] = [
               en: "300-micron (3/10) polypro cover with customizable title page, stitched, 3 mm double lines.",
             },
           },
+          {
+            slug: "cahier-recherche",
+            fr: "Cahier de Recherche",
+            en: "Research Notebook",
+            icon: "pencil",
+            desc: {
+              fr: "Format A4, papier 90 g/m², couverture polypro 300 microns (3/10ème), piqûres. Réglure Seyès ou papier uni, 5 coloris assortis.",
+              en: "A4 format, 90gsm paper, 300-micron (3/10) polypro cover, stitched. Seyès ruling or plain paper, 5 assorted colours.",
+            },
+          },
         ],
       },
       {

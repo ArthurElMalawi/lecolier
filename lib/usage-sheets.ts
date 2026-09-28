@@ -15,8 +15,7 @@ import { classementSheets } from "./classement-refs.ts";
 import { lineSheets } from "./product-lines.ts";
 import { availableFor, refFor, COLOR_ORDER } from "./product-refs.ts";
 
-type Variant = "STD" | "TP" | "MAT" | "DESSIN";
-type Ruling = "SEYES" | "QUADRI" | "LIGNE" | "BLANC";
+import type { NotebookVariant as Variant, Ruling } from "./catalog-types.ts";
 
 const FORMATS = ["F17x22", "F21x29_7", "F24x32"] as const;
 type Format = (typeof FORMATS)[number];
@@ -88,6 +87,9 @@ const S = {
   musiqueClassique: { grammage: 70, variant: "STD", ruling: "BLANC", layout: "formats-en-colonnes" },
   matPremium: { grammage: 90, variant: "MAT", ruling: "LIGNE" },
   matClassique: { grammage: 70, variant: "MAT", ruling: "LIGNE" },
+  // Cahier de recherche : A4 seulement, en 90 g, réglé ou uni selon la pagination.
+  rechercheSeyes: { grammage: 90, variant: "RECHERCHE", ruling: "SEYES" },
+  rechercheUni: { grammage: 90, variant: "RECHERCHE", ruling: "BLANC" },
 } satisfies Record<string, Source>;
 
 const T = {
@@ -98,6 +100,8 @@ const T = {
   musiqueClassique: { fr: "Musique et Chants — 70 g/m²", en: "Music & Singing — 70 gsm" },
   matPremium: { fr: "Double Lignes 3 mm — 90 g/m²", en: "Double Lines 3 mm — 90 gsm" },
   matClassique: { fr: "Double Lignes 3 mm — 70 g/m²", en: "Double Lines 3 mm — 70 gsm" },
+  rechercheSeyes: { fr: "Réglure Seyès — 90 g/m²", en: "Seyès ruling — 90 gsm" },
+  rechercheUni: { fr: "Papier uni — 90 g/m²", en: "Plain paper — 90 gsm" },
 
   // Pages « Cahiers Spécialisés » : les deux gammes réunies, titres du catalogue papier.
   tpPremiumMerged: { fr: "Gamme Premium — 90 g/m² + 90 g/m²", en: "Premium Range — 90 gsm + 90 gsm" },
@@ -155,6 +159,13 @@ const SPECS: Record<string, Spec[]> = {
   "nos-cahiers/cahiers-specialises/maternelle-petite-ecole": [
     { section: T.matPremiumMerged, source: S.matPremium, from: PAGE.matPremium },
     { section: T.matClassiqueMerged, source: S.matClassique, from: PAGE.matClassique },
+  ],
+
+  // Le cahier de recherche n'existe qu'en 90 g : pas de page par gamme à réunir,
+  // donc pas de `from` — c'est cette page qui porte ses visuels.
+  "nos-cahiers/cahiers-specialises/cahier-recherche": [
+    { section: T.rechercheSeyes, source: S.rechercheSeyes },
+    { section: T.rechercheUni, source: S.rechercheUni },
   ],
 };
 

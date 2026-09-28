@@ -46,13 +46,16 @@ export function Hero({ dict, lang }: HeroProps) {
               </Link>
             </div>
           </div>
-          <div className="mx-auto w-full lg:order-last">
-             <div className="relative w-full h-[300px] lg:h-[400px]">
+          <div className="mx-auto w-full max-w-md lg:order-last">
+             {/* Cadre au format du visuel (4/5) : une photo verticale dans une boîte
+                 large se retrouverait amputée de moitié par `object-cover`. */}
+             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-zinc-100 shadow-xl">
                 <Image
-                  src="/products/polypro_assortit.png"
+                  src="/products/image_hero.jpg"
                   alt="Assortiment de cahiers L'écolier"
                   fill
-                  className="object-contain"
+                  sizes="(min-width: 1024px) 28rem, 100vw"
+                  className="object-cover"
                   priority
                 />
              </div>

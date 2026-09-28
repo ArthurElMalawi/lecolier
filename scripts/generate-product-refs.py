@@ -33,18 +33,12 @@ NOT_A_NOTEBOOK = re.compile(
     r"GOURDE|SAC KRAFT|PLV|BLOC NOTE|POCHETTE|AGENDA|STYLO|COPIES DOUBLES|FEUILLETS MOBILES|ETUI|FEUTRE"
 )
 
-# « Cahier de recherche » n'a ni page ni variante dans le site : le laisser entrer
-# écraserait un cahier scolaire de même grammage, format et pagination.
-UNSUPPORTED = re.compile(r"CAHIER DE RECHERCHE")
-
 
 def key_for(label):
     """Clé REFS d'une désignation, ou (None, raison) si elle n'y a pas sa place."""
     d = label.upper()
     if NOT_A_NOTEBOOK.search(d):
         return None, "hors cahiers"
-    if UNSUPPORTED.search(d):
-        return None, "type de produit absent du site"
 
     grammage = re.search(r"\b(\d{2})\s?GR\b", d)
     fmt = next((v for k, v in FORMATS if k in d), None)
@@ -55,6 +49,9 @@ def key_for(label):
 
     if "TRAVAUX PRATIQUES" in d:
         variant, ruling = "TP", "SEYES"
+    elif "CAHIER DE RECHERCHE" in d:
+        # Réglé ou uni selon la pagination : la désignation le dit.
+        variant, ruling = "RECHERCHE", "BLANC" if re.search(r"\bUNI\b", d) else "SEYES"
     elif "PETITE ECOLE" in d:
         variant, ruling = "MAT", "LIGNE"
     elif "CAHIER DESSIN" in d:
