@@ -34,10 +34,15 @@ export type NavNode = {
 // autres usages (TP, Dessin, Maternelle) ont leurs propres références et sont
 // rendus en fiche produit via classementSheets (clé = chemin complet), ou
 // « Bientôt disponible » tant que la fiche n'existe pas.
-const usages = (family: string): NavNode[] => [
+//
+// `musique` : le cahier de Musique et Chants n'existe qu'en 70 g. La page Premium
+// garde le même slug — les URL ne bougent pas — mais ne l'annonce pas dans son titre.
+const usages = (family: string, { musique }: { musique: boolean }): NavNode[] => [
   { slug: "cahiers", fr: "Cahiers", en: "Notebooks", icon: "notebook", family, desc: { fr: "Le cahier du quotidien, réglure Seyès.", en: "Everyday notebook, Seyès ruling." } },
   { slug: "travaux-pratiques", fr: "Travaux Pratiques (TP)", en: "Practical Work (Lab)", icon: "flask", desc: { fr: "Une page unie, une page lignée.", en: "One plain page, one lined page." } },
-  { slug: "dessin-musique-chant", fr: "Dessin & Musique et Chant", en: "Drawing & Music", icon: "music", desc: { fr: "Pages dédiées au dessin et au solfège.", en: "Pages for drawing and music." } },
+  musique
+    ? { slug: "dessin-musique-chant", fr: "Dessin & Musique et Chant", en: "Drawing & Music", icon: "music", desc: { fr: "Pages dédiées au dessin et au solfège.", en: "Pages for drawing and music." } }
+    : { slug: "dessin-musique-chant", fr: "Dessin", en: "Drawing", icon: "palette", desc: { fr: "Véritable papier à dessin, pages unies.", en: "Genuine drawing paper, plain pages." } },
   { slug: "maternelle-petite-ecole", fr: "Maternelle / Petite École (Double lignes)", en: "Preschool / Early Years (Double-lined)", icon: "baby", desc: { fr: "Double lignes pour les premiers tracés.", en: "Double lines for early writing." } },
 ];
 
@@ -59,7 +64,7 @@ export const navTree: NavNode[] = [
         phare: true,
         icon: "sparkles",
         desc: { fr: "Papier 90g/m² ultra-blanc, couverture polypro 300 microns.", en: "Ultra-white 90gsm paper, 300-micron polypro cover." },
-        children: usages("90g-polypro-pique"),
+        children: usages("90g-polypro-pique", { musique: false }),
       },
       {
         slug: "gamme-polypro-classique",
@@ -67,7 +72,7 @@ export const navTree: NavNode[] = [
         en: "Polypro Classic Range (70gsm Paper)",
         icon: "notebook",
         desc: { fr: "Le rapport qualité/prix, papier 70g/m² et couverture polypro.", en: "Best value, 70gsm paper with polypro cover." },
-        children: usages("70g-polypro-pique"),
+        children: usages("70g-polypro-pique", { musique: true }),
       },
       {
         slug: "gamme-cartonnee-plume",

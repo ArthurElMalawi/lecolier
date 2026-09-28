@@ -9,9 +9,11 @@ import type { Lang } from "./i18n";
 
 /** Pastille (carré) par nom de couleur. Les couleurs sont TOUJOURS rendues en pastille, jamais en toutes lettres. */
 export const COLOR_STYLE: Record<string, string> = {
-  Orange: "bg-orange-500",
+  // Orange et jaune sont relevés sur les couvertures réelles, pas pris à la palette
+  // Tailwind : ce sont les teintes imprimées, elles doivent coller aux photos.
+  Orange: "bg-[lab(76_33.61_51.65)]",
   Gris: "bg-gray-500",
-  Jaune: "bg-yellow-400",
+  Jaune: "bg-[lab(89_-0.07_52.44)]",
   Rose: "bg-pink-400",
   Violet: "bg-purple-500",
   Bleu: "bg-blue-500",

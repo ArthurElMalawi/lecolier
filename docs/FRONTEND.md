@@ -9,6 +9,10 @@ Le projet utilise le **Next.js App Router**. L'interface est construite avec Rea
     - Sections de catégories dérivées de `navTree` (aucun appel base : tout est en mémoire).
     - Section des revendeurs (`ResellerSection`) avec carte interactive — actuellement commentée.
 - **Catalogue (`app/c/[...slug]/page.tsx`) :** route unique de toute l'arborescence. Selon le nœud :
+    - une **fiche à plusieurs produits** — un bloc titre + carrousel + tableau chacun — quand la page
+      porte plusieurs lignes de produit (`lib/product-lines.ts`) ou une fiche à plusieurs sections
+      (« Dessin & Musique et Chant », « Cahiers Spécialisés ») ; chaque carrousel ne reçoit que les
+      visuels de ses propres références ;
     - une **fiche produit** (`ProductSheet`) si le chemin a une fiche de références ou des visuels ;
     - une **grille de catégories** (`CategoryCard`) s'il a des enfants ;
     - une **liste de formats** si le nœud porte une `family` (page de gamme) ;
@@ -121,6 +125,12 @@ Trois régimes, du plus précis au plus tolérant :
   portée : toutes les couvertures ouvrent le carrousel, les détails (page de garde, réglure) le
   ferment, qu'ils soient communs à la gamme ou propres à une taille. À type égal, les visuels
   restent groupés par taille, dans l'ordre canonique des coloris.
+  Un coloris n'apparaît qu'**une fois par taille** : le catalogue photographie chaque pagination
+  (bleu 48 p, bleu 96 p…) alors que les couvertures sont identiques. Le rang d'une couverture
+  *étant* son coloris, il suffit de n'en garder qu'une par rang — hors de la plage des coloris le
+  rang n'est qu'un type de vue, et ne sert pas à dédoublonner.
+- `imagesForRefs(chemins, refs)` — visuels d'un produit au sein d'une page qui en présente
+  plusieurs : ceux dont le nom de fichier porte une référence de son tableau.
 - Une variante `toutes-tailles-<réglure>` ne s'applique qu'aux produits de cette réglure :
   `toutes-tailles-seyes` n'apparaît pas sur une page 5×5. `toutes-tailles` (sans suffixe) vaut pour tout.
 - `imagesForPages([…])` — une page qui en regroupe d'autres réunit leurs visuels (voir `groupedPages`).

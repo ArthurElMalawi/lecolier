@@ -233,11 +233,6 @@ export const catalogueImages: Record<string, Record<string, CatalogueImage[]>> =
       { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-dessin-rouge-reglure.webp", caption: { fr: "Rouge · Dessin", en: "Red · Drawing" }, rank: 91 },
       { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-dessin-vert-reglure.webp", caption: { fr: "Vert · Dessin", en: "Green · Drawing" }, rank: 91 },
       { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-musique-et-chant-reglure.webp", caption: { fr: "Musique et Chant", en: "Music & Singing" }, rank: 91 },
-      { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-sans-bleu-reglure.webp", caption: { fr: "Bleu · Sans réglure", en: "Blue · Unruled" }, rank: 91 },
-      { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-sans-incolore-reglure.webp", caption: { fr: "Incolore · Sans réglure", en: "Clear · Unruled" }, rank: 91 },
-      { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-sans-orange-reglure.webp", caption: { fr: "Orange · Sans réglure", en: "Orange · Unruled" }, rank: 91 },
-      { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-sans-rouge-reglure.webp", caption: { fr: "Rouge · Sans réglure", en: "Red · Unruled" }, rank: 91 },
-      { src: "/catalogue/nos-cahiers/gamme-polypro-classique/dessin-musique-chant/toutes-tailles/cahier-piqure-pp-70gr-sans-vert-reglure.webp", caption: { fr: "Vert · Sans réglure", en: "Green · Unruled" }, rank: 91 },
     ],
   },
   "nos-cahiers/gamme-polypro-classique/maternelle-petite-ecole": {

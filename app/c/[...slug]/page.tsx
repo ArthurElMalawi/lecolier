@@ -12,7 +12,7 @@ import { findByPath, nodeLabel, nodeDesc, nodeHref, type NavNode } from "@/lib/n
 import { NavIcon, getAccent } from "@/lib/nav-icons";
 import { sheetFor, groupedPages } from "@/lib/usage-sheets";
 import { linesFor } from "@/lib/product-lines";
-import { imagesFor, imagesForPages, heroFor } from "@/lib/catalogue-images";
+import { imagesFor, imagesForPages, imagesForRefs, heroFor } from "@/lib/catalogue-images";
 import { ProductCarousel } from "@/components/product-carousel";
 import { ProductSheet } from "@/components/product-sheet";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
@@ -157,11 +157,39 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     );
   }
 
+  /* --- Fiche à plusieurs produits : un bloc et un carrousel chacun --- */
+  // « Dessin & Musique et Chant » montre deux cahiers distincts, « Cahiers Spécialisés »
+  // en réunit un par gamme : leur donner un seul carrousel mélangeait leurs visuels.
+  const sheetPages = [path, ...groupedPages(path)];
+  if (children.length === 0 && sheet && sheet.length > 1) {
+    const blocks = sheet.map((s, i) => {
+      const refs = new Set(s.table.rows.flatMap((r) => r.cells).filter((c): c is string => !!c));
+      return { key: `${i}`, title: L(s.section), table: s.table, images: imagesForRefs(sheetPages, refs) };
+    });
+    // Sans visuel à répartir, un seul carrousel commun reste plus lisible.
+    if (blocks.some((b) => b.images.length > 0)) {
+      return (
+        <ProductSheet
+          crumbs={crumbs}
+          title={nodeLabel(node, lang)}
+          description={desc}
+          products={blocks.map((b) => ({
+            key: b.key,
+            image: <ProductCarousel images={b.images} alt={b.title} iconKey={node.icon} lang={lang} />,
+            title: b.title,
+            table: b.table,
+          }))}
+          lang={lang}
+        />
+      );
+    }
+  }
+
   /* --- Fiche produit (classement : Feuillets Mobiles, Copies Doubles…) --- */
   // Une fiche existante l'emporte, même si le nœud porte une famille (Gamme Plume
   // présente tous ses formats dans un seul tableau). Sinon une page illustrée vaut
   // mieux qu'un « Bientôt disponible » — mais une page de gamme garde ses formats.
-  const sheetImages = imagesForPages([path, ...groupedPages(path)]);
+  const sheetImages = imagesForPages(sheetPages);
   if (children.length === 0 && (sheet || (!node.family && sheetImages.length > 0))) {
     return (
       <ProductSheet
