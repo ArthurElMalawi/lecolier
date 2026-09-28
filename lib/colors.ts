@@ -40,6 +40,8 @@ const COLOR_EN: Record<string, string> = {
   Noir: "Black",
   Incolore: "Clear",
   Assortit: "Assorted",
+  // Pas un coloris : la Gamme Plume propose une version sans couverture.
+  "Sans Couverture": "No cover",
 };
 
 /** Nom lisible d'un coloris (le nom français fait foi quand la traduction manque). */

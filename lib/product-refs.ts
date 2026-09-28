@@ -334,6 +334,58 @@ const REFS: Record<string, string> = {
   "70|PP|F24x32|STD|QUADRI|Assortit|192": "48295",
 };
 
+/** Attributs d'un produit, tels que la clé de `REFS` les encode. */
+export type RefAttributes = {
+  grammageGsm: number;
+  cover: "PP" | "CARTONNE";
+  format: string;
+  variant: "STD" | "TP" | "MAT" | "DESSIN";
+  ruling: string;
+  color: string;
+  pages: number;
+};
+
+/**
+ * Index inverse SKU → attributs.
+ *
+ * Une référence portée par deux clés contradictoires dans l'export est
+ * enregistrée `null` : elle est ambiguë, et mieux vaut le dire que trancher au
+ * hasard (cf. 44540, deux lignes divergentes dans le xlsx).
+ */
+const BY_REF: Map<string, RefAttributes | null> = (() => {
+  const map = new Map<string, RefAttributes | null>();
+  for (const [key, ref] of Object.entries(REFS)) {
+    if (map.has(ref)) {
+      map.set(ref, null);
+      continue;
+    }
+    const [grammage, cover, format, variant, ruling, color, pages] = key.split("|");
+    map.set(ref, {
+      grammageGsm: Number(grammage),
+      cover: cover as "PP" | "CARTONNE",
+      format,
+      variant: variant as RefAttributes["variant"],
+      ruling,
+      color,
+      pages: Number(pages),
+    });
+  }
+  return map;
+})();
+
+/**
+ * Attributs d'une référence, ou `null` si elle est inconnue **ou ambiguë**.
+ * Les deux cas se distinguent avec `isKnownRef`.
+ */
+export function attributesFor(ref: string): RefAttributes | null {
+  return BY_REF.get(ref) ?? null;
+}
+
+/** La référence figure-t-elle dans l'export, même de façon contradictoire ? */
+export function isKnownRef(ref: string): boolean {
+  return BY_REF.has(ref);
+}
+
 /** Ordre canonique d'affichage des couleurs (aligne l'ordre des lignes sur les visuels). */
 export const COLOR_ORDER = [
   "Orange", "Gris", "Jaune", "Rose", "Violet", "Bleu", "Rouge", "Vert", "Noir", "Incolore", "Assortit",

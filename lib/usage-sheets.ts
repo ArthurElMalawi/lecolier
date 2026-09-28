@@ -9,8 +9,10 @@
  * seuls les titres de section restent éditoriaux (ils reprennent le catalogue papier).
  */
 import type { Bi, ProductSheet, RefRow, RefTableData } from "./classement-refs";
-import { classementSheets } from "./classement-refs";
-import { availableFor, refFor, COLOR_ORDER } from "./product-refs";
+// Extension explicite : scripts/ingest-catalogue-images.mts charge ce module directement
+// avec Node, qui ne devine pas les extensions comme le fait le bundler.
+import { classementSheets } from "./classement-refs.ts";
+import { availableFor, refFor, COLOR_ORDER } from "./product-refs.ts";
 
 type Variant = "STD" | "TP" | "MAT" | "DESSIN";
 type Ruling = "SEYES" | "QUADRI" | "LIGNE" | "BLANC";

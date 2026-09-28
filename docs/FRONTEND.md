@@ -96,6 +96,26 @@ nom de fichier (`…170x220_bleu_48P.png` → « 17 × 22 cm · Bleu · 48 pages
 `Réglure`, `5 couleurs`, `Perforated`, `5x5` sont reconnus). Le dossier de sortie et le manifeste sont
 **entièrement régénérés** à chaque exécution : ajouter des images puis relancer suffit.
 
+Les sources (PNG pleine résolution) restent **hors dépôt** ; seuls les webp générés sont versionnés.
+Un lot livré « à plat », avec des dossiers nommés en libellés plutôt qu'en slugs, se recopie avec
+`scripts/copy-photo-batch.ps1 -Source "<dossier livré>"` (simulation par défaut, `-Execute` pour
+copier ; rien n'est écrasé).
+
+### Placement d'un visuel
+Trois régimes, du plus précis au plus tolérant :
+
+1. **Nom = numéro de référence** (`44519.png`) — le fichier n'a pas besoin d'être rangé finement :
+   sa page est celle **dont la fiche affiche cette référence**, et sa taille, son coloris et sa
+   pagination viennent de `attributesFor()` (`lib/product-refs.ts`). Les pages de gamme
+   (« Cahiers ») n'ayant pas de fiche, elles sont retrouvées par grammage + couverture, et l'usage
+   (TP, Dessin & Musique, Maternelle) par la variante et la réglure de la référence. Une référence
+   absente de l'export, ou portée par deux clés contradictoires, n'est **pas** placée au hasard :
+   elle est listée en fin d'exécution.
+2. **Nom en clair à la racine d'une gamme** — réglures, pages de garde et pictogrammes valent pour
+   toutes les tailles : leur usage et leur portée se lisent dans le nom (`NAME_RULES`).
+3. **Sinon le dossier fait foi**, convention historique. Un visuel déjà rangé sous une page d'usage
+   garde donc sa place.
+
 ### Lecture (`lib/catalogue-images.ts`)
 - `imagesFor(chemin, variante?)` — visuels **communs d'abord**, puis ceux de la taille affichée.
 - Une variante `toutes-tailles-<réglure>` ne s'applique qu'aux produits de cette réglure :

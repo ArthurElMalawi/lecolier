@@ -20,6 +20,11 @@ Accès : `availableFor({ grammageGsm, cover, format, variant, ruling })` renvoie
 paginations disponibles ; `refFor({ …, color, pages })` renvoie le SKU. `COLOR_ORDER` fixe l'ordre
 canonique des coloris, repris partout (lignes de tableau comme ordre des visuels).
 
+Sens inverse : `attributesFor(sku)` retrouve les attributs d'une référence — c'est ce qui permet à
+`npm run images` de ranger un visuel nommé `44519.png` sans rien saisir. Une référence portée par
+**deux clés contradictoires** dans l'export (cas de `44540`) renvoie `null` plutôt que de trancher au
+hasard ; `isKnownRef(sku)` distingue alors l'ambiguë de l'inconnue.
+
 ### `lib/usage-sheets.ts` — tableaux dérivés
 Construit les fiches des usages **Travaux Pratiques**, **Dessin & Musique**, **Maternelle** à partir
 de `product-refs`. Chacun de ces produits est présenté à deux endroits — une page par gamme
