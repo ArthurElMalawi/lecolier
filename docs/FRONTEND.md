@@ -121,10 +121,11 @@ Trois régimes, du plus précis au plus tolérant :
    garde donc sa place.
 
 ### Lecture (`lib/catalogue-images.ts`)
-- `imagesFor(chemin, variante?)` — ordonne par **type de vue** (`rank`, posé à l'ingestion), pas par
-  portée : toutes les couvertures ouvrent le carrousel, les détails (page de garde, réglure) le
-  ferment, qu'ils soient communs à la gamme ou propres à une taille. À type égal, les visuels
-  restent groupés par taille, dans l'ordre canonique des coloris.
+- `imagesFor(chemin, variante?)` — ordonne par **coloris** (`color`), pas par portée. Ouvrent le
+  carrousel les vues qui ne dépendent d'aucune couleur — vue de format, coloris assortis, page de
+  garde et réglure génériques, dans cet ordre de `rank`. Viennent ensuite les coloris dans l'ordre
+  canonique, chacun suivi de ses vues ouvertes : *orange, orange ouvert, gris, gris ouvert…*
+  C'est `color`, posé à l'ingestion, qui rattache une page de garde bleue à la couverture bleue.
   Un coloris n'apparaît qu'**une fois par taille** : le catalogue photographie chaque pagination
   (bleu 48 p, bleu 96 p…) alors que les couvertures sont identiques. Le rang d'une couverture
   *étant* son coloris, il suffit de n'en garder qu'une par rang — hors de la plage des coloris le

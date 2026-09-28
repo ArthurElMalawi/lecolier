@@ -111,7 +111,8 @@ const RULING_USAGE: [RegExp, Bi][] = [
   [/seyes/, { fr: "Réglure Seyès", en: "Seyès ruling" }],
 ];
 
-type Parsed = { caption: Bi | null; rank: number; pages: number };
+/** `color` rattache une vue à son coloris : une page de garde bleue suit la couverture bleue. */
+type Parsed = { caption: Bi | null; rank: number; pages: number; color?: string };
 
 /** Déduit une légende bilingue du nom de fichier (ex. « … - 170x220_bleu_48P »). */
 function parseName(file: string): Parsed {
@@ -129,6 +130,7 @@ function parseName(file: string): Parsed {
   }
 
   const color = COLORS.find(([key]) => new RegExp(`\\b${key}\\b`).test(n));
+  const colorName = color?.[1].fr;
   if (color) {
     fr.push(color[1].fr);
     en.push(color[1].en);
@@ -160,12 +162,19 @@ function parseName(file: string): Parsed {
     en.push("5×5 ruling");
   }
 
-  // Visuels « détail » : toujours présentés après les vues produit.
+  // Vues « ouvertes » et détails. Elles gardent leur coloris quand le nom le porte :
+  // c'est lui qui les range derrière la couverture correspondante.
   if (/\b\d+ couleurs\b/.test(n)) {
+    // Vitrine de l'assortiment : elle ne se rattache à aucun coloris en particulier.
     return { caption: { fr: "Coloris assortis", en: "Assorted colours" }, rank: 70, pages };
   }
   if (/page de garde/.test(n)) {
-    return { caption: { fr: "Page de garde personnalisable", en: "Customizable title page" }, rank: 80, pages };
+    return {
+      caption: { fr: "Page de garde personnalisable", en: "Customizable title page" },
+      rank: 80,
+      pages,
+      color: colorName,
+    };
   }
   if (/reglure/.test(n)) {
     const zoom = /reglure\s*\+/.test(n) || n.includes("reglure+");
@@ -182,10 +191,11 @@ function parseName(file: string): Parsed {
       caption: fr.length ? { fr: fr.join(" · "), en: en.join(" · ") } : { fr: "Détail de la réglure", en: "Ruling close-up" },
       rank: 91,
       pages,
+      color: colorName,
     };
   }
 
-  return { caption: fr.length ? { fr: fr.join(" · "), en: en.join(" · ") } : null, rank, pages };
+  return { caption: fr.length ? { fr: fr.join(" · "), en: en.join(" · ") } : null, rank, pages, color: colorName };
 }
 
 /* -------------------------------- Placement -------------------------------- */
@@ -201,7 +211,7 @@ function parseName(file: string): Parsed {
  *      (réglures, pages de garde, pictogrammes, qui valent pour toutes les tailles).
  *   3. sinon -> le dossier fait foi, convention historique.
  */
-type Placement = { navPath: string; variant: string; caption: Bi | null; rank: number; pages: number };
+type Placement = { navPath: string; variant: string; caption: Bi | null; rank: number; pages: number; color?: string };
 
 /** Rang d'affichage d'un coloris : même ordre que les lignes du tableau de références. */
 const colorRank = (color?: string) => {
@@ -218,7 +228,7 @@ const colorRank = (color?: string) => {
  * Les pages de gamme (« Cahiers ») n'ont pas de fiche : elles passent par GAMME.
  */
 const PAGE_BY_REF = (() => {
-  const map = new Map<string, { navPath: string; caption: Bi; rank: number }>();
+  const map = new Map<string, { navPath: string; caption: Bi; rank: number; color?: string }>();
 
   const walk = (nodes: NavNode[], trail: string[]) => {
     for (const node of nodes) {
@@ -236,7 +246,7 @@ const PAGE_BY_REF = (() => {
                 [row.color && colorLabel(row.color, lang), row.label?.[lang], column?.[lang]]
                   .filter(Boolean)
                   .join(" · ");
-              map.set(cell, { navPath, caption: { fr: label("fr"), en: label("en") }, rank: colorRank(row.color) });
+              map.set(cell, { navPath, caption: { fr: label("fr"), en: label("en") }, rank: colorRank(row.color), color: row.color });
             });
           }
         }
@@ -298,7 +308,7 @@ function placeByRef(ref: string): Placement | null {
   }
 
   // Sans attributs, la fiche suffit : sa page ne se décline pas par taille.
-  if (!a) return { navPath: sheet!.navPath, variant: "", caption: sheet!.caption, rank: sheet!.rank, pages: 0 };
+  if (!a) return { navPath: sheet!.navPath, variant: "", caption: sheet!.caption, rank: sheet!.rank, pages: 0, color: sheet!.color };
 
   const gamme = GAMME[`${a.grammageGsm}|${a.cover}`];
   if (!sheet && !gamme) {
@@ -318,6 +328,7 @@ function placeByRef(ref: string): Placement | null {
     },
     rank: colorRank(a.color),
     pages: a.pages,
+    color: a.color,
   };
 }
 
@@ -340,22 +351,22 @@ function place(file: string, folderPath: string, rest: string[]): Placement | nu
   const name = basename(file, extname(file));
   if (/^\d{4,6}$/.test(name)) return placeByRef(name);
 
-  const { caption, rank, pages } = parseName(file);
+  const { caption, rank, pages, color } = parseName(file);
 
   // Les règles de nom ne servent qu'à répartir un dossier de gamme resté plat :
   // un visuel déjà rangé sous une page d'usage garde sa place.
   if (rest.length === 0 && findByPath([...folderPath.split("/"), "cahiers"])) {
     const n = plain(name).replace(/[_-]+/g, " ");
     const rule = NAME_RULES.find((r) => r.match.test(n));
-    if (rule) return { navPath: childPath(folderPath, rule.usage), variant: rule.variant, caption, rank, pages };
+    if (rule) return { navPath: childPath(folderPath, rule.usage), variant: rule.variant, caption, rank, pages, color };
   }
 
-  return { navPath: folderPath, variant: normalizeVariant(rest), caption, rank, pages };
+  return { navPath: folderPath, variant: normalizeVariant(rest), caption, rank, pages, color };
 }
 
 /* ------------------------------- Parcours source ---------------------------- */
 
-type Entry = { navPath: string; variant: string; src: string; caption: Bi | null; rank: number; pages: number };
+type Entry = { navPath: string; variant: string; src: string; caption: Bi | null; rank: number; pages: number; color?: string };
 
 const entries: Entry[] = [];
 // Empreinte (page + contenu) -> chemin public déjà écrit : un même visuel dupliqué
@@ -392,7 +403,7 @@ async function ingest(file: string) {
 
   const placed = place(file, segments.slice(0, depth).join("/"), segments.slice(depth));
   if (!placed) return; // Référence non résolue, déjà consignée dans `unplaced`.
-  const { navPath, variant, caption, rank, pages } = placed;
+  const { navPath, variant, caption, rank, pages, color } = placed;
 
   const bytes = readFileSync(file);
   const signature = `${navPath}:${createHash("sha1").update(bytes).digest("hex")}`;
@@ -416,7 +427,7 @@ async function ingest(file: string) {
     converted++;
   }
 
-  entries.push({ navPath, variant, src, caption, rank, pages });
+  entries.push({ navPath, variant, src, caption, rank, pages, color });
 }
 
 /* ------------------------------ Écriture du manifeste ----------------------- */
@@ -459,7 +470,8 @@ function writeManifest() {
         const caption = e.caption ? `, caption: ${bi(e.caption)}` : "";
         // Le rang voyage jusqu'au rendu : c'est lui qui ordonne le carrousel une fois
         // les visuels communs et ceux de la taille réunis (cf. imagesFor).
-        lines.push(`      { src: ${JSON.stringify(e.src)}${caption}, rank: ${e.rank} },`);
+        const color = e.color ? `, color: ${JSON.stringify(e.color)}` : "";
+        lines.push(`      { src: ${JSON.stringify(e.src)}${caption}, rank: ${e.rank}${color} },`);
       }
       lines.push("    ],");
     }

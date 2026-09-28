@@ -7,9 +7,10 @@ import { catalogueImages } from "./catalogue-images.generated";
  *
  * `rank` classe les **types** de vue — couverture (10-20 selon le coloris), vue de
  * format sans coloris (60), coloris assortis (70), page de garde (80), réglure (90) —
- * et fixe l'ordre du carrousel. Il est posé à l'ingestion (scripts/ingest-catalogue-images.mts).
+ * et `color` rattache une vue ouverte à sa couverture. Les deux sont posés à
+ * l'ingestion (scripts/ingest-catalogue-images.mts) et fixent l'ordre du carrousel.
  */
-export type CatalogueImage = { src: string; caption?: Bi; rank?: number };
+export type CatalogueImage = { src: string; caption?: Bi; rank?: number; color?: string };
 
 type Variants = Record<string, CatalogueImage[]>;
 
@@ -33,10 +34,14 @@ function commonVariants(byVariant: Variants, variant?: string): string[] {
 }
 
 /**
- * Une vue montre-t-elle le produit (couverture, coloris assortis) ou un détail
- * (page de garde, réglure) ? Seuil aligné sur les rangs posés à l'ingestion.
+ * Place d'un visuel dans l'ordre des coloris. `-1` pour ce qui n'en dépend pas —
+ * vue de format, coloris assortis, réglure générique : ces vues ouvrent le carrousel.
  */
-const detail = (rank = 50) => (rank >= 80 ? 1 : 0);
+const colorIndex = (color?: string) => {
+  if (!color) return -1;
+  const i = COLOR_ORDER.indexOf(color);
+  return i >= 0 ? i : COLOR_ORDER.length;
+};
 
 const dedupe = (images: CatalogueImage[]) => {
   const seen = new Set<string>();
@@ -49,9 +54,11 @@ const dedupe = (images: CatalogueImage[]) => {
  * @param navPath chemin de la page dans l'arborescence (ex. « nos-cahiers/gamme-polypro-premium/cahiers »)
  * @param variant taille du produit affiché (ex. « 17x22 », « 24x32-5x5 ») ; omis, toutes les tailles.
  *
- * L'ordre suit le **type de vue** (`rank`), pas la portée : les couvertures ouvrent
- * le carrousel, les détails (page de garde, réglure) le ferment — qu'ils soient
- * communs à la gamme ou propres à une taille.
+ * L'ordre suit le **coloris**, pas la portée. Ouvrent le carrousel les vues qui ne
+ * dépendent d'aucune couleur — vue de format, coloris assortis, page de garde et
+ * réglure génériques, dans cet ordre de `rank`. Viennent ensuite les coloris dans
+ * l'ordre canonique, chacun suivi de ses vues ouvertes : orange, orange ouvert,
+ * gris, gris ouvert…
  *
  * Un coloris n'apparaît qu'**une fois par taille** : le catalogue photographie chaque
  * pagination (bleu 48 p, bleu 96 p, bleu 192 p…) alors que les couvertures sont
@@ -77,11 +84,12 @@ export function imagesFor(navPath: string, variant?: string): CatalogueImage[] {
     .flatMap((key, group) => (byVariant[key] ?? []).map((img) => ({ img, group })))
     .sort(
       (a, b) =>
-        // Toutes les couvertures avant tous les détails, quelle que soit la taille…
-        detail(a.img.rank) - detail(b.img.rank) ||
-        // …puis taille par taille, et dans l'ordre canonique des coloris.
-        a.group - b.group ||
-        (a.img.rank ?? 50) - (b.img.rank ?? 50),
+        // Les vues sans coloris d'abord, puis les coloris dans l'ordre canonique…
+        colorIndex(a.img.color) - colorIndex(b.img.color) ||
+        // …à coloris égal, la couverture avant ses vues ouvertes…
+        (a.img.rank ?? 50) - (b.img.rank ?? 50) ||
+        // …et à vue égale, taille par taille.
+        a.group - b.group,
     )
     .filter(({ img, group }) => {
       if (!isColorCover(img.rank)) return true;
