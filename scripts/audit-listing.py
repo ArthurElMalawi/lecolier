@@ -38,10 +38,12 @@ def articles(path):
     out = {}
     for row in cells(path):
         for i, v in enumerate(row):
-            if re.fullmatch(r"\d{5}", v.strip()):
+            # Excel stocke certains SKU en numérique : « 47825 » arrive « 47825.0 ».
+            sku = re.fullmatch(r"(\d{5})(?:\.0+)?", v.strip())
+            if sku:
                 label = next((c for c in row[i + 1:] if len(c) > 20 and re.search(r"[A-Za-z]{4}", c)), "")
                 if label:
-                    out[v.strip()] = label
+                    out[sku.group(1)] = label
                 break
     return out
 
