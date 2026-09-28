@@ -133,8 +133,8 @@ function familyEntries(node: NavNode, trail: NavNode[]): SearchEntry[] {
     };
   };
 
-  const entries = FORMATS.map((f) => entry(f, false));
-  entries.push(entry("F24x32", true));
+  // Seyès puis 5×5, pour chaque format qui en propose un (cf. FamilyProducts).
+  const entries = [...FORMATS.map((f) => entry(f, false)), ...FORMATS.map((f) => entry(f, true))];
   return entries.filter((e): e is SearchEntry => e !== null);
 }
 

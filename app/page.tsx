@@ -1,7 +1,10 @@
 import { getLang, getDictionary } from "@/lib/i18n";
 import { Hero } from "@/components/hero";
 import { CategoryShowcase } from "@/components/category-showcase";
-import { ResellerSection } from "@/components/reseller-section";
+// Section « Nos Revendeurs » masquée pour le moment : la liste n'est pas à jour.
+// Le composant et les traductions (dict.resellers) restent en place, il suffit de
+// remettre <ResellerSection /> ci-dessous pour la réafficher.
+// import { ResellerSection } from "@/components/reseller-section";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;
@@ -22,7 +25,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         <CategoryShowcase lang={lang} />
       </div>
 
-      <ResellerSection translations={dict.resellers} />
+      {/* <ResellerSection translations={dict.resellers} /> */}
     </div>
   );
 }

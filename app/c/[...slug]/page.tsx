@@ -43,10 +43,13 @@ function FamilyProducts({ family, navPath, lang }: { family: string; navPath: st
   const has = (format: string, ruling?: string) =>
     availableFor({ grammageGsm: parsed.grammage, cover: coverKey, format, ruling }).pages.length > 0;
 
-  // Une carte par format Seyès disponible, + une carte 5×5 (réglure QUADRI, 24×32) si dispo.
+  // Une carte par format Seyès disponible, puis une carte 5×5 (réglure QUADRI) par format
+  // qui en propose une — l'export en a ajouté une en A4, elle ne se limite plus au 24×32.
   // La vignette est le premier visuel du format quand il existe (voir lib/catalogue-images).
   const cards: { key: string; href: string; title: string; photo?: string }[] = [];
-  for (const fmt of ["F17x22", "F21x29_7", "F24x32"] as Format[]) {
+  const FORMATS = ["F17x22", "F21x29_7", "F24x32"] as Format[];
+
+  for (const fmt of FORMATS) {
     if (has(fmt))
       cards.push({
         key: fmt,
@@ -55,13 +58,14 @@ function FamilyProducts({ family, navPath, lang }: { family: string; navPath: st
         photo: heroFor(navPath, FORMAT_SLUG[fmt])?.src,
       });
   }
-  if (has("F24x32", "QUADRI")) {
-    cards.push({
-      key: "24x32-5x5",
-      href: `/product/cahier-${family}-24x32-5x5?lang=${lang}`,
-      title: `${formatLabel("F24x32" as Format, lang)} 5×5`,
-      photo: heroFor(navPath, `${FORMAT_SLUG.F24x32}-5x5`)?.src,
-    });
+  for (const fmt of FORMATS) {
+    if (has(fmt, "QUADRI"))
+      cards.push({
+        key: `${FORMAT_SLUG[fmt]}-5x5`,
+        href: `/product/cahier-${family}-${FORMAT_SLUG[fmt]}-5x5?lang=${lang}`,
+        title: `${formatLabel(fmt, lang)} 5×5`,
+        photo: heroFor(navPath, `${FORMAT_SLUG[fmt]}-5x5`)?.src,
+      });
   }
 
   if (cards.length === 0) {

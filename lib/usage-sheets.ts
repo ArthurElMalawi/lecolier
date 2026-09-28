@@ -28,17 +28,6 @@ const DIM: Record<Format, Bi> = {
 };
 const P = (n: number): Bi => ({ fr: `${n} pages`, en: `${n} pages` });
 
-/**
- * Références manquantes dans l'export Excel (lib/product-refs.ts) alors qu'elles
- * existent au catalogue. À réintégrer à la source ; déclarées ici en attendant
- * pour ne pas disparaître du site. Même format de clé que product-refs.
- */
-const COMPLEMENTS: Record<string, string> = {
-  "70|PP|F17x22|DESSIN|BLANC|Incolore|32": "48319",
-  "70|PP|F24x32|DESSIN|BLANC|Incolore|32": "48324",
-  "70|PP|F17x22|MAT|LIGNE|Assortit|32": "48314",
-};
-
 type Source = {
   grammage: number;
   variant: Variant;
@@ -47,32 +36,13 @@ type Source = {
   layout?: "formats-en-colonnes";
 };
 
-const key = (s: Source, format: Format, color: string, pages: number) =>
-  [s.grammage, "PP", format, s.variant, s.ruling, color, pages].join("|");
-
-/** Coloris et paginations disponibles pour un format, compléments inclus. */
+/** Coloris et paginations disponibles pour un format. */
 function optionsFor(s: Source, format: Format): { colors: string[]; pages: number[] } {
-  const base = availableFor({ grammageGsm: s.grammage, cover: "PP", format, variant: s.variant, ruling: s.ruling });
-  const colors = new Set(base.colors);
-  const pages = new Set(base.pages);
-  const prefix = [s.grammage, "PP", format, s.variant, s.ruling, ""].join("|");
-  for (const k of Object.keys(COMPLEMENTS)) {
-    if (!k.startsWith(prefix)) continue;
-    const parts = k.split("|");
-    colors.add(parts[5]);
-    pages.add(Number(parts[6]));
-  }
-  const ordered = COLOR_ORDER.filter((c) => colors.has(c));
-  for (const c of colors) if (!ordered.includes(c)) ordered.push(c);
-  return { colors: ordered, pages: [...pages].sort((a, b) => a - b) };
+  return availableFor({ grammageGsm: s.grammage, cover: "PP", format, variant: s.variant, ruling: s.ruling });
 }
 
 function ref(s: Source, format: Format, color: string, pages: number): string | null {
-  return (
-    refFor({ grammageGsm: s.grammage, cover: "PP", format, variant: s.variant, ruling: s.ruling, color, pages }) ??
-    COMPLEMENTS[key(s, format, color, pages)] ??
-    null
-  );
+  return refFor({ grammageGsm: s.grammage, cover: "PP", format, variant: s.variant, ruling: s.ruling, color, pages });
 }
 
 /** Tableau d'un usage pour une gamme, ou null si aucune référence. */

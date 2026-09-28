@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Lang } from "@/lib/i18n";
 import { navTree, nodeLabel, nodeDesc, nodeHref } from "@/lib/navigation";
 import { NavIcon, getAccent } from "@/lib/nav-icons";
+import { imagesFor } from "@/lib/catalogue-images";
 
 /** Sections de présentation des rubriques sur la page d'accueil. */
 export function CategoryShowcase({ lang }: { lang: Lang }) {
@@ -13,15 +15,35 @@ export function CategoryShowcase({ lang }: { lang: Lang }) {
         const accent = getAccent(cat.slug);
         const reversed = i % 2 === 1;
         const subs = (cat.children ?? []).slice(0, 5);
+        // Visuel d'introduction posé à la racine de la rubrique (dossier Pictures) ;
+        // sans photo, le bloc garde son dégradé et son icône.
+        const intro = imagesFor(cat.slug)[0];
 
         return (
           <section key={cat.slug} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
             {/* Visuel */}
             <div className={reversed ? "lg:order-2" : ""}>
               <div className={`relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br ${accent.gradient} shadow-lg`}>
-                <NavIcon iconKey={cat.icon} className="h-24 w-24 text-white/90 drop-shadow" strokeWidth={1.5} />
-                <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/15" />
-                <div className="absolute -bottom-12 -left-8 h-48 w-48 rounded-full bg-black/10" />
+                {intro ? (
+                  <>
+                    <Image
+                      src={intro.src}
+                      alt={nodeLabel(cat, lang)}
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover"
+                      priority={i === 0}
+                    />
+                    {/* Voile bas : la pastille reste lisible sur une photo claire. */}
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" />
+                  </>
+                ) : (
+                  <>
+                    <NavIcon iconKey={cat.icon} className="h-24 w-24 text-white/90 drop-shadow" strokeWidth={1.5} />
+                    <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/15" />
+                    <div className="absolute -bottom-12 -left-8 h-48 w-48 rounded-full bg-black/10" />
+                  </>
+                )}
                 <span className="absolute bottom-5 left-5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
                   {(cat.children?.length ?? 0)} {lang === "en" ? "categories" : "catégories"}
                 </span>
