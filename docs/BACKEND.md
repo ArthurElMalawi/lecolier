@@ -7,7 +7,21 @@ TypeScript lus par les Server Components.
 ## Références produit
 
 ### `lib/product-refs.ts` — source de vérité
-Table générée depuis `lsiting_articles_complet.xlsx`. **Ne pas éditer à la main.**
+Table générée depuis l'export articles. **Ne pas éditer à la main :**
+
+```
+python scripts/generate-product-refs.py "<export>.xlsx" --write
+```
+
+C'est la **DESIGNATION** de l'export qui fait foi, pas ses colonnes structurées : celles-ci sont
+fusionnées dans Excel (valeur sur la première ligne seulement) et parfois décalées d'une rubrique à
+l'autre. `scripts/audit-listing.py` compare un export au fichier courant avant de le régénérer, et
+`scripts/read-xlsx.py` lit un classeur sans dépendance (un xlsx est une archive zip de XML).
+
+Deux catégories sont écartées à la génération : les produits hors cahiers (gourdes, sacs, blocs,
+stylos, copies doubles…), dont les tableaux vivent dans `classement-refs` ou `product-lines`, et les
+types de produit sans page dans le menu. Les clés `60|CARTONNE` et `70|CARTONNE`, absentes de
+l'export et affichées nulle part, sont conservées plutôt que supprimées.
 
 Clé : `grammage|cover|format|variant|ruling|couleur|pages`
 
@@ -37,8 +51,6 @@ de `product-refs`. Chacun de ces produits est présenté à deux endroits — un
 - `groupedPages(path)` expose les pages réunies par une page « Cahiers Spécialisés » : elle en
   affiche les tableaux, donc aussi les visuels.
 - `sheetFor(chemin, slug)` est le point d'entrée des pages : usage dérivé, sinon fiche manuelle.
-- `COMPLEMENTS` liste les références **absentes de l'export Excel** alors qu'elles existent au
-  catalogue (48319, 48324, 48314). À réintégrer à la source, après quoi le bloc peut être vidé.
 
 ### `lib/classement-refs.ts` — fiches saisies à la main
 Produits « hors cahier » : feuillets mobiles, copies doubles, protège-cahiers, spiralés, blocs,
