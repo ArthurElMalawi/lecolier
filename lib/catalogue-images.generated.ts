@@ -10,12 +10,6 @@ export const catalogueImages: Record<string, Record<string, CatalogueImage[]>> =
       { src: "/catalogue/accessoires/_/image-introduction-accessoires.webp", rank: 0 },
     ],
   },
-  "accessoires/agendas/agenda-rentree": {
-    "": [
-      { src: "/catalogue/accessoires/agendas/agenda-rentree/_/capture-d-ecran-2026-07-26-192215.webp", rank: 0 },
-      { src: "/catalogue/accessoires/agendas/agenda-rentree/_/capture-d-ecran-2026-07-26-192228.webp", rank: 0 },
-    ],
-  },
   "accessoires/gourdes/gourdes-bpa": {
     "": [
       { src: "/catalogue/accessoires/gourdes/gourdes-bpa/_/img-20241014-163029.webp", rank: 0 },

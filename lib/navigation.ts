@@ -347,8 +347,8 @@ export const navTree: NavNode[] = [
     en: "Accessories & Daily Life",
     icon: "accessories",
     desc: {
-      fr: "Sacs à dos, trousses, agendas et gourdes pour accompagner l'élève au quotidien.",
-      en: "Backpacks, pencil cases, diaries and bottles for everyday school life.",
+      fr: "Sacs à dos, trousses et gourdes pour accompagner l'élève au quotidien.",
+      en: "Backpacks, pencil cases and bottles for everyday school life.",
     },
     children: [
       {
@@ -373,14 +373,6 @@ export const navTree: NavNode[] = [
             desc: { fr: "Trousse 2 zips en trois coloris, et modèle haut de gamme.", en: "Two-zip case in three colours, plus a premium model." },
           },
         ],
-      },
-      {
-        slug: "agendas",
-        fr: "Agendas Scolaires",
-        en: "School Diaries",
-        icon: "calendar",
-        desc: { fr: "Pour organiser toute l'année scolaire.", en: "To organize the whole school year." },
-        children: [{ slug: "agenda-rentree", fr: "Agenda Rentrée des Classes", en: "Back-to-School Diary", icon: "calendar", soon: true }],
       },
       {
         slug: "gourdes",
