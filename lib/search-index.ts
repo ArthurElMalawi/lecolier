@@ -171,6 +171,11 @@ function buildIndex(): SearchEntry[] {
 
 const ENTRIES = buildIndex();
 
+/** Toutes les références présentées par le site (une page au moins les affiche). */
+export function displayedRefs(): Set<string> {
+  return new Set(ENTRIES.flatMap((e) => e.refs.map((r) => r.ref)));
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Appariement                                                                 */
 /* -------------------------------------------------------------------------- */

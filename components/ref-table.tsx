@@ -1,6 +1,8 @@
 import type { Lang } from "@/lib/i18n";
 import type { Bi, RefTableData } from "@/lib/classement-refs";
 import { COLOR_STYLE, colorLabel } from "@/lib/colors";
+import { ficheFor } from "@/lib/fiches";
+import { FicheRefButton } from "@/components/fiche-modal";
 import {
   Tooltip,
   TooltipContent,
@@ -23,6 +25,17 @@ function Swatch({ color, lang }: { color: string; lang: Lang }) {
       </Tooltip>
     </TooltipProvider>
   );
+}
+
+/** Badge d'une référence ; cliquable (fiche en modale) quand une fiche PDF la décrit. */
+function RefBadge({ code, lang }: { code: string; lang: Lang }) {
+  const badge = (
+    <span className="inline-block rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300">
+      {code}
+    </span>
+  );
+  const fiche = ficheFor(code);
+  return fiche ? <FicheRefButton code={code} fiche={fiche} lang={lang}>{badge}</FicheRefButton> : badge;
 }
 
 /**
@@ -73,9 +86,7 @@ export function RefTable({ data, lang }: { data: RefTableData; lang: Lang }) {
               {r.cells.map((cell, i) => (
                 <td key={i} className="p-2 text-center">
                   {cell ? (
-                    <span className="inline-block rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300">
-                      {cell}
-                    </span>
+                    <RefBadge code={cell} lang={lang} />
                   ) : (
                     <span className="text-zinc-300 dark:text-zinc-600">—</span>
                   )}
