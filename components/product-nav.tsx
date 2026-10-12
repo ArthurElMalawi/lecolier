@@ -135,18 +135,26 @@ function DesktopMega({ lang }: { lang: Lang }) {
         )}
       >
         <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
-          <div className="grid grid-cols-2 items-start gap-x-8 gap-y-8 md:grid-cols-3 lg:grid-cols-5">
-            {navTree.map((cat) => {
+          {/* 4 colonnes pleine largeur : Nos cahiers (×2), Fournitures, Accessoires. */}
+          <div className="grid grid-cols-2 items-stretch gap-y-8 lg:grid-cols-4">
+            {navTree.map((cat, i) => {
               const wide = cat.slug === "nos-cahiers";
               const kids = cat.children ?? [];
               const half = Math.ceil(kids.length / 2);
               const columns = wide ? [kids.slice(0, half), kids.slice(half)] : [kids];
               return (
-                <div key={cat.slug} className={cn("space-y-3", wide && "lg:col-span-2")}>
+                <div
+                  key={cat.slug}
+                  className={cn(
+                    "space-y-3 px-4 first:pl-0 last:pr-0 lg:px-6",
+                    wide && "lg:col-span-2",
+                    i > 0 && "lg:border-l lg:border-zinc-100"
+                  )}
+                >
                   <Link
                     href={nodeHref([cat.slug], cat, lang)}
                     onClick={close}
-                    className="block text-xs font-bold uppercase tracking-wider text-blue-600 hover:underline"
+                    className="block border-b border-zinc-100 pb-2 text-xs font-bold uppercase tracking-wider text-blue-600 hover:underline"
                   >
                     {nodeLabel(cat, lang)}
                   </Link>
