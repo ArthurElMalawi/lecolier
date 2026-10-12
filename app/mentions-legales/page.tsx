@@ -1,4 +1,14 @@
 import React from 'react';
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/mentions-legales",
+  lang: "fr",
+  title: "Mentions légales",
+  description: "Mentions légales du site L'écolier : éditeur, hébergeur et propriété intellectuelle.",
+  frOnly: true,
+});
 
 export default function MentionsLegales() {
   return (

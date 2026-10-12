@@ -20,15 +20,34 @@ import { Button } from "@/components/ui/button";
 import { CategoryCard } from "@/components/category-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProductCardLink } from "@/components/product-card-link";
+import { pageMetadata } from "@/lib/seo";
+import { isComingSoon } from "@/lib/indexable-pages";
 
 type Params = { slug: string[] };
 type Search = { [key: string]: string | string[] | undefined };
 
-export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: Promise<Params>; searchParams: Promise<Search> }): Promise<Metadata> {
   const { slug } = await params;
+  const lang = getLang(await searchParams);
   const resolved = findByPath(slug);
-  if (!resolved) return { title: "L'écolier" };
-  return { title: `${resolved.node.fr} — L'écolier` };
+  if (!resolved) return {};
+  const { node, trail } = resolved;
+  const path = slug.join("/");
+  const label = nodeLabel(node, lang);
+  // Le titre seul est parfois ambigu (« Cahiers ») : on le complète de la gamme parente.
+  const parent = trail.length > 1 ? nodeLabel(trail[trail.length - 2], lang) : null;
+  const title = parent && trail.length > 2 ? `${label} — ${parent}` : label;
+  const desc =
+    nodeDesc(node, lang) ??
+    (lang === "en" ? `${label}: discover the L'écolier range and its references.` : `${label} : découvrez la gamme L'écolier et ses références.`);
+  return pageMetadata({
+    path: `/c/${path}`,
+    lang,
+    title,
+    description: parent && nodeDesc(node, lang) ? `${title}. ${desc}` : desc,
+    image: imagesForPages([path, ...groupedPages(path)])[0]?.src,
+    noindex: isComingSoon(path, node),
+  });
 }
 
 /* --------------------------- Listing des produits -------------------------- */

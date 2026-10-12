@@ -1,4 +1,14 @@
 import React from 'react';
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/confidentialite",
+  lang: "fr",
+  title: "Politique de confidentialité",
+  description: "Politique de confidentialité de L'écolier : données collectées, usage et droits des utilisateurs.",
+  frOnly: true,
+});
 
 export default function Confidentialite() {
   return (

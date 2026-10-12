@@ -1,6 +1,21 @@
 import { ShieldCheck, Lightbulb, Handshake } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Metadata } from "next";
 import { getLang, getDictionary } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }): Promise<Metadata> {
+  const lang = getLang(await searchParams);
+  return pageMetadata({
+    path: "/qui-sommes-nous",
+    lang,
+    title: lang === "en" ? "About us" : "Qui sommes-nous",
+    description:
+      lang === "en"
+        ? "The story of L'écolier: durable, high-quality school notebooks made accessible to every student."
+        : "L'histoire de L'écolier : des cahiers scolaires robustes et de haute qualité, accessibles à chaque élève.",
+  });
+}
 
 export default async function QuiSommesNousPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;

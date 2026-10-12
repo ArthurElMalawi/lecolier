@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { formatLabel, rulingLabel, familyKey, familyLabel } from "@/lib/catalog";
 import { findFamilyTrail, nodeLabel, nodeHref } from "@/lib/navigation";
 import { refFor, availableFor } from "@/lib/product-refs";
@@ -7,7 +8,8 @@ import type { CoverType, Format, Ruling } from "@/lib/catalog-types";
 import type { RefTableData } from "@/lib/classement-refs";
 import { ProductCarousel } from "@/components/product-carousel";
 import { ProductSheet } from "@/components/product-sheet";
-import { getLang, getDictionary } from "@/lib/i18n";
+import { getLang, getDictionary, type Lang } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
 // Slug d'une fiche cahier : cahier-{grammage}g-{cover}-{format}[-5x5] (réglure 5×5 optionnelle).
 const COVER_BY_SLUG: Record<string, CoverType> = {
@@ -27,12 +29,9 @@ const VARIANT_BY_FORMAT: Record<Format, string> = {
   F24x32: "24x32",
 };
 
-export default async function ProductPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
-  const { slug } = await params;
-  const sp = await searchParams;
-  const lang = getLang(sp);
-  const dict = getDictionary(lang);
+type Search = { [key: string]: string | string[] | undefined };
 
+function parseSlug(slug: string) {
   const m = slug.match(/^cahier-(\d+)g-(polypro-pique|polypro|cartonne)-(17x22|21x29_7|24x32)(-5x5)?$/);
   const coverType = m ? COVER_BY_SLUG[m[2]] : undefined;
   const format = m ? FORMAT_BY_SLUG[m[3]] : undefined;
@@ -43,6 +42,47 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
   // Couleurs et nombres de pages disponibles, dérivés des références (images).
   const { colors, pages } =
     coverType && format ? availableFor({ grammageGsm, cover: coverKey, format, ruling }) : { colors: [], pages: [] };
+  return { coverType, format, grammageGsm, ruling, coverKey, colors, pages } as const;
+}
+
+function productNameFor(grammageGsm: number, coverType: CoverType, format: Format, ruling: Ruling, lang: Lang) {
+  const rulingName = rulingLabel(ruling, lang);
+  return `${familyLabel({ grammageGsm, coverType }, lang)} ${formatLabel(format, lang)}${rulingName && rulingName !== "—" ? ` — ${rulingName}` : ""}`;
+}
+
+function variantFor(format: Format, ruling: Ruling) {
+  return `${VARIANT_BY_FORMAT[format]}${ruling === "QUADRI" ? "-5x5" : ""}`;
+}
+
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<Search> }): Promise<Metadata> {
+  const { slug } = await params;
+  const lang = getLang(await searchParams);
+  const { coverType, format, grammageGsm, ruling, colors, pages } = parseSlug(slug);
+  if (!coverType || !format || colors.length === 0) return { robots: { index: false } };
+
+  const name = productNameFor(grammageGsm, coverType, format, ruling, lang);
+  const pageList = pages.join(", ");
+  const description =
+    lang === "en"
+      ? `L'écolier ${name} notebook: ${colors.length} colour${colors.length > 1 ? "s" : ""}, ${pageList} pages. All product references (SKU) by colour and page count.`
+      : `Cahier L'écolier ${name} : ${colors.length} couleur${colors.length > 1 ? "s" : ""}, ${pageList} pages. Toutes les références produit par couleur et pagination.`;
+  const familyTrail = findFamilyTrail(familyKey({ grammageGsm, coverType })) ?? [];
+  return pageMetadata({
+    path: `/product/${slug}`,
+    lang,
+    title: name,
+    description,
+    image: imagesFor(familyTrail.map((n) => n.slug).join("/"), variantFor(format, ruling))[0]?.src,
+  });
+}
+
+export default async function ProductPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<Search> }) {
+  const { slug } = await params;
+  const sp = await searchParams;
+  const lang = getLang(sp);
+  const dict = getDictionary(lang);
+
+  const { coverType, format, grammageGsm, ruling, coverKey, colors, pages } = parseSlug(slug);
 
   if (!coverType || !format || colors.length === 0) {
     return (
@@ -53,8 +93,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     );
   }
 
-  const rulingName = rulingLabel(ruling, lang);
-  const productName = `${familyLabel({ grammageGsm, coverType }, lang)} ${formatLabel(format, lang)}${rulingName && rulingName !== "—" ? ` — ${rulingName}` : ""}`;
+  const productName = productNameFor(grammageGsm, coverType, format, ruling, lang);
   const formatName = `${formatLabel(format, lang)}${ruling === "QUADRI" ? " 5×5" : ""}`;
 
   // Fil d'ariane reconstruit depuis l'arborescence (/c/...)
@@ -88,7 +127,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
         <ProductCarousel
           images={imagesFor(
             familyTrail.map((n) => n.slug).join("/"),
-            `${VARIANT_BY_FORMAT[format]}${ruling === "QUADRI" ? "-5x5" : ""}`,
+            variantFor(format, ruling),
           )}
           alt={productName}
           iconKey="notebook"

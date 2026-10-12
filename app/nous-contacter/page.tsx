@@ -1,6 +1,14 @@
 import { Mail } from "lucide-react";
+import type { Metadata } from "next";
 import { getLang, getDictionary } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/contact-form";
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }): Promise<Metadata> {
+  const lang = getLang(await searchParams);
+  const t = getDictionary(lang).contact;
+  return pageMetadata({ path: "/nous-contacter", lang, title: t.title, description: t.intro });
+}
 
 export default async function NousContacterPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;

@@ -8,7 +8,8 @@ import { MIN_REF_DIGITS, isShortRefQuery } from "@/lib/search-query";
 import { SearchBar } from "@/components/search-bar";
 import { SearchResultRow } from "@/components/search-result";
 
-export const metadata: Metadata = { title: "Recherche — L'écolier" };
+// Pages de résultats : utiles au visiteur, pas aux moteurs (contenu dupliqué, infini).
+export const metadata: Metadata = { title: "Recherche", robots: { index: false, follow: true } };
 
 type Search = { [key: string]: string | string[] | undefined };
 
