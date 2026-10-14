@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 // Adresse de réception (surchargée par variable d'environnement si besoin)
-const CONTACT_TO = (process.env.CONTACT_TO || "arthur@avantis-france.com,arthur.elmalawi@gmail.com")
+const CONTACT_TO = (process.env.CONTACT_TO || "arthur@avantis-france.com,brahim.aitbenalla@criom.com")
   .split(",")
   .map((e) => e.trim())
   .filter(Boolean);
