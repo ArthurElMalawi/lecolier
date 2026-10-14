@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 // Adresse de réception (surchargée par variable d'environnement si besoin)
-const CONTACT_TO = process.env.CONTACT_TO || "arthur@avantis-france.com";
+const CONTACT_TO = (process.env.CONTACT_TO || "arthur@avantis-france.com,arthur.elmalawi@gmail.com")
+  .split(",")
+  .map((e) => e.trim())
+  .filter(Boolean);
 // Expéditeur : un domaine vérifié dans Resend, ou l'adresse de test onboarding@resend.dev
 const CONTACT_FROM = process.env.CONTACT_FROM || "L'écolier <onboarding@resend.dev>";
 
