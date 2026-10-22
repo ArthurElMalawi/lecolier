@@ -9,7 +9,9 @@ import type { RefTableData } from "@/lib/classement-refs";
 import { ProductCarousel } from "@/components/product-carousel";
 import { ProductSheet } from "@/components/product-sheet";
 import { getLang, getDictionary, type Lang } from "@/lib/i18n";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, absoluteUrl, SITE_URL } from "@/lib/seo";
+import { colorLabel } from "@/lib/colors";
+import { JsonLd } from "@/components/json-ld";
 
 // Slug d'une fiche cahier : cahier-{grammage}g-{cover}-{format}[-5x5] (réglure 5×5 optionnelle).
 const COVER_BY_SLUG: Record<string, CoverType> = {
@@ -114,7 +116,39 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     })),
   };
 
+  const images = imagesFor(familyTrail.map((n) => n.slug).join("/"), variantFor(format, ruling));
+
+  // Un produit par format, décliné en couleurs × paginations : chaque référence est une
+  // variante. Pas de prix (site vitrine), donc pas d'extrait enrichi « produit », mais
+  // la marque et les caractéristiques sont lisibles sans ambiguïté par les moteurs.
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProductGroup",
+    name: `${lang === "en" ? "L'écolier notebook" : "Cahier L'écolier"} ${productName}`,
+    url: absoluteUrl(`/product/${slug}?lang=${lang}`),
+    brand: { "@id": `${SITE_URL}/#brand` },
+    manufacturer: { "@id": `${SITE_URL}/#organization` },
+    category: lang === "en" ? "School notebooks" : "Cahiers scolaires",
+    image: images.slice(0, 5).map((img) => absoluteUrl(img.src)),
+    variesBy: ["https://schema.org/color", "https://schema.org/numberOfPages"],
+    additionalProperty: [
+      { "@type": "PropertyValue", name: lang === "en" ? "Paper weight" : "Grammage", value: grammageGsm, unitText: "g/m²" },
+      { "@type": "PropertyValue", name: "Format", value: formatLabel(format, lang) },
+      { "@type": "PropertyValue", name: lang === "en" ? "Ruling" : "Réglure", value: rulingLabel(ruling, lang) },
+    ],
+    hasVariant: colors.flatMap((color) =>
+      pages.flatMap((p) => {
+        const sku = refFor({ grammageGsm, cover: coverKey, format, ruling, color, pages: p });
+        return sku
+          ? [{ "@type": "Product", sku, name: `${productName} — ${colorLabel(color, lang)}, ${p} pages`, color: colorLabel(color, lang), numberOfPages: p }]
+          : [];
+      }),
+    ),
+  };
+
   return (
+    <>
+    <JsonLd data={productJsonLd} />
     <ProductSheet
       crumbs={crumbs}
       title={productName}
@@ -125,10 +159,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
       }
       image={
         <ProductCarousel
-          images={imagesFor(
-            familyTrail.map((n) => n.slug).join("/"),
-            variantFor(format, ruling),
-          )}
+          images={images}
           alt={productName}
           iconKey="notebook"
           lang={lang}
@@ -137,5 +168,6 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
       sections={[{ table: tableData }]}
       lang={lang}
     />
+    </>
   );
 }

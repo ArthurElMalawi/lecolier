@@ -55,3 +55,19 @@ export function pageMetadata(opts: {
     ...(opts.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
+
+/**
+ * URL absolue canonique d'un lien interne : le `?lang=fr` des liens est retiré,
+ * comme pour la balise canonique.
+ */
+export function absoluteUrl(href: string): string {
+  const url = new URL(href, SITE_URL);
+  if (url.searchParams.get("lang") === "fr") url.searchParams.delete("lang");
+  return url.toString();
+}
+
+/**
+ * Variantes sous lesquelles la marque est tapée (sans accent, sans apostrophe…) :
+ * annoncées dans les données structurées pour que « lecolier » renvoie au site.
+ */
+export const SITE_ALTERNATE_NAMES = ["Lecolier", "L'ecolier", "L’écolier", "lecolier.eu", "Cahiers L'écolier"];

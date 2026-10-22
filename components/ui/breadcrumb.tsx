@@ -2,6 +2,8 @@
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
 
 export interface BreadcrumbItem {
   label: string;
@@ -14,7 +16,21 @@ export interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
+  // Fil d'ariane en données structurées : Google l'affiche à la place de l'URL.
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [{ label: "L'écolier", href: "/" }, ...items].map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      ...(item.href ? { item: absoluteUrl(item.href) } : {}),
+    })),
+  };
+
   return (
+    <>
+    <JsonLd data={breadcrumbJsonLd} />
     <nav
       aria-label="Breadcrumb"
       className={cn("text-sm leading-6 text-zinc-500 [overflow-wrap:anywhere]", className)}
@@ -35,5 +51,6 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
         </span>
       ))}
     </nav>
+    </>
   );
 }

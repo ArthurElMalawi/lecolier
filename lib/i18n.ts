@@ -4,8 +4,8 @@ export type Lang = "fr" | "en";
 export const dictionaries = {
   fr: {
     hero: {
-      title: "L'excellence pour vos études",
-      subtitle: "Découvrez notre gamme complète de fournitures scolaires de haute qualité. Conçus pour accompagner la réussite de chaque élève, du primaire à l'université.",
+      title: "Les cahiers L'écolier",
+      subtitle: "L'excellence pour vos études. Cahiers polypro et cartonnés, papier 56 à 90 g/m², réglure Seyès et 5×5 : découvrez notre gamme complète de fournitures scolaires de haute qualité. Conçus pour accompagner la réussite de chaque élève, du primaire à l'université.",
       cta: "Découvrir nos produits",
       more: "En savoir plus",
     },
@@ -95,8 +95,8 @@ export const dictionaries = {
   },
   en: {
     hero: {
-      title: "Excellence for your studies",
-      subtitle: "Discover our complete range of high-quality school supplies. Designed to support every student's success, from primary to university.",
+      title: "L'écolier notebooks",
+      subtitle: "Excellence for your studies. Polypro and hardcover notebooks, 56 to 90 gsm paper, Seyès and 5×5 ruling: discover our complete range of high-quality school supplies. Designed to support every student's success, from primary to university.",
       cta: "Discover our products",
       more: "Learn more",
     },

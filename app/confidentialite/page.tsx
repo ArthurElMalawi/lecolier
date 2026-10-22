@@ -68,14 +68,14 @@ export default function Confidentialite() {
               <li>Droit à la portabilité des données.</li>
             </ul>
             <p className="mt-4">
-              Pour exercer ces droits, vous pouvez nous contacter à l&apos;adresse suivante : <strong>[Votre email de contact]</strong>
+              Pour exercer ces droits, vous pouvez nous contacter à l&apos;adresse suivante : <a href="mailto:info@avantis-france.com" className="font-semibold text-zinc-900 underline underline-offset-2 hover:no-underline">info@avantis-france.com</a>
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900 mb-4">5. Contact</h2>
             <p>
-              Pour toute question relative à cette politique de confidentialité, veuillez nous contacter à : <strong>[Votre email de contact]</strong>
+              Pour toute question relative à cette politique de confidentialité, veuillez nous contacter à : <a href="mailto:info@avantis-france.com" className="font-semibold text-zinc-900 underline underline-offset-2 hover:no-underline">info@avantis-france.com</a>
             </p>
           </section>
         </div>

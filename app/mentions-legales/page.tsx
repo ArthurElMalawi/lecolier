@@ -28,12 +28,17 @@ export default function MentionsLegales() {
               Le présent site est édité par :
             </p>
             <ul className="list-disc pl-5 space-y-2">
-              <li><strong>Propriétaire :</strong> [Nom de votre entreprise ou votre nom]</li>
-              <li><strong>Statut :</strong> [Forme juridique : SARL, SAS, Auto-entrepreneur...]</li>
-              <li><strong>Adresse :</strong> [Votre adresse complète]</li>
-              <li><strong>SIRET :</strong> [Numéro SIRET]</li>
-              <li><strong>Responsable de publication :</strong> [Nom du responsable]</li>
-              <li><strong>Contact :</strong> [Adresse email de contact]</li>
+              <li><strong>Propriétaire :</strong> AVANTIS</li>
+              <li><strong>Statut :</strong> SARL au capital de 180 000,00 €</li>
+              <li><strong>Adresse :</strong> 8 Rue de Témara, 78100 Saint-Germain-en-Laye, France</li>
+              <li><strong>SIRET :</strong> 440 545 770 00065</li>
+              <li><strong>RCS :</strong> Versailles 440 545 770</li>
+              <li><strong>N° TVA intracommunautaire :</strong> FR03440545770</li>
+              <li><strong>Responsable de publication :</strong> Emeric DONT</li>
+              <li><strong>Téléphone :</strong>{' '}
+                <a href="tel:+33134242338" className="text-zinc-900 underline underline-offset-2 hover:no-underline">01 34 24 23 38</a>
+              </li>
+              <li><strong>Contact :</strong> <a href="mailto:info@avantis-france.com" className="text-zinc-900 underline underline-offset-2 hover:no-underline">info@avantis-france.com</a></li>
             </ul>
           </section>
 

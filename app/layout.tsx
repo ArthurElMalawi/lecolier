@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { SITE_URL, SITE_NAME, SITE_ALTERNATE_NAMES, DEFAULT_DESCRIPTION } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,13 +23,54 @@ export const metadata: Metadata = {
   description: DEFAULT_DESCRIPTION.fr,
 };
 
-// Données structurées de l'entreprise, lues par les moteurs pour la fiche de marque.
-const organizationJsonLd = {
+// Données structurées de la marque et du site, lues par les moteurs pour la fiche de
+// marque et le nom affiché dans les résultats. Le WebSite et ses `alternateName`
+// relient les recherches « lecolier », « l'ecolier »… à ce domaine.
+const siteJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: SITE_NAME,
-  url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      alternateName: SITE_ALTERNATE_NAMES,
+      url: SITE_URL,
+      logo: `${SITE_URL}/logo.png`,
+      description: DEFAULT_DESCRIPTION.fr,
+      // Société éditrice (voir les mentions légales).
+      legalName: "AVANTIS",
+      email: "info@avantis-france.com",
+      telephone: "+33134242338",
+      vatID: "FR03440545770",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "8 Rue de Témara",
+        postalCode: "78100",
+        addressLocality: "Saint-Germain-en-Laye",
+        addressCountry: "FR",
+      },
+      identifier: { "@type": "PropertyValue", propertyID: "SIRET", value: "44054577000065" },
+      brand: { "@id": `${SITE_URL}/#brand` },
+    },
+    {
+      "@type": "Brand",
+      "@id": `${SITE_URL}/#brand`,
+      name: SITE_NAME,
+      alternateName: SITE_ALTERNATE_NAMES,
+      url: SITE_URL,
+      logo: `${SITE_URL}/logo.png`,
+      slogan: "L'excellence pour vos études",
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      alternateName: SITE_ALTERNATE_NAMES,
+      url: SITE_URL,
+      inLanguage: ["fr-FR", "en-GB"],
+      publisher: { "@id": `${SITE_URL}/#organization` },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -39,10 +81,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground flex flex-col`}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-        />
+        <JsonLd data={siteJsonLd} />
         <Suspense>
           <Header />
         </Suspense>
