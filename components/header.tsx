@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSearchParams, usePathname } from "next/navigation";
 import { ProductNav } from "./product-nav";
 import { SearchBar } from "./search-bar";
+import { withLang } from "@/lib/i18n";
 
 export function Header() {
   const searchParams = useSearchParams();
@@ -17,14 +18,16 @@ export function Header() {
   // Helper to create links that preserve other params
   const createLangLink = (targetLang: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("lang", targetLang);
-    return `${pathname}?${params.toString()}`;
+    if (targetLang === "en") params.set("lang", "en");
+    else params.delete("lang");
+    const query = params.toString();
+    return query ? `${pathname}?${query}` : pathname;
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <Link href={`/?lang=${lang}`} className="flex items-center gap-3 group">
+        <Link href={withLang("/", lang === "en" ? "en" : "fr")} className="flex items-center gap-3 group">
           <div className="relative overflow-hidden rounded-lg transition-transform duration-300 group-hover:scale-105">
             <Image
               src="/logo.png"
@@ -46,20 +49,20 @@ export function Header() {
         <div className="flex items-center gap-4 lg:gap-6">
           <nav className="hidden lg:flex items-center gap-6">
             <Link
-              href={`/?lang=${lang}`}
+              href={withLang("/", lang === "en" ? "en" : "fr")}
               className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors"
             >
               {lang === 'en' ? 'Home' : 'Accueil'}
             </Link>
             <ProductNav />
             <Link
-              href={`/qui-sommes-nous?lang=${lang}`}
+              href={withLang("/qui-sommes-nous", lang === "en" ? "en" : "fr")}
               className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors"
             >
               {lang === 'en' ? 'Who we are' : 'Qui sommes-nous'}
             </Link>
             <Link
-              href={`/nous-contacter?lang=${lang}`}
+              href={withLang("/nous-contacter", lang === "en" ? "en" : "fr")}
               className="text-sm font-semibold text-zinc-600 hover:text-blue-600 transition-colors"
             >
               {lang === 'en' ? 'Contact us' : 'Nous contacter'}

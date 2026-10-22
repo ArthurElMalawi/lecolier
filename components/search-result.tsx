@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import type { Lang } from "@/lib/i18n";
+import { withLang, type Lang } from "@/lib/i18n";
 import type { SearchHit } from "@/lib/search-index";
 import { NavIcon } from "@/lib/nav-icons";
 
@@ -55,7 +55,7 @@ export function SearchResultRow({
 
   return (
     <Link
-      href={`${hit.href}?lang=${lang}`}
+      href={withLang(hit.href, lang)}
       id={id}
       role={compact ? "option" : undefined}
       aria-selected={compact ? active : undefined}

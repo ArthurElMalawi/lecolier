@@ -8,7 +8,7 @@ import type { CoverType, Format, Ruling } from "@/lib/catalog-types";
 import type { RefTableData } from "@/lib/classement-refs";
 import { ProductCarousel } from "@/components/product-carousel";
 import { ProductSheet } from "@/components/product-sheet";
-import { getLang, getDictionary, type Lang } from "@/lib/i18n";
+import { getLang, getDictionary, withLang, type Lang } from "@/lib/i18n";
 import { pageMetadata, absoluteUrl, SITE_URL } from "@/lib/seo";
 import { colorLabel } from "@/lib/colors";
 import { JsonLd } from "@/components/json-ld";
@@ -90,7 +90,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     return (
       <div className="mx-auto max-w-3xl px-6 py-10">
         <p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.product.notFound}</p>
-        <Link href={`/?lang=${lang}`} className="text-blue-500 hover:underline mt-4 inline-block">{dict.products.backToHome}</Link>
+        <Link href={withLang("/", lang)} className="text-blue-500 hover:underline mt-4 inline-block">{dict.products.backToHome}</Link>
       </div>
     );
   }
@@ -125,7 +125,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
     "@context": "https://schema.org",
     "@type": "ProductGroup",
     name: `${lang === "en" ? "L'écolier notebook" : "Cahier L'écolier"} ${productName}`,
-    url: absoluteUrl(`/product/${slug}?lang=${lang}`),
+    url: absoluteUrl(withLang(`/product/${slug}`, lang)),
     brand: { "@id": `${SITE_URL}/#brand` },
     manufacturer: { "@id": `${SITE_URL}/#organization` },
     category: lang === "en" ? "School notebooks" : "Cahiers scolaires",

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Clock, ArrowLeft } from "lucide-react";
 
-import { getLang, type Lang } from "@/lib/i18n";
+import { getLang, withLang, type Lang } from "@/lib/i18n";
 import { formatLabel, parseFamilyKey } from "@/lib/catalog";
 import type { Format } from "@/lib/catalog-types";
 import { availableFor } from "@/lib/product-refs";
@@ -72,7 +72,7 @@ function FamilyProducts({ family, navPath, lang }: { family: string; navPath: st
     if (has(fmt))
       cards.push({
         key: fmt,
-        href: `/product/cahier-${family}-${FORMAT_SLUG[fmt]}?lang=${lang}`,
+        href: withLang(`/product/cahier-${family}-${FORMAT_SLUG[fmt]}`, lang),
         title: formatLabel(fmt, lang),
         photo: heroFor(navPath, FORMAT_SLUG[fmt])?.src,
       });
@@ -81,7 +81,7 @@ function FamilyProducts({ family, navPath, lang }: { family: string; navPath: st
     if (has(fmt, "QUADRI"))
       cards.push({
         key: `${FORMAT_SLUG[fmt]}-5x5`,
-        href: `/product/cahier-${family}-${FORMAT_SLUG[fmt]}-5x5?lang=${lang}`,
+        href: withLang(`/product/cahier-${family}-${FORMAT_SLUG[fmt]}-5x5`, lang),
         title: `${formatLabel(fmt, lang)} 5×5`,
         photo: heroFor(navPath, `${FORMAT_SLUG[fmt]}-5x5`)?.src,
       });

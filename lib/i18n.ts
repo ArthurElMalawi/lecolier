@@ -190,6 +190,16 @@ export function getDictionary(lang: Lang) {
   return dictionaries[lang] || dictionaries.fr;
 }
 
+/**
+ * Lien interne dans une langue : le français, langue par défaut, est servi sans
+ * paramètre (l'adresse canonique), l'anglais par `?lang=en`.
+ */
+export function withLang(href: string, lang: Lang): string {
+  if (lang !== "en") return href;
+  const [path, hash] = href.split("#");
+  return `${path}${path.includes("?") ? "&" : "?"}lang=en${hash !== undefined ? `#${hash}` : ""}`;
+}
+
 export function getLang(searchParams: { [key: string]: string | string[] | undefined }): Lang {
   const lang = typeof searchParams.lang === "string" ? searchParams.lang : "fr";
   return (lang === "en" ? "en" : "fr") as Lang;

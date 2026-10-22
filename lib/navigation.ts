@@ -1,4 +1,4 @@
-import type { Lang } from "./i18n";
+import { withLang, type Lang } from "./i18n";
 
 /**
  * Arborescence de navigation & de catalogue "L'écolier" (V2).
@@ -431,8 +431,7 @@ export function nodeDesc(node: NavNode, lang: Lang): string | null {
 
 /** Lien de navigation d'un nœud dans l'arborescence de pages. */
 export function nodeHref(trailSlugs: string[], node: NavNode, lang: Lang): string {
-  if (node.path) return `${node.path}?lang=${lang}`;
-  return `/c/${trailSlugs.join("/")}?lang=${lang}`;
+  return withLang(node.path ?? `/c/${trailSlugs.join("/")}`, lang);
 }
 
 export type Resolved = { node: NavNode; trail: NavNode[] };

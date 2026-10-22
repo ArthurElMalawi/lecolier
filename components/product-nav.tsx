@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSearchParams, usePathname } from "next/navigation";
 import { ChevronDown, ChevronLeft, ChevronRight, Menu, X, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Lang } from "@/lib/i18n";
+import { withLang, type Lang } from "@/lib/i18n";
 import { navTree, nodeLabel, nodeHref, type NavNode } from "@/lib/navigation";
 import { NavIcon } from "@/lib/nav-icons";
 import { SearchBar } from "@/components/search-bar";
@@ -251,8 +251,10 @@ function MobileNav({ lang }: { lang: Lang }) {
   // Lien de bascule de langue conservant la page et les autres paramètres.
   const langLink = (target: Lang) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("lang", target);
-    return `${pathname}?${params.toString()}`;
+    if (target === "en") params.set("lang", "en");
+    else params.delete("lang");
+    const query = params.toString();
+    return query ? `${pathname}?${query}` : pathname;
   };
 
   return (
@@ -309,7 +311,7 @@ function MobileNav({ lang }: { lang: Lang }) {
                 </Link>
               ) : (
                 <Link
-                  href={`/?lang=${lang}`}
+                  href={withLang("/", lang)}
                   onClick={close}
                   className="block rounded-md px-2 py-2.5 text-sm font-semibold text-zinc-800 transition-colors hover:bg-zinc-50"
                 >
@@ -323,7 +325,7 @@ function MobileNav({ lang }: { lang: Lang }) {
 
               {!current && (
                 <Link
-                  href={`/qui-sommes-nous?lang=${lang}`}
+                  href={withLang("/qui-sommes-nous", lang)}
                   onClick={close}
                   className="block rounded-md px-2 py-2.5 text-sm font-semibold text-zinc-800 transition-colors hover:bg-zinc-50"
                 >
@@ -333,7 +335,7 @@ function MobileNav({ lang }: { lang: Lang }) {
 
               {!current && (
                 <Link
-                  href={`/nous-contacter?lang=${lang}`}
+                  href={withLang("/nous-contacter", lang)}
                   onClick={close}
                   className="block rounded-md px-2 py-2.5 text-sm font-semibold text-zinc-800 transition-colors hover:bg-zinc-50"
                 >

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { withLang } from "@/lib/i18n";
 
 interface HeroProps {
   dict: {
@@ -21,7 +22,7 @@ export function Hero({ dict, lang }: HeroProps) {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
       // Update URL without jump
-      history.pushState(null, "", `?lang=${lang}#products`);
+      history.pushState(null, "", withLang("/#products", lang === "en" ? "en" : "fr"));
     }
   };
 
@@ -39,7 +40,7 @@ export function Hero({ dict, lang }: HeroProps) {
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Link href={`/?lang=${lang}#products`} onClick={handleScroll}>
+              <Link href={withLang("/#products", lang === "en" ? "en" : "fr")} onClick={handleScroll}>
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   {dict.cta}
                 </Button>

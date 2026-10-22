@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchX } from "lucide-react";
 
-import { getLang } from "@/lib/i18n";
+import { getLang, withLang } from "@/lib/i18n";
 import { searchCatalogue } from "@/lib/search-index";
 import { MIN_REF_DIGITS, isShortRefQuery } from "@/lib/search-query";
 import { SearchBar } from "@/components/search-bar";
@@ -72,7 +72,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             </p>
             <p className="mt-2 text-sm text-zinc-500">{isShortRefQuery(query) ? t.shortRef : t.hint}</p>
             <Link
-              href={`/catalogue?lang=${lang}`}
+              href={withLang("/catalogue", lang)}
               className="mt-6 inline-block text-sm font-semibold text-blue-600 hover:underline"
             >
               {t.browse} →

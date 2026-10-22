@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import type { Lang } from "./i18n";
+import { withLang, type Lang } from "./i18n";
 
 /**
  * Référencement : adresse canonique, alternatives de langue et partage social.
  *
- * Le français est servi sans paramètre (/c/...), l'anglais par `?lang=en`. Les liens
- * internes portent `?lang=fr`, d'où la canonique explicite : Google ne garde qu'une
- * adresse par page et relie les deux langues via hreflang.
+ * Le français est servi sans paramètre (/c/...), l'anglais par `?lang=en`, liens
+ * internes compris (voir `withLang`). La canonique reste explicite : une adresse
+ * avec `?lang=fr` (anciens liens) renvoie à la version sans paramètre.
  */
 export const SITE_URL = "https://www.lecolier.eu";
 export const SITE_NAME = "L'écolier";
@@ -20,7 +20,7 @@ const DEFAULT_IMAGE = "/products/image_hero.jpg";
 
 /** URL d'une page dans une langue (chemin sans paramètre de langue). */
 export function localizedUrl(path: string, lang: Lang): string {
-  return lang === "en" ? `${path}?lang=en` : path;
+  return withLang(path, lang);
 }
 
 export function pageMetadata(opts: {
@@ -57,7 +57,7 @@ export function pageMetadata(opts: {
 }
 
 /**
- * URL absolue canonique d'un lien interne : le `?lang=fr` des liens est retiré,
+ * URL absolue canonique d'un lien interne : un éventuel `?lang=fr` est retiré,
  * comme pour la balise canonique.
  */
 export function absoluteUrl(href: string): string {

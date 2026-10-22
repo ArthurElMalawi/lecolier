@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Search, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { Lang } from "@/lib/i18n";
+import { withLang, type Lang } from "@/lib/i18n";
 import type { SearchHit } from "@/lib/search-index";
 import { MIN_REF_DIGITS, isShortRefQuery } from "@/lib/search-query";
 import { SearchResultRow } from "@/components/search-result";
@@ -118,12 +118,12 @@ export function SearchBar({
     e.preventDefault();
     const q = query.trim();
     if (active >= 0 && hits[active]) {
-      router.push(`${hits[active].href}?lang=${lang}`);
+      router.push(withLang(hits[active].href, lang));
       select();
       return;
     }
     if (q.length < 2) return;
-    router.push(`/recherche?q=${encodeURIComponent(q)}&lang=${lang}`);
+    router.push(withLang(`/recherche?q=${encodeURIComponent(q)}`, lang));
     select();
   };
 
@@ -179,7 +179,7 @@ export function SearchBar({
 
       {hits.length > 0 && (
         <Link
-          href={`/recherche?q=${encodeURIComponent(query.trim())}&lang=${lang}`}
+          href={withLang(`/recherche?q=${encodeURIComponent(query.trim())}`, lang)}
           onClick={select}
           className="block rounded-lg px-3 py-2 text-center text-xs font-semibold text-blue-600 hover:bg-blue-50"
         >
